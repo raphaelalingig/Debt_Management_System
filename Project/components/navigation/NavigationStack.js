@@ -6,6 +6,7 @@ import React from "react";
 import Intro from "../pages/Intro";
 import SignupForm from "../forms/SignupForm";
 import LoginForm from "../forms/LoginForms";
+import MainPage from "../pages/MainPage";
 
 const Stack = createNativeStackNavigator();
 
@@ -27,6 +28,11 @@ const NavigationStack = () => {
           options={{ headerShown: false }}
           name="LoginForms"
           component={LoginForm}
+        />
+        <Stack.Screen
+          options={{ headerShown: false }}
+          name="MainPage"
+          component={MainPage}
         />
       </Stack.Navigator>
     </NavigationContainer>

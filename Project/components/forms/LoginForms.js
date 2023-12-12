@@ -137,7 +137,7 @@ const LoginForm = () => {
                 <Button
                   loading={isSubmitting}
                   disabled={isSubmitting}
-                  onPress={handleSubmit}
+                  onPress={() => navigation.navigate("MainPage")}
                   icon="login"
                   mode="contained"
                   style={{ marginTop: 10, backgroundColor: "#FFD803" }}

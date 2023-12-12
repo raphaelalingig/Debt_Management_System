@@ -41,7 +41,6 @@ const SignupForm = () => {
         return false;
       }
 
-      const result = await fetchServices.postData(url, data);
 
       if (result?.message != null) {
         showToast(result?.message);
