@@ -2,7 +2,7 @@ import { StyleSheet, TouchableOpacity, View } from "react-native";
 import React from "react";
 import { Button, Text } from "react-native-paper";
 
-const Intro = () => {
+const Intro = ({ navigation }) => {
   return (
     <View style={styles.container}>
       <Text variant="headlineSmall" style={styles.titleText}>
@@ -21,9 +21,15 @@ const Intro = () => {
         </Button>
       </View>
       <View style={styles.signupContainer}>
-        <Text>Don't have an account? </Text>
+        <Text variant="bodyMedium">Don't have an account? </Text>
         <TouchableOpacity>
-          <Text style={{color: '#008686'}}> Sign up</Text>
+          <Text
+            variant="bodyMedium"
+            onPress={() => navigation.navigate("SignupForm")}
+            style={{ color: "#008686" }}
+          >
+            Sign up
+          </Text>
         </TouchableOpacity>
       </View>
     </View>
@@ -37,6 +43,7 @@ const styles = StyleSheet.create({
     flex: 1,
     justifyContent: "center",
     alignItems: "center",
+    backgroundColor: "#BAE8E8",
   },
   titleText: {
     fontWeight: "bold",
@@ -46,10 +53,9 @@ const styles = StyleSheet.create({
     marginBottom: 150,
   },
   buttons: {
-    gap: 10,
+    gap: 5,
   },
   button: {
-    marginHorizontal: 10,
     backgroundColor: "#FFD803",
     padding: 15,
     paddingHorizontal: 50,
