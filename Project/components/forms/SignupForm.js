@@ -1,4 +1,10 @@
-import { StyleSheet, Text, View, ToastAndroid } from "react-native";
+import {
+  StyleSheet,
+  Text,
+  View,
+  ToastAndroid,
+  TouchableOpacity,
+} from "react-native";
 import React from "react";
 import { TextInput, Card, Button } from "react-native-paper";
 import { useNavigation } from "@react-navigation/native";
@@ -101,7 +107,19 @@ const SignupForm = () => {
         onChangeText={setRepassword}
       />
       <Text>By signing you agree to our Team of use and privacy notice</Text>
-      <Card.Actions>
+      <View style={styles.signupContainer}>
+        <Text variant="bodyMedium">Already have an account? </Text>
+        <TouchableOpacity>
+          <Text
+            variant="bodyMedium"
+            onPress={() => navigation.navigate("LoginForms")}
+            style={{ color: "#008686" }}
+          >
+             Login?
+          </Text>
+        </TouchableOpacity>
+      </View>
+      <Card.Actions style={{ marginTop: 10 }}>
         <Button
           style={{ borderColor: "#FFD803" }}
           disabled={loading}
@@ -141,5 +159,9 @@ const styles = StyleSheet.create({
   textRegister: {
     alignItems: "center",
     marginBottom: 10,
+  },
+  signupContainer: {
+    marginTop: 10,
+    flexDirection: "row",
   },
 });

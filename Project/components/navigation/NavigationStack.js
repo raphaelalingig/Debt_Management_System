@@ -5,6 +5,7 @@ import { StyleSheet, Text, View } from "react-native";
 import React from "react";
 import Intro from "../pages/Intro";
 import SignupForm from "../forms/SignupForm";
+import LoginForm from "../forms/LoginForms";
 
 const Stack = createNativeStackNavigator();
 
@@ -21,6 +22,11 @@ const NavigationStack = () => {
           options={{ headerShown: false }}
           name="SignupForm"
           component={SignupForm}
+        />
+        <Stack.Screen
+          options={{ headerShown: false }}
+          name="LoginForms"
+          component={LoginForm}
         />
       </Stack.Navigator>
     </NavigationContainer>

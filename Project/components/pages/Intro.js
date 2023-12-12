@@ -9,14 +9,20 @@ const Intro = ({ navigation }) => {
         Mark Jundy Sari-Sari Store Debt Management System
       </Text>
       <View style={styles.buttons}>
-        <Button style={styles.button}>
+        <Button
+          onPress={() => navigation.navigate("SignupForm")}
+          style={styles.button}
+        >
           <Text style={styles.buttonText} variant="bodyLarge">
-            Admin
+            Register
           </Text>
         </Button>
-        <Button style={styles.button}>
+        <Button
+          onPress={() => navigation.navigate("LoginForms")}
+          style={styles.button}
+        >
           <Text style={styles.buttonText} variant="bodyLarge">
-            Staff
+            Login
           </Text>
         </Button>
       </View>
