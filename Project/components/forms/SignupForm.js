@@ -13,9 +13,9 @@ import Intro from "../pages/Intro";
 const SignupForm = () => {
   const [text, setText] = React.useState("");
   const [email, setEmail] = React.useState("");
-  const [name, setName] = React.useState(""); // Add this line
-  const [password, setPassword] = React.useState(""); // Add this line
-  const [repassword, setRepassword] = React.useState(""); // Add this line
+  const [name, setName] = React.useState(""); 
+  const [password, setPassword] = React.useState(""); 
+  const [repassword, setRepassword] = React.useState(""); 
   const [showPass, setShowPass] = React.useState(false);
   const [showRePass, setShowRePass] = React.useState(false);
   const [loading, setLoading] = React.useState(false);

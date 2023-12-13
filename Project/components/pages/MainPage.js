@@ -1,3 +1,4 @@
+import "react-native-gesture-handler";
 import { StyleSheet, TouchableOpacity, View } from "react-native";
 import React from "react";
 import { TextInput, Button, Text } from "react-native-paper";
@@ -5,11 +6,17 @@ import { FontAwesome } from "@expo/vector-icons";
 import { MaterialCommunityIcons } from "@expo/vector-icons";
 import { Feather } from "@expo/vector-icons";
 
-const MainPage = () => {
+
+const MainPage = ({ navigation }) => {
   return (
     <View style={styles.container}>
       <TouchableOpacity style={styles.menuLogo}>
-        <MaterialCommunityIcons name="menu" size={24} color="black" />
+        <MaterialCommunityIcons
+          name="menu"
+          size={24}
+          color="black"
+          onPress={() => navigation.toggleDrawer()}
+        />
       </TouchableOpacity>
       <View style={styles.inputBoxContainer}>
         <TextInput

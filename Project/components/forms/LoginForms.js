@@ -4,8 +4,9 @@ import { Button, Card, TextInput, Text, HelperText } from "react-native-paper";
 import { useNavigation } from "@react-navigation/native";
 import { Formik } from "formik";
 import * as Yup from "yup";
+import { Ionicons } from "@expo/vector-icons";
+import { MaterialIcons } from "@expo/vector-icons";
 
-import Intro from "../pages/Intro";
 
 const LoginForm = () => {
   const [email, setEmail] = useState("");
@@ -125,25 +126,38 @@ const LoginForm = () => {
                 </TouchableOpacity>
               </View>
               <Card.Actions>
-                <Button
+                <TouchableOpacity
                   disabled={isSubmitting}
                   onPress={() => navigation.navigate("Intro")}
-                  icon="keyboard-backspace"
-                  mode="contained"
-                  style={{ marginTop: 10, backgroundColor: "#FFD803" }}
+                  style={{
+                    marginTop: 10,
+                    backgroundColor: "#FFD803",
+                    padding: 12,
+                    flexDirection: "row",
+                    alignItems: "center",
+                    justifyContent: "center",
+                    borderRadius: 20,
+                  }}
                 >
-                  <Text>Back</Text>
-                </Button>
-                <Button
-                  loading={isSubmitting}
+                  <Ionicons name="arrow-back" size={24} color="black" />
+                  <Text style={{ marginLeft: 5 }}>Back</Text>
+                </TouchableOpacity>
+                <TouchableOpacity
                   disabled={isSubmitting}
                   onPress={() => navigation.navigate("MainPage")}
-                  icon="login"
-                  mode="contained"
-                  style={{ marginTop: 10, backgroundColor: "#FFD803" }}
+                  style={{
+                    marginTop: 10,
+                    backgroundColor: "#FFD803",
+                    padding: 10,
+                    flexDirection: "row",
+                    alignItems: "center",
+                    justifyContent: "center",
+                    borderRadius: 20,
+                  }}
                 >
-                  <Text>Login</Text>
-                </Button>
+                  <MaterialIcons name="login" size={24} color="black" />
+                  <Text style={{ marginLeft: 5 }}>Login</Text>
+                </TouchableOpacity>
               </Card.Actions>
             </View>
           );
