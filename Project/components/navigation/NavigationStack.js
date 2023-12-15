@@ -13,7 +13,7 @@ import { MaterialCommunityIcons } from "@expo/vector-icons";
 import ClickforMoreDetails from "../pages/ClickforMoreDetails";
 import EditProfile from "../pages/EditProfile";
 import ViewDebtRecord from "../pages/ViewDebtRecord";
-
+import AddDebtor from "../pages/AddDebtor";
 const Stack = createNativeStackNavigator();
 const Drawer = createDrawerNavigator();
 
@@ -121,6 +121,16 @@ const NavigationStack = () => {
           component={ViewDebtRecord}
           options={{
             title: "View Debt Record",
+            headerStyle: {
+              backgroundColor: "#BAE8E8",
+            },
+          }}
+        />
+        <Stack.Screen
+          name="AddDebtor"
+          component={AddDebtor}
+          options={{
+            title: "Add Debtor",
             headerStyle: {
               backgroundColor: "#BAE8E8",
             },

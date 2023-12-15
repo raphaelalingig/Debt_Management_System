@@ -74,7 +74,7 @@ const MainPage = ({ navigation }) => {
           </View>
         </View>
       </ScrollView>
-      <TouchableOpacity>
+      <TouchableOpacity onPress={() => navigation.navigate("AddDebtor")}>
         <AntDesign
           style={styles.plusButton}
           name="pluscircle"
