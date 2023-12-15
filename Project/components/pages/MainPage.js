@@ -5,7 +5,9 @@ import { TextInput, Button, Text } from "react-native-paper";
 import { FontAwesome } from "@expo/vector-icons";
 import { MaterialCommunityIcons } from "@expo/vector-icons";
 import { Feather } from "@expo/vector-icons";
-
+import { ScrollView } from "react-native-gesture-handler";
+import ClickforMoreDetails from "./ClickforMoreDetails";
+import { AntDesign } from "@expo/vector-icons";
 
 const MainPage = ({ navigation }) => {
   return (
@@ -42,32 +44,44 @@ const MainPage = ({ navigation }) => {
           <Text>Transactions</Text>
         </View>
       </TouchableOpacity>
-      <View style={styles.customersList}>
-        <View style={{ flexDirection: "row" }}>
-          <Feather
-            name="user"
-            size={72}
-            color="black"
-            style={styles.userLogo}
-          />
-          <View style={styles.verticalLine}></View>
-          <View style={styles.userDetails}>
-            <Text>Name: </Text>
-            <Text>Date Started: </Text>
-            <Text>Total Balance: </Text>
+      <ScrollView style={styles.customerContainer}>
+        <View style={styles.customersList}>
+          <View style={{ flexDirection: "row" }}>
+            <Feather
+              name="user"
+              size={72}
+              color="black"
+              style={styles.userLogo}
+            />
+            <View style={styles.verticalLine}></View>
+            <View style={styles.userDetails}>
+              <Text>Name: </Text>
+              <Text>Date Started: </Text>
+              <Text>Total Balance: </Text>
+              <TouchableOpacity
+                onPress={() => navigation.navigate("ClickforMoreDetails")}
+              >
+                <Text style={{ marginLeft: 8, color: "gray" }}>
+                  Click for more details:
+                </Text>
+              </TouchableOpacity>
+            </View>
             <TouchableOpacity>
-              <Text style={{ marginLeft: 8, color: "gray" }}>
-                Click for more details:
-              </Text>
+              <Button style={styles.deleteButton}>
+                <Text>DELETE</Text>
+              </Button>
             </TouchableOpacity>
           </View>
-          <TouchableOpacity>
-            <Button style={styles.deleteButton}>
-              <Text>DELETE</Text>
-            </Button>
-          </TouchableOpacity>
         </View>
-      </View>
+      </ScrollView>
+      <TouchableOpacity>
+        <AntDesign
+          style={styles.plusButton}
+          name="pluscircle"
+          size={58}
+          color="black"
+        />
+      </TouchableOpacity>
     </View>
   );
 };
@@ -131,5 +145,9 @@ const styles = StyleSheet.create({
     backgroundColor: "#FFD803",
     marginTop: 15,
     right: -50,
+  },
+  plusButton: {
+    margin: 20,
+    left: "37%",
   },
 });

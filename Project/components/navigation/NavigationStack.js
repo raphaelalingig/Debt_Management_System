@@ -10,6 +10,9 @@ import Items from "../Drawers/Items";
 import Aboutus from "../Drawers/AboutUs";
 import { FontAwesome5 } from "@expo/vector-icons";
 import { MaterialCommunityIcons } from "@expo/vector-icons";
+import ClickforMoreDetails from "../pages/ClickforMoreDetails";
+import EditProfile from "../pages/EditProfile";
+import ViewDebtRecord from "../pages/ViewDebtRecord";
 
 const Stack = createNativeStackNavigator();
 const Drawer = createDrawerNavigator();
@@ -92,6 +95,36 @@ const NavigationStack = () => {
           options={{ headerShown: false }}
           name="LoginForms"
           component={LoginForm}
+        />
+        <Stack.Screen
+          name="ClickforMoreDetails"
+          component={ClickforMoreDetails}
+          options={{
+            title: "Records",
+            headerStyle: {
+              backgroundColor: "#BAE8E8",
+            },
+          }}
+        />
+        <Stack.Screen
+          name="EditProfile"
+          component={EditProfile}
+          options={{
+            title: "Edit Profile",
+            headerStyle: {
+              backgroundColor: "#BAE8E8",
+            },
+          }}
+        />
+        <Stack.Screen
+          name="ViewDebtRecord"
+          component={ViewDebtRecord}
+          options={{
+            title: "View Debt Record",
+            headerStyle: {
+              backgroundColor: "#BAE8E8",
+            },
+          }}
         />
         <Stack.Screen
           options={{ headerShown: false }}
