@@ -4,6 +4,8 @@ import { EvilIcons } from "@expo/vector-icons";
 import { DataTable, Text, Button, TouchableRipple } from "react-native-paper";
 import EditProfile from "./EditProfile";
 import ViewDebtRecord from "./ViewDebtRecord";
+import { AntDesign } from "@expo/vector-icons";
+
 const ClickforMoreDetails = ({ navigation }) => {
   return (
     <View style={styles.container}>
@@ -20,6 +22,7 @@ const ClickforMoreDetails = ({ navigation }) => {
         <View style={{ flexDirection: "row", marginTop: 15, left: 60, gap: 5 }}>
           <TouchableOpacity
             style={{ backgroundColor: "#FFD803", borderRadius: 20 }}
+            onPress={() => navigation.navigate("Transactions")}
           >
             <Button>
               <Text>Transactions</Text>
@@ -66,6 +69,16 @@ const ClickforMoreDetails = ({ navigation }) => {
           </TouchableRipple>
         </DataTable>
       </View>
+      <TouchableOpacity
+        onPress={() => navigation.navigate("AddUtang", { screen: "AddUtang" })}
+      >
+        <AntDesign
+          style={styles.plusButton}
+          name="pluscircle"
+          size={58}
+          color="black"
+        />
+      </TouchableOpacity>
     </View>
   );
 };
@@ -98,5 +111,9 @@ const styles = StyleSheet.create({
   },
   tableTitle: {
     fontWeight: "bold",
+  },
+  plusButton: {
+    marginTop: 10,
+    right: 3
   },
 });

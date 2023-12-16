@@ -14,6 +14,9 @@ import ClickforMoreDetails from "../pages/ClickforMoreDetails";
 import EditProfile from "../pages/EditProfile";
 import ViewDebtRecord from "../pages/ViewDebtRecord";
 import AddDebtor from "../pages/AddDebtor";
+import Transactions from "../pages/Transactions";
+import ViewTransaction from "../pages/ViewTransaction";
+import AddUtang from "../pages/AddUtang";
 const Stack = createNativeStackNavigator();
 const Drawer = createDrawerNavigator();
 
@@ -131,6 +134,36 @@ const NavigationStack = () => {
           component={AddDebtor}
           options={{
             title: "Add Debtor",
+            headerStyle: {
+              backgroundColor: "#BAE8E8",
+            },
+          }}
+        />
+        <Stack.Screen
+          name="Transactions"
+          component={Transactions}
+          options={{
+            title: "Transactions",
+            headerStyle: {
+              backgroundColor: "#BAE8E8",
+            },
+          }}
+        />
+        <Stack.Screen
+          name="ViewTransaction"
+          component={ViewTransaction}
+          options={{
+            title: "View Transaction",
+            headerStyle: {
+              backgroundColor: "#BAE8E8",
+            },
+          }}
+        />
+        <Stack.Screen
+          name="AddUtang"
+          component={AddUtang}
+          options={{
+            title: "Add Debt Items",
             headerStyle: {
               backgroundColor: "#BAE8E8",
             },

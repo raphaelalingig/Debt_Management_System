@@ -4,7 +4,7 @@ import { TextInput, Text, Button } from "react-native-paper";
 
 import { EvilIcons } from "@expo/vector-icons";
 
-const ViewDebtRecord = ({ navigation }) => {
+const ViewTransaction = () => {
   return (
     <View style={styles.container}>
       <View style={styles.contentContainer}>
@@ -14,54 +14,43 @@ const ViewDebtRecord = ({ navigation }) => {
         <View style={styles.details}>
           <TextInput
             style={{ height: 30 }}
-            value="sample"
-            label="Item: "
+            value="2"
+            label="User ID: "
             mode="outlined"
+            editable={false}
+
           ></TextInput>
           <TextInput
             style={{ height: 30 }}
-            value="3"
-            label="Quantity: "
+            value="Raphael Alingig"
+            label="Customer Name: "
             mode="outlined"
+            editable={false}
+
           ></TextInput>
           <TextInput
             style={{ height: 30 }}
-            value="300"
-            label="Price: "
+            value="Get 1pc. chicken"
+            label="Action: "
             mode="outlined"
+            editable={false}
+
           ></TextInput>
+
           <TextInput
             style={{ height: 30 }}
-            value="500"
-            label="Total: "
-            mode="outlined"
-          ></TextInput>
-          <TextInput
-            style={{ height: 30 }}
-            value="12/01/2002"
-            label="Date: "
+            value="2023-12-01 10:00 AM"
+            label="Date & Time: "
             mode="outlined"
             editable={false}
           ></TextInput>
-          <View style={{ marginTop: 20, gap: 5 }}>
-            <TouchableOpacity
-              onPress={() => navigation.navigate("ClickforMoreDetails")}
-            >
-              <Button style={styles.button}>Save</Button>
-            </TouchableOpacity>
-            <TouchableOpacity>
-              <Button style={{ backgroundColor: "#13C913" }}>
-                <Text style={{ color: "white" }}>Pay</Text>
-              </Button>
-            </TouchableOpacity>
-          </View>
         </View>
       </View>
     </View>
   );
 };
 
-export default ViewDebtRecord;
+export default ViewTransaction;
 
 const styles = StyleSheet.create({
   container: {

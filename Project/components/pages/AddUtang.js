@@ -1,10 +1,8 @@
 import { StyleSheet, View, TouchableOpacity } from "react-native";
 import React from "react";
-import { TextInput, Text, Button } from "react-native-paper";
-
 import { EvilIcons } from "@expo/vector-icons";
-
-const ViewDebtRecord = ({ navigation }) => {
+import { TextInput, Text, Button } from "react-native-paper";
+const AddUtang = ({navigation}) => {
   return (
     <View style={styles.container}>
       <View style={styles.contentContainer}>
@@ -14,44 +12,35 @@ const ViewDebtRecord = ({ navigation }) => {
         <View style={styles.details}>
           <TextInput
             style={{ height: 30 }}
-            value="sample"
-            label="Item: "
+            placeholder="Item  "
+            label="Item:  "
             mode="outlined"
           ></TextInput>
           <TextInput
             style={{ height: 30 }}
-            value="3"
+            placeholder="Quantity "
             label="Quantity: "
             mode="outlined"
           ></TextInput>
-          <TextInput
-            style={{ height: 30 }}
-            value="300"
-            label="Price: "
-            mode="outlined"
-          ></TextInput>
-          <TextInput
-            style={{ height: 30 }}
-            value="500"
-            label="Total: "
-            mode="outlined"
-          ></TextInput>
-          <TextInput
-            style={{ height: 30 }}
-            value="12/01/2002"
-            label="Date: "
-            mode="outlined"
-            editable={false}
-          ></TextInput>
-          <View style={{ marginTop: 20, gap: 5 }}>
+
+          <View
+            style={{
+              marginTop: 20,
+              gap: 5,
+              flexDirection: "row",
+              marginLeft: 140,
+            }}
+          >
             <TouchableOpacity
               onPress={() => navigation.navigate("ClickforMoreDetails")}
             >
-              <Button style={styles.button}>Save</Button>
+              <Button style={{ backgroundColor: "#DB0202" }}>
+                <Text style={{ color: "white" }}>Cancel</Text>
+              </Button>
             </TouchableOpacity>
             <TouchableOpacity>
               <Button style={{ backgroundColor: "#13C913" }}>
-                <Text style={{ color: "white" }}>Pay</Text>
+                <Text style={{ color: "white" }}>Save</Text>
               </Button>
             </TouchableOpacity>
           </View>
@@ -61,7 +50,7 @@ const ViewDebtRecord = ({ navigation }) => {
   );
 };
 
-export default ViewDebtRecord;
+export default AddUtang;
 
 const styles = StyleSheet.create({
   container: {
