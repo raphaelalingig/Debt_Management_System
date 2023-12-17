@@ -1,4 +1,3 @@
-<<<<<<< HEAD
 import { View, StyleSheet, ToastAndroid, BackHandler } from "react-native";
 import { TouchableOpacity } from "react-native";
 import React, { useEffect } from "react";
@@ -71,15 +70,6 @@ const AddDebtor = () => {
     return () => backHandler.remove();
   }, [isFocused]);
 
-=======
-import { StyleSheet, View, TouchableOpacity } from "react-native";
-import React from "react";
-import { EvilIcons } from "@expo/vector-icons";
-import { TextInput, Text, Button } from "react-native-paper";
-
-
-const AddDebtor = () => {
->>>>>>> f1b8e108c6b6bfa4829993b687e9271f46fb9eca
   return (
     <View style={styles.container}>
       <View style={styles.contentContainer}>
@@ -91,34 +81,24 @@ const AddDebtor = () => {
             style={{ height: 30 }}
             placeholder="Name: "
             label="Name: "
-<<<<<<< HEAD
             mode="outlined"value={d_name}
             onChangeText={setDebtorName}
             error={isError}
           />
-=======
-            mode="outlined"
-          ></TextInput>
->>>>>>> f1b8e108c6b6bfa4829993b687e9271f46fb9eca
           <TextInput
             style={{ height: 30 }}
             placeholder="Phone Number: "
             label="Phone Number: "
             mode="outlined"
-<<<<<<< HEAD
             value={phone}
             onChangeText={setPhone}
             error={isError}
           />
-=======
-          ></TextInput>
->>>>>>> f1b8e108c6b6bfa4829993b687e9271f46fb9eca
           <TextInput
             style={{ height: 30 }}
             placeholder="Address: "
             label="Address: "
             mode="outlined"
-<<<<<<< HEAD
             value={address}
             onChangeText={setAddress}
             error={isError}
@@ -126,17 +106,10 @@ const AddDebtor = () => {
           <View style={{ marginTop: 20, gap: 5 }}>
             <TouchableOpacity
               onPress={() => navigation.navigate("MainPage")}
-=======
-          ></TextInput>
-          <View style={{ marginTop: 20, gap: 5 }}>
-            <TouchableOpacity
-              onPress={() => navigation.navigate("ClickforMoreDetails")}
->>>>>>> f1b8e108c6b6bfa4829993b687e9271f46fb9eca
             >
               <Button style={styles.button}>Cancel</Button>
             </TouchableOpacity>
             <TouchableOpacity>
-<<<<<<< HEAD
               <Button 
                 style={styles.button}
                 disabled={loading}
@@ -144,9 +117,6 @@ const AddDebtor = () => {
                 onPress={handleInsertDebtor}>
                   Save
                   </Button>
-=======
-              <Button style={styles.button}>Save</Button>
->>>>>>> f1b8e108c6b6bfa4829993b687e9271f46fb9eca
             </TouchableOpacity>
           </View>
         </View>
