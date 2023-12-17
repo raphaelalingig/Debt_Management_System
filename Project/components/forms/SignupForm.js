@@ -6,6 +6,8 @@ import {
   TouchableOpacity,
 } from "react-native";
 import React from "react";
+import fetchServices from "../services/fetchServices";
+import API_URL from "../services/apiurl";
 import { TextInput, Card, Button } from "react-native-paper";
 import { useNavigation } from "@react-navigation/native";
 import Intro from "../pages/Intro";
@@ -41,11 +43,24 @@ const SignupForm = () => {
         return false;
       }
 
+      const url = API_URL+"register";
+      const data = {
+        name,
+        email,
+        password,
+        password_confirmation: repassword,
+      };
+ 
 
-      if (result?.message != null) {
+      const result = await fetchServices.postData(url, data);
+
+      if (result?.message != "Successfully created") {
         showToast(result?.message);
-      } else {
-        navigation.navigate("LoginForm");
+        console.log(result?.message);
+      } if (result?.message == "Successfully created"){
+        showToast(result?.message);
+        console.log(result?.message);
+        navigation.navigate("LoginForms");
       }
     } catch (e) {
       showToast(e.toString());
@@ -122,7 +137,7 @@ const SignupForm = () => {
         <Button
           style={{ borderColor: "#FFD803" }}
           disabled={loading}
-          onPress={() => navigation.navigate("Intro")}
+          onPress={() => navigation.pop()}
         >
           <Text style={{ color: "black" }}>Back</Text>
         </Button>

@@ -6,30 +6,39 @@ import { Formik } from "formik";
 import * as Yup from "yup";
 import { Ionicons } from "@expo/vector-icons";
 import { MaterialIcons } from "@expo/vector-icons";
+import fetchServices from "../services/fetchServices";
+import API_URL from "../services/apiurl";
 
 
 const LoginForm = () => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [text, setText] = useState("");
-  const [showPass, setShowPass] = useState(false);
+  const [showPass, setShowPass] = React.useState(false);
   const navigation = useNavigation();
 
   const showToast = (message = "Something went wrong") => {
     ToastAndroid.show(message, 3000);
   };
 
-  const handleForgotPasswordPress = () => {
-    // Navigate to the ForgotPage screen
-    navigation.navigate("ForgotPage");
+  const handleLogin = async (values) => {
+    try {
+      const url = API_URL+'login';
+      
+      const result = await fetchServices.postData(url, values);
+  
+      console.log('API Response:', result);
+  
+      if (result.message != null) {
+        showToast(result?.message);
+      } else {
+        navigation.navigate("MainPage");
+      }
+    } catch (e) {
+      console.error('API Error:', e);
+      showToast("Something went wrong. Please try again.");
+    }
   };
-  const ClickableText = ({ onPress, text }) => (
-    <TouchableOpacity onPress={onPress}>
-      <Text style={{ color: "blue", textDecorationLine: "underline" }}>
-        {text}
-      </Text>
-    </TouchableOpacity>
-  );
 
   const validationSchema = Yup.object().shape({
     email: Yup.string()
@@ -143,8 +152,10 @@ const LoginForm = () => {
                   <Text style={{ marginLeft: 5 }}>Back</Text>
                 </TouchableOpacity>
                 <TouchableOpacity
+                  loading={isSubmitting}
                   disabled={isSubmitting}
-                  onPress={() => navigation.navigate("MainPage")}
+                  mode="elevated" 
+                  onPress={handleSubmit}
                   style={{
                     marginTop: 10,
                     backgroundColor: "#FFD803",
