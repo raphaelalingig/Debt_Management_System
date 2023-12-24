@@ -105,7 +105,12 @@ const AddDebtor = () => {
             error={isError}
           />
           <View style={{ marginTop: 20, gap: 5 }}>
-          <TouchableOpacity>
+            <TouchableOpacity
+              onPress={() => navigation.navigate("MainPage")}
+            >
+              <Button style={styles.button}>Cancel</Button>
+            </TouchableOpacity>
+            <TouchableOpacity>
               <Button 
                 style={styles.button}
                 disabled={loading}
