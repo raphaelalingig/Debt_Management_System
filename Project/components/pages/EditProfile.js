@@ -1,10 +1,89 @@
-import { StyleSheet, View, TouchableOpacity } from "react-native";
-import React from "react";
+import { StyleSheet, View, TouchableOpacity, ToastAndroid } from "react-native";
+import React, { useState, useEffect} from "react";
 import { EvilIcons } from "@expo/vector-icons";
-import { TextInput, Text, Button } from "react-native-paper";
-import ClickforMoreDetails from "./ClickforMoreDetails";
+import { TextInput, Text, Button,  } from "react-native-paper";
+import ConfirmationModal from './Confirmation';
+import API_URL from "../services/apiurl";
+import axios from "axios";
 
-const EditProfile = ({navigation}) => {
+const EditProfile = ({ route, navigation }) => {
+  const { debtorInfo } = route.params;
+  const [isModalVisible, setIsModalVisible] = useState(false);
+  const [d_name, setDebtorName] = useState(debtorInfo?.d_name || "");
+  const [phone, setPhone] = useState(debtorInfo?.phone || "");
+  const [address, setAddress] = useState(debtorInfo?.address || "");
+  const [loading, setLoading] = useState(false);
+  const [isError, setIsError] = useState(false);
+
+  const showToast = (message = "Something wen't wrong") => {
+    ToastAndroid.show(message, 3000);
+  };
+  const handleSave = async () => {
+    try {
+      setLoading(true);
+      if (!debtorInfo?.d_id) {
+          console.error("Missing 'd_id' in debtorInfo");
+          return;
+      }
+
+      const url = API_URL + 'updatedebtor/' + debtorInfo.d_id;
+      const data = {
+          d_name: d_name,
+          phone: phone,
+          address: address,
+      };
+
+      console.log("Request URL:", url);
+      const result = await axios.put(url, data);
+
+          if (result?.data?.debtor) {
+              // Access the updated Uthang data
+              console.log(result.data.debtor);
+              navigation.navigate("MainPage");
+          } else {
+              // Handle error if needed
+              console.log(result?.data?.error || result?.message);
+          }
+
+  } catch (e) {
+      showToast(e.toString());
+      console.error(e);
+  } finally {
+      setLoading(false);
+  }
+}
+
+const handleConfirm = async () => {
+  setIsModalVisible(false);
+  try {
+    setLoading(true);
+    const url = API_URL + 'deletedebtor/' + debtorInfo.d_id;
+    const response = await axios.delete(url);
+
+    if (response.data && response.data.message === "Debtor deleted successfully") {
+      // Log success
+      console.log("Debtor deleted successfully");
+      ToastAndroid.show("Debtor deleted successfully", ToastAndroid.SHORT);
+      // Navigate to a success page or perform any other action
+      navigation.navigate("MainPage");
+    } else {
+      // Handle the case where the API response does not indicate success
+      console.error("Debtor deletion failed:", response.data.message || "Unknown error");
+      ToastAndroid.show("Debtor deletion failed", ToastAndroid.SHORT);
+    }
+  } catch (error) {
+    // Handle network error or other exceptions
+    console.error("Error deleting debtor:", error.message);
+    ToastAndroid.show("Error deleting debtor", ToastAndroid.SHORT);
+  }
+};
+
+  const handleCancel = () => {
+    // Handle the "No" button click
+    setIsModalVisible(false);
+  };
+
+
   return (
     <View style={styles.container}>
       <View style={styles.contentContainer}>
@@ -17,29 +96,57 @@ const EditProfile = ({navigation}) => {
             placeholder="Name: "
             label="Name: "
             mode="outlined"
+            value={d_name}
+            onChangeText={setDebtorName}
           ></TextInput>
           <TextInput
             style={{ height: 30 }}
             placeholder="Phone Number: "
             label="Phone Number: "
             mode="outlined"
+            value={phone}
+            onChangeText={setPhone}
           ></TextInput>
           <TextInput
             style={{ height: 30 }}
             placeholder="Address: "
             label="Address: "
             mode="outlined"
+            value={address}
+            onChangeText={setAddress}
           ></TextInput>
           <View style={{marginTop: 20, gap: 5}}>
-            <TouchableOpacity onPress={() => navigation.navigate("ClickforMoreDetails")}>
-              <Button style={styles.button}>Cancel</Button>
+            <TouchableOpacity onPress={handleSave}>
+              <Button 
+                style={styles.button} 
+                disabled={loading}
+                loading={loading}>
+                  Save</Button>
             </TouchableOpacity>
-            <TouchableOpacity>
-              <Button style={styles.button}>Save</Button>
+
+            <TouchableOpacity onPress={() => setIsModalVisible(true)}>
+              <Button 
+                style={styles.button}
+                disabled={loading}
+                loading={loading}>
+                  Delete</Button>
+            </TouchableOpacity>
+            
+            <TouchableOpacity onPress={() => navigation.navigate("ClickforMoreDetails",{debtorInfo})}>
+              <Button 
+                style={styles.button}
+                disabled={loading}
+                loading={loading}>
+                  Cancel</Button>
             </TouchableOpacity>
           </View>
         </View>
       </View>
+      <ConfirmationModal
+        isVisible={isModalVisible}
+        onConfirm={handleConfirm}
+        onCancel={handleCancel}
+      />
     </View>
   );
 };

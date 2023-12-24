@@ -17,11 +17,16 @@ import AddDebtor from "../pages/AddDebtor";
 import Transactions from "../pages/Transactions";
 import ViewTransaction from "../pages/ViewTransaction";
 import AddUtang from "../pages/AddUtang";
+import Auto from "../pages/Confirmation";
+import Edit from "../pages/Edit";
+
+
+
 const Stack = createNativeStackNavigator();
 const Drawer = createDrawerNavigator();
 
 const DrawerNavigator = ({ navigation }) => (
-  <Drawer.Navigator initialRouteName="Home">
+  <Drawer.Navigator>
     <Drawer.Screen
       name="Home"
       component={MainPage}
@@ -83,7 +88,7 @@ const DrawerNavigator = ({ navigation }) => (
 const NavigationStack = () => {
   return (
     <NavigationContainer>
-      <Stack.Navigator>
+      <Stack.Navigator initialRouteName="MainPage">
         <Stack.Screen
           options={{ headerShown: false }}
           name="Intro"
@@ -130,6 +135,16 @@ const NavigationStack = () => {
           }}
         />
         <Stack.Screen
+          name="Edit"
+          component={Edit}
+          options={{
+            title: "View Debt Record",
+            headerStyle: {
+              backgroundColor: "#BAE8E8",
+            },
+          }}
+        />
+        <Stack.Screen
           name="AddDebtor"
           component={AddDebtor}
           options={{
@@ -162,6 +177,16 @@ const NavigationStack = () => {
         <Stack.Screen
           name="AddUtang"
           component={AddUtang}
+          options={{
+            title: "Add Debt Items",
+            headerStyle: {
+              backgroundColor: "#BAE8E8",
+            },
+          }}
+        />
+        <Stack.Screen
+          name="Auto"
+          component={Auto}
           options={{
             title: "Add Debt Items",
             headerStyle: {

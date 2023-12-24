@@ -1,8 +1,8 @@
 // Items.js
 import React, { useEffect, useState } from 'react';
-import { StyleSheet, Text, View, FlatList } from 'react-native';
+import { StyleSheet, Text, View } from 'react-native';
 import axios from 'axios';
-import API_URL from "../services/apiurl";
+import API_URL from '../services/apiurl';
 
 const ItemsComponent = () => {
   const [items, setItems] = useState([]);
@@ -11,15 +11,14 @@ const ItemsComponent = () => {
   useEffect(() => {
     // Fetch data from the Laravel API endpoint
     axios
-      .get(API_URL + "items")
+      .get(API_URL + 'items')
       .then((response) => {
         setItems(response.data);
       })
       .catch((error) => {
         console.error('Error fetching data:', error.message);
-        // Check if error has a response property before accessing data
         if (error.response) {
-          console.error("Response data:", error.response.data);
+          console.error('Response data:', error.response.data);
         }
         setError(error.message);
       });
@@ -35,22 +34,19 @@ const ItemsComponent = () => {
 
   return (
     <View>
-      <Text style={styles.header}>Debtor List</Text>
-      <FlatList
-        data={items}
-        keyExtractor={(item) => item.item_id.toString()}
-        renderItem={({ item }) => (
-          <View style={styles.debtorBox}>
-            <Text>Name: {item.item_name}</Text>
-            <Text>Price: {item.price}</Text>
-            {item.category ? (
-              <Text>Category: {item.category.category_name}</Text>
-            ) : (
-              <Text>No category data</Text>
-            )}
-          </View>
-        )}
-      />
+      <Text style={styles.header}>Items List</Text>
+      <View style={styles.tableHeader}>
+        <Text style={styles.tableHeaderText}>Item Name</Text>
+        <Text style={styles.tableHeaderText}>Price</Text>
+        <Text style={styles.tableHeaderText}>Category</Text>
+      </View>
+      {items.map((item) => (
+        <View key={item.item_id} style={styles.tableRow}>
+          <Text style={styles.tableRowText}>{item.item_name}</Text>
+          <Text style={styles.tableRowText}>{item.price}</Text>
+          <Text style={styles.tableRowText}>{item.category}</Text>
+        </View>
+      ))}
     </View>
   );
 };
@@ -61,12 +57,28 @@ const styles = StyleSheet.create({
     fontWeight: 'bold',
     marginBottom: 10,
   },
-  debtorBox: {
-    marginBottom: 20,
-    padding: 10,
+  tableHeader: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    height: 40,
+    backgroundColor: '#f1f8ff',
+    marginHorizontal: 10,
+  },
+  tableHeaderText: {
+    flex: 1,
+    textAlign: 'center',
+    fontWeight: 'bold',
+  },
+  tableRow: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    height: 30,
     backgroundColor: '#ffffff',
-    borderRadius: 8,
-    elevation: 3,
+    marginHorizontal: 10,
+  },
+  tableRowText: {
+    flex: 1,
+    textAlign: 'center',
   },
 });
 

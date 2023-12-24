@@ -81,7 +81,8 @@ const AddDebtor = () => {
             style={{ height: 30 }}
             placeholder="Name: "
             label="Name: "
-            mode="outlined"value={d_name}
+            mode="outlined"
+            value={d_name}
             onChangeText={setDebtorName}
             error={isError}
           />
@@ -104,12 +105,7 @@ const AddDebtor = () => {
             error={isError}
           />
           <View style={{ marginTop: 20, gap: 5 }}>
-            <TouchableOpacity
-              onPress={() => navigation.navigate("MainPage")}
-            >
-              <Button style={styles.button}>Cancel</Button>
-            </TouchableOpacity>
-            <TouchableOpacity>
+          <TouchableOpacity>
               <Button 
                 style={styles.button}
                 disabled={loading}
@@ -118,6 +114,13 @@ const AddDebtor = () => {
                   Save
                   </Button>
             </TouchableOpacity>
+            
+            <TouchableOpacity
+              onPress={() => navigation.navigate("MainPage")}
+            >
+              <Button style={styles.button}>Cancel</Button>
+            </TouchableOpacity>
+            
           </View>
         </View>
       </View>
