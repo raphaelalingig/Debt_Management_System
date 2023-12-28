@@ -2,10 +2,11 @@ import { StyleSheet, View, TouchableOpacity, FlatList } from "react-native";
 import React, { useState, useEffect} from "react";
 import { TextInput, Text, Button } from "react-native-paper";
 import { EvilIcons } from "@expo/vector-icons";
+import ConfirmationModal from './Confirmation';
 import API_URL from "../services/apiurl";
 import axios from "axios";
 import { ToastAndroid } from "react-native";
-import ConfirmationModal from './Confirmation';
+
 
 const ViewDebtRecord = ({ navigation, route }) => {
   const { uthangInfo } = route.params;
@@ -117,26 +118,35 @@ const ViewDebtRecord = ({ navigation, route }) => {
       const response = await axios.delete(url);
   
       console.log("Response data:", response.data);
-      if (response.data && response.data.message === "Uthang deleted successfully") {
+      if (response.status === 200) {
         // Handle success
-        console.log("Uthang deleted successfully");
-        ToastAndroid.show("Uthang deleted successfully", ToastAndroid.SHORT);
+        console.log("Uthang paid successfully");
+      
+        // Update local state before navigation
+        await setQuantity(""); // Assuming you want to clear the quantity after payment
+        await setItemId("");   // Clear the item ID or update it as needed
+      
         // Navigate or perform other actions
-        navigation.navigate("ClickforMoreDetails",{debtorInfo});
+        navigation.navigate("ClickforMoreDetails", { debtorInfo });
+        ToastAndroid.show("Uthang paid successfully", ToastAndroid.SHORT);
       } else {
-        // Handle the case where the API response does not indicate success
+        // Handle other cases where the API response does not indicate success
         console.error(
-          "Uthang deletion failed:",
+          "Uthang operation failed:",
           response.data.message || "Unknown error"
         );
-        ToastAndroid.show("Uthang deletion failed", ToastAndroid.SHORT);
+        ToastAndroid.show("Uthang operation failed", ToastAndroid.SHORT);
       }
     } catch (error) {
       // Handle network error or other exceptions
       console.error("Error deleting uthang:", error.message);
       ToastAndroid.show("Error deleting uthang", ToastAndroid.SHORT);
+    } finally {
+      setLoading(false);
     }
   };
+  
+  
   
     const handleCancel = () => {
       // Handle the "No" button click
@@ -189,13 +199,19 @@ const ViewDebtRecord = ({ navigation, route }) => {
               style={styles.button}
               >Save</Button>
             </TouchableOpacity>
-            <TouchableOpacity onPress={handleConfirm}>
-              <Button style={{ backgroundColor: "#13C913" }}>
+            <TouchableOpacity onPress={() => setIsModalVisible(true)}>
+              <Button 
+                style={{ backgroundColor: "#13C913" }}
+                disabled={loading}
+              loading={loading}>
                 <Text style={{ color: "white" }}>Pay</Text>
               </Button>
             </TouchableOpacity>
             <TouchableOpacity onPress={() => navigation.navigate("ClickforMoreDetails",{debtorInfo})}>
-              <Button style={{ backgroundColor: "red" }}>
+              <Button 
+                style={{ backgroundColor: "red" }}
+                disabled={loading}
+              loading={loading}>
                 <Text style={{ color: "white" }}>Cancel</Text>
               </Button>
             </TouchableOpacity>

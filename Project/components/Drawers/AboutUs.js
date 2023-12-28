@@ -11,7 +11,7 @@ const AboutUs = () => {
 
         <View style={styles.memberContainer}>
           <Image style={styles.tinyLogo} source={require('./pictures/Buwanding_Aladdin.jpg')} />
-          <Text style={styles.memberName}>Aladdin, Buwanding</Text>
+          <Text style={styles.memberName} >Aladdin, Buwanding</Text>
           <Text style={styles.memberRole}>Hacker</Text>
           <Text style={styles.memberDescription}>
             Group Leading Computer hacker, responsible for debugging and checking for errors in the code.

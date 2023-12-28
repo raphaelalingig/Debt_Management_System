@@ -18,7 +18,8 @@ import Transactions from "../pages/Transactions";
 import ViewTransaction from "../pages/ViewTransaction";
 import AddUtang from "../pages/AddUtang";
 import Auto from "../pages/Confirmation";
-import Edit from "../pages/Edit";
+import Sales from "../Drawers/Sales";
+import SalesInfo from "../Drawers/SalesInfo";
 
 
 
@@ -70,6 +71,23 @@ const DrawerNavigator = ({ navigation }) => (
       }}
     />
     <Drawer.Screen
+      name="Sales"
+      component={Sales}
+      options={{
+        drawerIcon: () => (
+          <MaterialCommunityIcons
+            name="account-group"
+            size={24}
+            color="black"
+          />
+        ),
+        drawerLabel: "Sales",
+        drawerLabelStyle: {
+          color: "black",
+        },
+      }}
+    />
+    <Drawer.Screen
       name="Logout"
       component={Intro}
       options={{
@@ -88,7 +106,7 @@ const DrawerNavigator = ({ navigation }) => (
 const NavigationStack = () => {
   return (
     <NavigationContainer>
-      <Stack.Navigator initialRouteName="MainPage">
+      <Stack.Navigator initialRouteName="Intro">
         <Stack.Screen
           options={{ headerShown: false }}
           name="Intro"
@@ -134,16 +152,7 @@ const NavigationStack = () => {
             },
           }}
         />
-        <Stack.Screen
-          name="Edit"
-          component={Edit}
-          options={{
-            title: "View Debt Record",
-            headerStyle: {
-              backgroundColor: "#BAE8E8",
-            },
-          }}
-        />
+        
         <Stack.Screen
           name="AddDebtor"
           component={AddDebtor}
@@ -193,6 +202,11 @@ const NavigationStack = () => {
               backgroundColor: "#BAE8E8",
             },
           }}
+        />
+        <Stack.Screen
+          options={{ headerShown: false }}
+          name="SalesInfo"
+          component={SalesInfo}
         />
         <Stack.Screen
           options={{ headerShown: false }}

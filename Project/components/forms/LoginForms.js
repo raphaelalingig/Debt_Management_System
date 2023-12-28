@@ -20,19 +20,20 @@ const LoginForm = () => {
   const showToast = (message = "Something went wrong") => {
     ToastAndroid.show(message, 3000);
   };
-
   const handleLogin = async (values) => {
     try {
       const url = API_URL+'login';
       
       const result = await fetchServices.postData(url, values);
   
-      console.log('API Response:', result);
-  
       if (result.message != null) {
         showToast(result?.message);
       } else {
-        navigation.navigate("MainPage");
+        if(result.role === 'admin'){
+          navigation.navigate("MainPage");
+        }else{
+            navigation.navigate("ViewTransaction");
+        }
       }
     } catch (e) {
       console.error('API Error:', e);

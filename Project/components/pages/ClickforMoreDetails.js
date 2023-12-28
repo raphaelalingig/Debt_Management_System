@@ -93,7 +93,7 @@ const ClickforMoreDetails = ({ route, navigation }) => {
           {uthangsData?.length > 0 ? (
             <DataTable>
               <DataTable.Header>
-                <DataTable.Title>Title</DataTable.Title>
+                <DataTable.Title>Item</DataTable.Title>
                 <DataTable.Title>Quantity</DataTable.Title>
                 <DataTable.Title>Price</DataTable.Title>
                 <DataTable.Title>Total</DataTable.Title>
@@ -111,7 +111,7 @@ const ClickforMoreDetails = ({ route, navigation }) => {
                   <DataTable.Row>
                     <DataTable.Cell>{item.item_name}</DataTable.Cell>
                     <DataTable.Cell>{item.quantity}</DataTable.Cell>
-                    <DataTable.Cell>{item.price}</DataTable.Cell>
+                    <DataTable.Cell>₱{item.price}</DataTable.Cell>
                     <DataTable.Cell>{item.total}</DataTable.Cell>
                     <DataTable.Cell>{item.date}</DataTable.Cell>
                   </DataTable.Row>

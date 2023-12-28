@@ -65,7 +65,7 @@ const AddUtang = ({ route, navigation }) => {
     try {
       setLoading(true);
 
-      if (item_id === "" || quantity === "") {
+      if (query === "" || quantity === "") {
         showToast("Please input required data");
         setIsError(true);
         return false;
@@ -80,17 +80,16 @@ const AddUtang = ({ route, navigation }) => {
 
       const result = await fetchServices.postData(url, data);
       console.log("API Response:", result); // Log the entire response
-
-      if (result?.message != "Uthang added successfully") {
+      if (result?.error === 'Total price exceeds 1000 for this item') {
+        showToast('Total price exceeds 1000 for this item');
+    } else if (result?.error === 'Exceeded maximum total of Debt') {
+      showToast('Exceeded maximum total of Debt');
+    } else if (result?.message !== 'Uthang added successfully') {
         showToast(result?.message);
-        console.log(result?.message);
-      }
-      if (result?.message == "Uthang added successfully") {
+    } else {
         showToast(result?.message);
-        console.log(result?.message);
-        navigation.navigate("ClickforMoreDetails", { debtorInfo });
-        console.log("Navigating to DebtorPage");
-      }
+        navigation.navigate('ClickforMoreDetails', { debtorInfo });
+    }
     } catch (e) {
       showToast(e.toString());
       console.error(e); // Log the error directly
@@ -116,7 +115,8 @@ const AddUtang = ({ route, navigation }) => {
                 mode="outlined"
                 value={query}
                 onChangeText={handleInputChange}
-                onFocus={handleInputClick} // Add onFocus event to detect when the input is clicked
+                onFocus={handleInputClick} 
+                error={isError}
               />
               <FlatList
                 data={suggestions}
