@@ -121,7 +121,7 @@ const handleConfirm = async () => {
                 style={styles.button} 
                 disabled={loading}
                 loading={loading}>
-                  Save</Button>
+                  Save Changes</Button>
             </TouchableOpacity>
 
             <TouchableOpacity onPress={() => setIsModalVisible(true)}>
@@ -129,7 +129,7 @@ const handleConfirm = async () => {
                 style={styles.button}
                 disabled={loading}
                 loading={loading}>
-                  Delete</Button>
+                  Delete Debtor</Button>
             </TouchableOpacity>
             
             <TouchableOpacity onPress={() => navigation.navigate("ClickforMoreDetails",{debtorInfo})}>

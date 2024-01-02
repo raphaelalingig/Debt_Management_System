@@ -8,6 +8,7 @@ import LoginForm from "../forms/LoginForms";
 import MainPage from "../pages/MainPage";
 import Items from "../Drawers/Items";
 import Aboutus from "../Drawers/AboutUs";
+import Account from "../Drawers/Account";
 import { FontAwesome5 } from "@expo/vector-icons";
 import { MaterialCommunityIcons } from "@expo/vector-icons";
 import ClickforMoreDetails from "../pages/ClickforMoreDetails";
@@ -125,6 +126,16 @@ const NavigationStack = () => {
         <Stack.Screen
           name="ClickforMoreDetails"
           component={ClickforMoreDetails}
+          options={{
+            title: "Records",
+            headerStyle: {
+              backgroundColor: "#BAE8E8",
+            },
+          }}
+        />
+        <Stack.Screen
+          name="Account"
+          component={Account}
           options={{
             title: "Records",
             headerStyle: {

@@ -7,7 +7,7 @@ import axios from 'axios';
 import SalesInfoModal from "../Drawers/SalesInfo";
 import API_URL from "../services/apiurl";
 
-const Transactions = () => {
+const Sales = () => {
   const [sales, setSales] = useState([]); // Define salesData state variable
   const [selectedSale, setSelectedSale] = useState(null); // Add a state variable for the selected sale
   const [isModalVisible, setIsModalVisible] = useState(false);
@@ -27,9 +27,7 @@ const Transactions = () => {
     }, []) // The empty dependency array ensures that this effect runs only once when the component mounts
   );
 
-  React.useEffect(() => {
-    console.log('Sales Data:', sales);
-  }, [sales]);
+
 
   const grandTotal = sales
     .filter(item => typeof item.price === 'number' || (typeof item.price === 'string' && item.price.trim() !== ''))
@@ -40,64 +38,65 @@ const Transactions = () => {
       setIsModalVisible(false);
     };
   return (
-    <View style={styles.tableSales}>
-      {sales?.length > 0 ? (
-        <DataTable>
-          <DataTable.Header>
-            <DataTable.Title>Id</DataTable.Title>
-            <DataTable.Title>Item</DataTable.Title>
-            <DataTable.Title>Quantity</DataTable.Title>
-            <DataTable.Title>Price</DataTable.Title>
-            <DataTable.Title>Debtor</DataTable.Title>
-            <DataTable.Title>Date</DataTable.Title>
-          </DataTable.Header>
-          
-          {sales.map((item) => (
-          <TouchableRipple
-            key={item.sale_id}
-            onPress={() => {
-              setSelectedSale(item); // Set the selected sale
-              setIsModalVisible(true); // Show the modal
-            }}
-          >
-            <DataTable.Row>
-              <DataTable.Cell>{item.sale_id}</DataTable.Cell>
-              <DataTable.Cell>{item.item_name}</DataTable.Cell>
-              <DataTable.Cell>{item.quantity_sold}</DataTable.Cell>
-              <DataTable.Cell>₱{item.price}</DataTable.Cell>
-              <DataTable.Cell>{item.debtor_name}</DataTable.Cell>
-              <DataTable.Cell>{item.sale_date}</DataTable.Cell>
-            </DataTable.Row>
-          </TouchableRipple>
-        ))}
+    <ScrollView>
+      <View style={styles.tableSales}>
+        {sales?.length > 0 ? (
+          <DataTable>
+            <DataTable.Header>
+              <DataTable.Title>Id</DataTable.Title>
+              <DataTable.Title>Item</DataTable.Title>
+              <DataTable.Title>Quantity</DataTable.Title>
+              <DataTable.Title>Price</DataTable.Title>
+              <DataTable.Title>Debtor</DataTable.Title>
+              <DataTable.Title>Date</DataTable.Title>
+            </DataTable.Header>
+            
+            {sales.map((item) => (
+            <TouchableRipple
+              key={item.sale_id}
+              onPress={() => {
+                setSelectedSale(item); // Set the selected sale
+                setIsModalVisible(true); // Show the modal
+              }}
+            >
+              <DataTable.Row>
+                <DataTable.Cell>{item.sale_id}</DataTable.Cell>
+                <DataTable.Cell>{item.item_name}</DataTable.Cell>
+                <DataTable.Cell>{item.quantity_sold}</DataTable.Cell>
+                <DataTable.Cell>₱{item.price}</DataTable.Cell>
+                <DataTable.Cell>{item.debtor_name}</DataTable.Cell>
+                <DataTable.Cell>{item.sale_date}</DataTable.Cell>
+              </DataTable.Row>
+            </TouchableRipple>
+          ))}
 
-          {/* Grand Total Row */}
-          <DataTable.Row>
-            <DataTable.Cell></DataTable.Cell>
-            <DataTable.Cell></DataTable.Cell>
-            <DataTable.Cell></DataTable.Cell>
-            <DataTable.Cell>
-              <Text style={styles.tableTitle}>Grand Total:</Text>
-            </DataTable.Cell>
-            <DataTable.Cell>
-              <Text style={styles.tableTitle}> ₱{grandTotal.toFixed(2)}</Text>
-            </DataTable.Cell>
-          </DataTable.Row>
-        </DataTable>
-      ) : (
-        <Text style={styles.noSalesText}>NO CURRENT SALES TO SHOW</Text>
-      )}
-      <SalesInfoModal
-        isVisible={isModalVisible}
-        onCancel={handleCancel}
-        saleDetails={selectedSale}
-      />
-    </View>
-    
+            {/* Grand Total Row */}
+            <DataTable.Row>
+              <DataTable.Cell></DataTable.Cell>
+              <DataTable.Cell></DataTable.Cell>
+              <DataTable.Cell></DataTable.Cell>
+              <DataTable.Cell>
+                <Text style={styles.tableTitle}>Grand Total:</Text>
+              </DataTable.Cell>
+              <DataTable.Cell>
+                <Text style={styles.tableTitle}> ₱{grandTotal.toFixed(2)}</Text>
+              </DataTable.Cell>
+            </DataTable.Row>
+          </DataTable>
+        ) : (
+          <Text style={styles.noSalesText}>NO CURRENT SALES TO SHOW</Text>
+        )}
+        <SalesInfoModal
+          isVisible={isModalVisible}
+          onCancel={handleCancel}
+          saleDetails={selectedSale}
+        />
+      </View>
+    </ScrollView>
   );
 };
 
-export default Transactions;
+export default Sales;
 
 const styles = StyleSheet.create({
   container: {

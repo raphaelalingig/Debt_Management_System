@@ -8,11 +8,11 @@ import { Feather } from "@expo/vector-icons";
 import axios from "axios";
 import API_URL from "../services/apiurl";
 import { AntDesign } from "@expo/vector-icons";
-import Items from "../Drawers/Items";
 
+export default function MainPage({ navigation, route }) {
 
-export default function MainPage({ navigation }) {
   const DebtorList = () => {
+    
     const [debtors, setDebtors] = useState([]);
     const [searchTerm, setSearchTerm] = useState("");
 
@@ -49,6 +49,7 @@ export default function MainPage({ navigation }) {
             onPress={() => navigation.toggleDrawer()}
           />
         </TouchableOpacity>
+
         <View style={styles.inputBoxContainer}>
           <TextInput
             style={styles.searchBox}
@@ -64,6 +65,11 @@ export default function MainPage({ navigation }) {
             color="black"
             style={styles.iconSearch}
           />
+          <View style={styles.accountIconContainer}>
+            <TouchableOpacity onPress={() => navigation.navigate("Account")}>
+              <MaterialCommunityIcons name="account" size={30} color="black" />
+            </TouchableOpacity>
+          </View>
         </View>
         <TouchableOpacity
             onPress={() =>
@@ -100,7 +106,6 @@ export default function MainPage({ navigation }) {
                     <Text style={styles.debtorInfo}>Phone: {item.phone}</Text>
                     <Text style={styles.debtorInfo}>Address: {item.address}</Text>
                   </View>
-
                 </View>
               </View>
             </View>
@@ -137,7 +142,7 @@ export default function MainPage({ navigation }) {
     },
     iconSearch: {
       position: "absolute",
-      right: 15,
+      right: 50,
     },
     menuLogo: {
       top: 40,
@@ -189,6 +194,9 @@ export default function MainPage({ navigation }) {
       margin: 20,
       marginTop: 20,
       left: "37%",
+    },
+    accountIconContainer: {
+      marginLeft: '5%', // This will push it to the rightmost side
     },
   });
 

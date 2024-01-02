@@ -5,6 +5,7 @@ import { TextInput, Text, Button } from "react-native-paper";
 import { EvilIcons } from "@expo/vector-icons";
 
 const ViewTransaction = () => {
+  const result = route.params?.result;
   return (
     <View style={styles.container}>
       <View style={styles.contentContainer}>

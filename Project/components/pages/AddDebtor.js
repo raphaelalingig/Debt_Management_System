@@ -11,6 +11,7 @@ const AddDebtor = () => {
   const navigation = useNavigation();
   const isFocused = useIsFocused();
   const [d_name, setDebtorName] = React.useState("");
+  const [email, setEmail] = React.useState("");
   const [phone, setPhone] = React.useState("");
   const [address, setAddress] = React.useState("");
   const [loading, setLoading] = React.useState(false);
@@ -25,7 +26,7 @@ const AddDebtor = () => {
     try {
       setLoading(true);
 
-      if (d_name === "" || phone === "" || address === "") {
+      if (d_name === "" || email === "" || phone === "" || address === "") {
         showToast("Please input required data");
         setIsError(true);
         return false;
@@ -34,6 +35,7 @@ const AddDebtor = () => {
       const url = API_URL+"insertdebtors";
       const data = {
         d_name,
+        email,
         phone,
         address,
       };
@@ -84,6 +86,15 @@ const AddDebtor = () => {
             mode="outlined"
             value={d_name}
             onChangeText={setDebtorName}
+            error={isError}
+          />
+          <TextInput
+            style={{ height: 30 }}
+            placeholder="Email: "
+            label="Email: "
+            mode="outlined"
+            value={email}
+            onChangeText={setEmail}
             error={isError}
           />
           <TextInput

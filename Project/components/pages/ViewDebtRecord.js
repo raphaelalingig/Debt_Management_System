@@ -9,17 +9,15 @@ import { ToastAndroid } from "react-native";
 
 
 const ViewDebtRecord = ({ navigation, route }) => {
-  const { uthangInfo } = route.params;
+  const { selectedUthang } = route.params;
   const { debtorInfo } = route.params;
   const [loading, setLoading] = React.useState(false);
   const [isError, setIsError] = React.useState(false);
   const [item_id, setItemId] = useState("");
   const [itemName, setItemName] = useState("");
-  const [quantity, setQuantity] = useState(uthangInfo?.quantity || "");
-  const [query, setQuery] = useState(uthangInfo?.item_name || "");
+  const [quantity, setQuantity] = useState("");
+  const [query, setQuery] = useState("");
   const [suggestions, setSuggestions] = useState([]);
-  const [isInputClicked, setIsInputClicked] = useState(false);
-  const [isModalVisible, setIsModalVisible] = useState(false);
 
   const items = [
     { id: 1, name: 'Rice' },
@@ -56,14 +54,15 @@ const ViewDebtRecord = ({ navigation, route }) => {
   const handleItemPress = (item) => {
     setQuery(item.name);
     setItemId(item.id);
+    setQuantity(selectedUthang.quantity.toString());
     setSuggestions([]);
-    setEditedData({ ...editedData, item: item.name, quantity: quantity });
+    setEditedData({ ...editedData, item: item.name, quantity: selectedUthang.quantity.toString() });
   };
 
   // Assuming you want to allow editing and have local state for it
   const [editedData, setEditedData] = useState({
-    item: uthangInfo.item_name,
-    quantity: uthangInfo.quantity.toString(),
+    item: selectedUthang.item_name,
+    quantity: selectedUthang.quantity.toString(),
   });
 
   useEffect(() => {
@@ -78,12 +77,25 @@ const ViewDebtRecord = ({ navigation, route }) => {
   const handleSave = async () => {
     try {
       setLoading(true);
-      if (!uthangInfo?.u_id) {
-          console.error("Missing 'u_id' in uthangInfo");
-          return;
+
+      if (query === "" || quantity === "") {
+        showToast("Please input required data");
+        setIsError(true);
+        return false;
       }
 
-      const url = API_URL + 'updateutang/' + uthangInfo.u_id;
+
+      if (!selectedUthang?.u_id) {
+          console.error("Missing 'u_id' in selectedUthang");
+          return;
+      }
+      if (item_id === null) {
+        console.warn("item_id is null. Setting to default value or handling accordingly.");
+        setItemId(selectedUthang.item_id); // Set to a default item_id or handle this case accordingly
+      }
+  
+
+      const url = API_URL + 'updateutang/' + selectedUthang.u_id;
       const data = {
           quantity: quantity,
           item_id: item_id,
@@ -109,49 +121,6 @@ const ViewDebtRecord = ({ navigation, route }) => {
       console.log("Edited Data:", editedData);
   }
   };
-
-  const handleConfirm = async () => {
-    setIsModalVisible(false);
-    try {
-      setLoading(true);
-      const url = API_URL + 'payutang/' + uthangInfo.u_id;
-      const response = await axios.delete(url);
-  
-      console.log("Response data:", response.data);
-      if (response.status === 200) {
-        // Handle success
-        console.log("Uthang paid successfully");
-      
-        // Update local state before navigation
-        await setQuantity(""); // Assuming you want to clear the quantity after payment
-        await setItemId("");   // Clear the item ID or update it as needed
-      
-        // Navigate or perform other actions
-        navigation.navigate("ClickforMoreDetails", { debtorInfo });
-        ToastAndroid.show("Uthang paid successfully", ToastAndroid.SHORT);
-      } else {
-        // Handle other cases where the API response does not indicate success
-        console.error(
-          "Uthang operation failed:",
-          response.data.message || "Unknown error"
-        );
-        ToastAndroid.show("Uthang operation failed", ToastAndroid.SHORT);
-      }
-    } catch (error) {
-      // Handle network error or other exceptions
-      console.error("Error deleting uthang:", error.message);
-      ToastAndroid.show("Error deleting uthang", ToastAndroid.SHORT);
-    } finally {
-      setLoading(false);
-    }
-  };
-  
-  
-  
-    const handleCancel = () => {
-      // Handle the "No" button click
-      setIsModalVisible(false);
-    };
   
 
   return (
@@ -162,7 +131,7 @@ const ViewDebtRecord = ({ navigation, route }) => {
         </View>
         <View style={styles.autoCompleteContainer}>
           <TextInput
-              placeholder={uthangInfo.item_name}
+              placeholder={selectedUthang.item_name}
               label="Item"
               mode="outlined"
               value={query}
@@ -183,7 +152,7 @@ const ViewDebtRecord = ({ navigation, route }) => {
               </View>
               <TextInput
                 style={styles.quantityInput}
-                placeholder={uthangInfo.quantity.toString()}
+                placeholder={selectedUthang.quantity.toString()}
                 label="Quantity"
                 mode="outlined"
                 value={quantity.toString()}
@@ -199,14 +168,7 @@ const ViewDebtRecord = ({ navigation, route }) => {
               style={styles.button}
               >Save</Button>
             </TouchableOpacity>
-            <TouchableOpacity onPress={() => setIsModalVisible(true)}>
-              <Button 
-                style={{ backgroundColor: "#13C913" }}
-                disabled={loading}
-              loading={loading}>
-                <Text style={{ color: "white" }}>Pay</Text>
-              </Button>
-            </TouchableOpacity>
+            
             <TouchableOpacity onPress={() => navigation.navigate("ClickforMoreDetails",{debtorInfo})}>
               <Button 
                 style={{ backgroundColor: "red" }}
@@ -216,14 +178,7 @@ const ViewDebtRecord = ({ navigation, route }) => {
               </Button>
             </TouchableOpacity>
           </View>
-          <ConfirmationModal
-        isVisible={isModalVisible}
-        onConfirm={handleConfirm}
-        onCancel={handleCancel}
-      />
-        </View>
-     
-    
+        </View>    
   );
 };
 
