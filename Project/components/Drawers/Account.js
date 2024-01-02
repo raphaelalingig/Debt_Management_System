@@ -41,27 +41,29 @@ const AccountPage = ({ route }) => {
     }
   };
 
-  const handleResetPassword = async () => {
-    try {
-      // Call your server's reset-password endpoint here
-      const authToken = await AsyncStorage.getItem('authToken');
-      const headers = {
-        Authorization: `Bearer ${authToken}`,
-      };
-  
-      const payload = {
-        email: userData.email,  // Include the user's email in the payload
-      };
-  
-      const response = await axios.post(API_URL + 'reset-password', payload, { headers });
-  
-      // Handle the response accordingly, e.g., show a success message
-      console.log('Password reset email sent successfully:', response.data);
-    } catch (error) {
-      console.error('Error sending password reset email:', error.response);
-      // Handle the error, e.g., show an error message
-    }
-  };
+  // Update the handleResetPassword function in your React Native code
+
+const handleResetPassword = async () => {
+  try {
+    const authToken = await AsyncStorage.getItem('authToken');
+    const headers = {
+      Authorization: `Bearer ${authToken}`,
+    };
+
+    const payload = {
+      email: userData.email,
+    };
+
+    const response = await axios.post(API_URL + 'send-reset-email', payload, { headers });
+
+    // Handle the response accordingly, e.g., show a success message
+    console.log('Password reset email sent successfully:', response.data);
+  } catch (error) {
+    console.error('Error sending password reset email:', error.response);
+    // Handle the error, e.g., show an error message
+  }
+};
+
   
 
   if (loading) {
