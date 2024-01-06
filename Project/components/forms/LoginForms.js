@@ -38,7 +38,7 @@ const LoginForm = () => {
         if (result.role === 1) {
           navigation.navigate('MainPage');
         } else if (result.role === 2) {
-          navigation.navigate('ViewTransaction');
+          navigation.navigate('DebtorPage');
         }
       }
     } catch (e) {

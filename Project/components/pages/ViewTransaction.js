@@ -1,10 +1,11 @@
 import { StyleSheet, View, TouchableOpacity } from "react-native";
 import React from "react";
 import { TextInput, Text, Button } from "react-native-paper";
+import { MaterialCommunityIcons } from "@expo/vector-icons";
 
 import { EvilIcons } from "@expo/vector-icons";
 
-const ViewTransaction = () => {
+const ViewTransaction = ({ navigation, route }) => {
   const result = route.params?.result;
   return (
     <View style={styles.container}>
@@ -12,6 +13,11 @@ const ViewTransaction = () => {
         <View style={styles.displayPicture}>
           <EvilIcons name="user" size={256} color="black" />
         </View>
+        <View style={styles.accountIconContainer}>
+            <TouchableOpacity onPress={() => navigation.navigate("Account")}>
+              <MaterialCommunityIcons name="account" size={30} color="black" />
+            </TouchableOpacity>
+          </View>
         <View style={styles.details}>
           <TextInput
             style={{ height: 30 }}

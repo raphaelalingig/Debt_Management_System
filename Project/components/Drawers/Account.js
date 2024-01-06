@@ -56,11 +56,12 @@ const handleResetPassword = async () => {
 
     const response = await axios.post(API_URL + 'send-reset-email', payload, { headers });
 
-    // Handle the response accordingly, e.g., show a success message
     console.log('Password reset email sent successfully:', response.data);
+    alert('Password reset email sent successfully. Check your email.');
   } catch (error) {
     console.error('Error sending password reset email:', error.response);
     // Handle the error, e.g., show an error message
+    alert('Failed to send password reset email. Please try again.');
   }
 };
 
@@ -95,7 +96,8 @@ const handleResetPassword = async () => {
       ) : (
         <Text>Error fetching user data</Text>
       )}
-      <Button title="Reset Password" onPress={handleResetPassword} />
+      <Button title="Reset Password" onPress={() => navigation.navigate("ResetPassword",{userData})} disabled={loading} />
+
       <Button title="Logout" onPress={handleLogout} />
     </View>
   );

@@ -71,7 +71,8 @@ const styles = StyleSheet.create({
   },
   titleText: {
     fontWeight: "bold",
-    padding: 25,
+    padding: 10,
+    textAlign: "center",
   },
   subtitleText: {
     fontWeight: "bold",

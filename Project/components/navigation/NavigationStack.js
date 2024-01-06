@@ -8,6 +8,8 @@ import LoginForm from "../forms/LoginForms";
 import MainPage from "../pages/MainPage";
 import Items from "../Drawers/Items";
 import Aboutus from "../Drawers/AboutUs";
+import ResetPasswordScreen from "../Drawers/ResetPassword";
+import Reset from "../Drawers/Reset";
 import Account from "../Drawers/Account";
 import { FontAwesome5 } from "@expo/vector-icons";
 import { MaterialCommunityIcons } from "@expo/vector-icons";
@@ -17,17 +19,22 @@ import ViewDebtRecord from "../pages/ViewDebtRecord";
 import AddDebtor from "../pages/AddDebtor";
 import Transactions from "../pages/Transactions";
 import ViewTransaction from "../pages/ViewTransaction";
+import DebtorPage from "../pages/DebtorPage";
 import AddUtang from "../pages/AddUtang";
 import Auto from "../pages/Confirmation";
 import Sales from "../Drawers/Sales";
 import SalesInfo from "../Drawers/SalesInfo";
-
+import LogoutScreen from "../Drawers/LogoutScreen";
+import Mail from "../Drawers/Mail";
+import Mailpage from "../Drawers/OpenMail";
+import {TouchableOpacity, StyleSheet, View}  from "react-native";
 
 
 const Stack = createNativeStackNavigator();
 const Drawer = createDrawerNavigator();
 
 const DrawerNavigator = ({ navigation }) => (
+  
   <Drawer.Navigator>
     <Drawer.Screen
       name="Home"
@@ -90,7 +97,7 @@ const DrawerNavigator = ({ navigation }) => (
     />
     <Drawer.Screen
       name="Logout"
-      component={Intro}
+      component={LogoutScreen}
       options={{
         headerShown: false,
         drawerIcon: () => (
@@ -137,7 +144,52 @@ const NavigationStack = () => {
           name="Account"
           component={Account}
           options={{
-            title: "Records",
+            title: "Account",
+            headerStyle: {
+              backgroundColor: "#BAE8E8",
+            },
+          }}
+        />
+        <Stack.Screen
+          name="ResetPassword"
+          component={ResetPasswordScreen}
+          options={({ navigation }) => ({
+            title: "Account",
+            headerStyle: {
+              backgroundColor: "#BAE8E8",
+            },
+            headerRight: () => (
+              <View style={styles.headerRightContainer}>
+                
+                <TouchableOpacity
+                  style={styles.mailButton}
+                  onPress={() => navigation.navigate("Mail")}
+                >
+                  <MaterialCommunityIcons
+                    name="email"
+                    size={30}
+                    color="black"
+                  />
+                </TouchableOpacity>
+                <TouchableOpacity
+                  style={styles.logoutButton}
+                  onPress={() => navigation.navigate("Logout")}
+                >
+                  <MaterialCommunityIcons
+                    name="logout"
+                    size={24}
+                    color="black"
+                  />
+                </TouchableOpacity>
+              </View>
+            ),
+          })}
+        />
+        <Stack.Screen
+          name="Reset"
+          component={Reset}
+          options={{
+            title: "Account",
             headerStyle: {
               backgroundColor: "#BAE8E8",
             },
@@ -224,9 +276,82 @@ const NavigationStack = () => {
           name="MainPage"
           component={DrawerNavigator}
         />
+        <Stack.Screen
+          options={{ headerShown: false }}
+          name="Logout"
+          component={LogoutScreen}
+        />
+        <Stack.Screen
+          options={{ headerShown: false }}
+          name="Mail"
+          component={Mail}
+        />
+        <Stack.Screen
+          options={{ headerShown: false }}
+          name="MailPage"
+          component={Mailpage}
+        />
+               
+        <Stack.Screen
+          name="DebtorPage"
+          component={DebtorPage}
+          options={({ navigation }) => ({
+            title: "DebtorPage",
+            headerStyle: {
+              backgroundColor: "#BAE8E8",
+            },
+            headerRight: () => (
+              <View style={styles.headerRightContainer}>
+                <TouchableOpacity
+                  style={styles.accountButton}
+                  onPress={() => navigation.navigate("Account")}
+                >
+                  <MaterialCommunityIcons
+                    name="account"
+                    size={30}
+                    color="black"
+                  />
+                </TouchableOpacity>
+                <TouchableOpacity
+                  style={styles.mailButton}
+                  onPress={() => navigation.navigate("Mail")}
+                >
+                  <MaterialCommunityIcons
+                    name="email"
+                    size={30}
+                    color="black"
+                  />
+                </TouchableOpacity>
+                <TouchableOpacity
+                  style={styles.logoutButton}
+                  onPress={() => navigation.navigate("Logout")}
+                >
+                  <MaterialCommunityIcons
+                    name="logout"
+                    size={24}
+                    color="black"
+                  />
+                </TouchableOpacity>
+              </View>
+            ),
+          })}
+        />
       </Stack.Navigator>
     </NavigationContainer>
   );
 };
 
+const styles = StyleSheet.create({
+  headerRightContainer: {
+    flexDirection: "row",
+    marginRight: 10,
+  },
+  accountButton: {
+    marginRight: 10,
+  },
+  mailButton: {
+    marginRight: 10,
+  },
+  logoutButton: {},
+});
 export default NavigationStack;

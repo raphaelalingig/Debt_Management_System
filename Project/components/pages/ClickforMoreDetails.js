@@ -28,25 +28,6 @@ const ClickforMoreDetails = ({ route, navigation }) => {
   const [isError, setIsError] = React.useState(false);
   
 
-  
-  // const full = async () => {
-  //   // Define a small threshold for comparison
-  //   const epsilon = 0.0001;
-  
-  //   // Convert payment and balance to numbers for comparison
-  //   const paymentNumber = parseFloat(payment);
-  //   const balanceNumber = parseFloat(balance);
-  
-  //   // Check if the absolute difference between payment and balance is within the threshold
-  //   if (Math.abs(paymentNumber - balanceNumber) < epsilon) {
-  //     console.log("Is payment = balance", Math.abs(paymentNumber - balanceNumber) < epsilon);
-  //     await setCon(true);
-  //   } else {
-  //     // Handle the case when payment is not approximately equal to balance
-  //     setPayment(String(balance));
-  //   }
-  // };
-
   const full = async () => {
     const paymentNumber = parseFloat(payment);
     const balanceNumber = parseFloat(balance);
@@ -155,8 +136,6 @@ const ClickforMoreDetails = ({ route, navigation }) => {
     setIsModalVisible(false);
     setLoading(true);
       try {
-
-        
 
         const url = API_URL + 'payutang/' + selectedUthang.u_id;
         const response = await axios.delete(url);
@@ -747,9 +726,7 @@ const styles = StyleSheet.create({
     borderRadius: 10,
     paddingVertical: 5,
     paddingHorizontal: 5,
-    position: 'absolute',
-    top: 10,
-    right: 10,
+    left: 100,
   },
   buttonText: {
     color: 'white',
