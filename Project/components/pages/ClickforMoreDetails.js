@@ -729,8 +729,7 @@ const styles = StyleSheet.create({
     left: 100,
   },
   buttonText: {
-    color: 'white',
-    fontWeight: 'bold',
+    color: 'black',
     fontSize: 16,
     textAlign: 'center',
   },
