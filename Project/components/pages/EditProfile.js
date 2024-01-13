@@ -1,8 +1,8 @@
 import { StyleSheet, View, TouchableOpacity, ToastAndroid } from "react-native";
-import React, { useState, useEffect} from "react";
+import React, { useState, useEffect } from "react";
 import { EvilIcons } from "@expo/vector-icons";
-import { TextInput, Text, Button,  } from "react-native-paper";
-import ConfirmationModal from './Confirmation';
+import { TextInput, Text, Button } from "react-native-paper";
+import ConfirmationModal from "./Confirmation";
 import API_URL from "../services/apiurl";
 import axios from "axios";
 
@@ -22,67 +22,77 @@ const EditProfile = ({ route, navigation }) => {
     try {
       setLoading(true);
       if (!debtorInfo?.d_id) {
-          console.error("Missing 'd_id' in debtorInfo");
-          return;
+        console.error("Missing 'd_id' in debtorInfo");
+        return;
       }
 
-      const url = API_URL + 'updatedebtor/' + debtorInfo.d_id;
+      const url = API_URL + "updatedebtor/" + debtorInfo.d_id;
       const data = {
-          d_name: d_name,
-          phone: phone,
-          address: address,
+        d_name: d_name,
+        phone: phone,
+        address: address,
       };
 
       console.log("Request URL:", url);
       const result = await axios.put(url, data);
 
-          if (result?.data?.debtor) {
-              // Access the updated Uthang data
-              console.log(result.data.debtor);
-              navigation.navigate("MainPage");
-          } else {
-              // Handle error if needed
-              console.log(result?.data?.error || result?.message);
-          }
-
-  } catch (e) {
+      if (result?.data?.debtor) {
+        // Access the updated Uthang data
+        console.log(result.data.debtor);
+        navigation.navigate("MainPage");
+      } else {
+        // Handle error if needed
+        console.log(result?.data?.error || result?.message);
+      }
+    } catch (e) {
       showToast(e.toString());
       console.error(e);
-  } finally {
+    } finally {
       setLoading(false);
-  }
-}
-
-const handleConfirm = async () => {
-  setIsModalVisible(false);
-  try {
-    setLoading(true);
-    const url = API_URL + 'deletedebtor/' + debtorInfo.d_id;
-    const response = await axios.delete(url);
-
-    if (response.data && response.data.message === "Debtor deleted successfully") {
-      // Log success
-      console.log("Debtor deleted successfully");
-      ToastAndroid.show("Debtor deleted successfully", ToastAndroid.SHORT);
-      // Navigate to a success page or perform any other action
-      navigation.navigate("MainPage");
-    } else {
-      // Handle the case where the API response does not indicate success
-      console.error("Debtor deletion failed:", response.data.message || "Unknown error");
-      ToastAndroid.show("Debtor deletion failed", ToastAndroid.SHORT);
     }
-  } catch (error) {
-    // Handle network error or other exceptions
-    console.error("Error deleting debtor:", error.message);
-    ToastAndroid.show("Error deleting debtor", ToastAndroid.SHORT);
-  }
-};
+  };
+
+  const handleConfirm = async () => {
+    setIsModalVisible(false);
+    try {
+      setLoading(true);
+      const url = API_URL + "deletedebtor/" + debtorInfo.d_id;
+      const response = await axios.delete(url);
+
+      if (response.data && response.data.message === "Cannot delete Debtor, Uthangs still unpaid.") {
+        // Log success
+        console.log(response.data.message);
+        ToastAndroid.show(response.data.message, ToastAndroid.SHORT);
+        // Navigate to a success page or perform any other action
+        navigation.navigate("MainPage");
+      } else {
+        // Handle the case where the API response does not indicate success
+        console.error(
+          "Debtor deletion failed:",
+          response.data.message || "Unknown error"
+        );
+        ToastAndroid.show("Debtor deletion failed", ToastAndroid.SHORT);
+      }
+    } catch (error) {
+      // Handle network error or other exceptions
+      if (error.response && error.response.status === 422 && error.response.data.message === "Cannot delete Debtor, Uthangs still unpaid.") {
+        // Handle the specific error scenario where Uthangs are still unpaid
+        console.error("Cannot delete Debtor, Uthangs still unpaid.");
+        ToastAndroid.show("Cannot delete Debtor, Uthangs still unpaid.", ToastAndroid.SHORT);
+      } else {
+        // Handle other errors
+        console.error("Error deleting debtor:", error.message);
+        ToastAndroid.show("Error deleting debtor", ToastAndroid.SHORT);
+      }
+    } finally {
+      setLoading(false);
+    }
+  };
 
   const handleCancel = () => {
     // Handle the "No" button click
     setIsModalVisible(false);
   };
-
 
   return (
     <View style={styles.container}>
@@ -115,29 +125,43 @@ const handleConfirm = async () => {
             value={address}
             onChangeText={setAddress}
           ></TextInput>
-          <View style={{marginTop: 20, gap: 5}}>
+          <View style={{ marginTop: 20, gap: 5 }}>
             <TouchableOpacity onPress={handleSave}>
-              <Button 
-                style={styles.button} 
+              <Button
+                style={{ backgroundColor: "#04aa6d" }}
                 disabled={loading}
-                loading={loading}>
-                  Save Changes</Button>
+                loading={loading}
+              >
+                <Text variant="bodyMedium" style={{ color: "white" }}>
+                  Save Changes
+                </Text>
+              </Button>
             </TouchableOpacity>
 
             <TouchableOpacity onPress={() => setIsModalVisible(true)}>
-              <Button 
-                style={styles.button}
+              <Button
+                style={{ backgroundColor: "#f44336" }}
                 disabled={loading}
-                loading={loading}>
-                  Delete Debtor</Button>
+                loading={loading}
+              >
+                <Text variant="bodyMedium" style={{ color: "white" }}>
+                  Delete Debtor
+                </Text>
+              </Button>
             </TouchableOpacity>
-            
-            <TouchableOpacity onPress={() => navigation.navigate("ClickforMoreDetails",{debtorInfo})}>
-              <Button 
+
+            <TouchableOpacity
+              onPress={() =>
+                navigation.navigate("ClickforMoreDetails", { debtorInfo })
+              }
+            >
+              <Button
                 style={styles.button}
                 disabled={loading}
-                loading={loading}>
-                  Cancel</Button>
+                loading={loading}
+              >
+                <Text variant="bodyMedium">Cancel</Text>
+              </Button>
             </TouchableOpacity>
           </View>
         </View>

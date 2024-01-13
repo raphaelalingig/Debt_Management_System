@@ -13,7 +13,7 @@ import EnterModal from './EnterAmount';
 import ConfirmModal from './Confirm';
 
 const ClickforMoreDetails = ({ route, navigation }) => {
-  const { debtorInfo } = route.params;
+  const { debtorInfo, calculatedDueStatus } = route.params;
   const [loading, setLoading] = React.useState(false);
   const [uthangsData, setUthangsData] = useState([]);
   const [payment, setPayment] =  React.useState(0.00);
@@ -26,6 +26,7 @@ const ClickforMoreDetails = ({ route, navigation }) => {
   const [isConfirmed, setIsConfirmed] = useState(false);
   const [reloadData, setReloadData] = useState(false);
   const [isError, setIsError] = React.useState(false);
+  const [due_fee, setDue_fee] = useState(0);
   
 
   const full = async () => {
@@ -49,6 +50,8 @@ const ClickforMoreDetails = ({ route, navigation }) => {
     await setCon(true)
   }
   }
+
+  
 
   const confirmed = async () =>{
     setCon(false)
@@ -80,6 +83,13 @@ const ClickforMoreDetails = ({ route, navigation }) => {
         .get(API_URL + 'uthangs/' + debtorInfo.d_id)
         .then((response) => {
           setUthangsData(response.data);
+          
+ 
+          if(calculatedDueStatus.status === "Overdue"){
+            setDue_fee(0.01);
+          }else{
+            setDue_fee(0);
+          }
           checkBalance(balance);
         })
         .catch((error) => {
@@ -117,10 +127,11 @@ const ClickforMoreDetails = ({ route, navigation }) => {
   }, [navigation, fetchData]);
 
   const grandTotal = uthangsData
-    .filter(item => typeof item.total === 'number' || (typeof item.total === 'string' && item.total.trim() !== ''))
-    .reduce((sum, item) => sum + parseFloat(item.total), 0);
-  
-  const balance = grandTotal - debtorInfo.data_amount;
+  .filter(item => typeof item.total === 'number' || (typeof item.total === 'string' && item.total.trim() !== ''))
+  .reduce((sum, item) => sum + parseFloat(item.total), 0);
+  const interest  = (grandTotal * due_fee) + grandTotal;
+  const percent = interest - grandTotal;
+  const balance = interest - debtorInfo.data_amount;
   
   const payAmount = (balance) => {
     if (selectedUthang.total > balance) {
@@ -390,7 +401,11 @@ const PayModalContent = ({ setPayModalVisible }) => {
       <Text style={styles.modalTitle}>Payment</Text>
       <View style={styles.paydetailsContainer}>
         <Text style={styles.paydetailLabel}>Total Utang:</Text>
-        <Text style={styles.paydetailValue}>₱{grandTotal}.00</Text>
+        <Text style={styles.paydetailValue}>₱{grandTotal.toFixed(2)}</Text>
+      </View>
+      <View style={styles.paydetailsContainer}>
+        <Text style={styles.paydetailLabel}>Overdue Fee:</Text>
+        <Text style={styles.paydetailValue}>₱{percent.toFixed(2)}</Text>
       </View>
       <View style={styles.paydetailsContainer}>
         <Text style={styles.paydetailLabel}>Data Payment:</Text>
@@ -402,13 +417,13 @@ const PayModalContent = ({ setPayModalVisible }) => {
       </View>
       <View style={styles.paydetailsContainer}>
         <Text style={styles.paydetailLabel}>Balance:</Text>
-        <Text style={styles.paydetailValue}>₱{balance}</Text>
+        <Text style={styles.paydetailValue}>₱{balance.toFixed(2)}</Text>
       </View>
       <Text style={styles.payTitle}>Amount</Text>
       
         <View style={styles.payFieldContainer}>
           <TouchableOpacity onPress={() => setEnterModalVisible(true)}>
-            <Text style={styles.pesoSign}>          ₱{payment}.00</Text>
+            <Text style={styles.pesoSign}>          ₱{payment}</Text>
           </TouchableOpacity>
           
             <View style={styles.resetButtonContainer}>    
@@ -454,13 +469,15 @@ const PayModalContent = ({ setPayModalVisible }) => {
         <View style={styles.container}>
           <View style={styles.contentContainer}>
             <View style={styles.displayPicture}>
-              <EvilIcons name="user" size={256} color="black" />
+              <EvilIcons name="user" size={230} color="black" />
             </View>
             <View style={styles.details}>
               <Text>Name: {debtorInfo.d_name}</Text>
               <Text>Phone: {debtorInfo.phone}</Text>
               <Text>Address: {debtorInfo.address}</Text>
               <Text>Email: {debtorInfo.email}</Text>
+              <Text>Due Date: {debtorInfo.due_date}    <Text style={{color:calculatedDueStatus.color}}>{calculatedDueStatus.status}</Text></Text>
+      
             </View>
             <View style={{ flexDirection: "row", marginTop: 15, gap: 5 }}>
               <TouchableOpacity
@@ -526,7 +543,7 @@ const PayModalContent = ({ setPayModalVisible }) => {
                     <Text style={styles.tableTitle}>Balance Total:</Text>
                   </DataTable.Cell>
                   <DataTable.Cell>
-                    <Text style={styles.tableTitle}> ₱{balance}.00</Text>
+                    <Text style={styles.tableTitle}> ₱{balance.toFixed(2)}</Text>
                   </DataTable.Cell>
                 </DataTable.Row>
               </DataTable>
@@ -615,7 +632,9 @@ const styles = StyleSheet.create({
     borderRadius: 30,
     marginTop: 10,
   },
-  displayPicture: {},
+  displayPicture: {
+    alignItems: "center",
+  },
   details: {
     marginTop: 20,
     gap: 10,
@@ -729,8 +748,7 @@ const styles = StyleSheet.create({
     left: 100,
   },
   buttonText: {
-    color: 'white',
-    fontWeight: 'bold',
+    color: 'black',
     fontSize: 16,
     textAlign: 'center',
   },

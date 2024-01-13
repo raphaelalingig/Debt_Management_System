@@ -114,7 +114,7 @@ const DrawerNavigator = ({ navigation }) => (
 const NavigationStack = () => {
   return (
     <NavigationContainer>
-      <Stack.Navigator initialRouteName="Intro">
+      <Stack.Navigator initialRouteName="MainPage">
         <Stack.Screen
           options={{ headerShown: false }}
           name="Intro"

@@ -15,6 +15,7 @@ export default function MainPage({ navigation, route }) {
     
     const [debtors, setDebtors] = useState([]);
     const [searchTerm, setSearchTerm] = useState("");
+    const [due, setDue] = useState("");
 
     useFocusEffect(
       React.useCallback(() => {
@@ -31,8 +32,27 @@ export default function MainPage({ navigation, route }) {
       }, []) // The empty dependency array ensures that this effect runs only once when the component mounts
     );
 
+    const calculateDueStatus = (due_date) => {
+      const currentDate = new Date();
+      const dueDate = new Date(due_date);
+  
+      if (dueDate.toDateString() === currentDate.toDateString()) {
+        return { status: "Due Today", color: "orange" };
+      } else if (dueDate < currentDate) {
+        return { status: "Overdue", color: "red" };
+      } else {
+        return { status: "Due", color: "blue" };
+      }
+    };
+
     const handleDebtorClick = (item) => {
-      navigation.navigate("ClickforMoreDetails", { debtorInfo: item, uthangsData: item.uthangsData });
+      const calculatedDueStatus = calculateDueStatus(item.due_date);
+  
+      navigation.navigate("ClickforMoreDetails", {
+        debtorInfo: item,
+        uthangsData: item.uthangsData,
+        calculatedDueStatus, // Include the calculatedDueStatus in navigation parameters
+      });
     };
 
     const filteredDebtors = debtors.filter((debtor) =>
@@ -103,8 +123,13 @@ export default function MainPage({ navigation, route }) {
                         <Text style={styles.debtorInfo}>Id: {item.d_id}</Text>
                       ) : null}
                     <Text style={styles.debtorInfo}>Name: {item.d_name}</Text>
-                    <Text style={styles.debtorInfo}>Phone: {item.phone}</Text>
-                    <Text style={styles.debtorInfo}>Address: {item.address}</Text>
+                    <Text style={styles.debtorInfo}>Balance: {item.phone}</Text>
+                    <Text>
+                      <Text style={{fontSize: 16, marginBottom: 5, color: "black" }}>Status: </Text>
+                      <Text style={{ ...styles.debtorInfo, color: calculateDueStatus(item.due_date).color }}>
+                        {calculateDueStatus(item.due_date).status}
+                      </Text>
+                    </Text>
                   </View>
                 </View>
               </View>

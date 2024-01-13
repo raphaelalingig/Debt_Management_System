@@ -9,7 +9,7 @@ const LogoutScreen = ({ navigation }) => {
     const handleLogout = async () => {
       try {
         await AsyncStorage.removeItem('authToken');
-        navigation.navigate('Intro');
+        navigation.navigate('LoginForms');
       } catch (error) {
         console.error('Error during logout:', error);
       }

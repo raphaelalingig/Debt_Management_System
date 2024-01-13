@@ -1,12 +1,13 @@
-// Items.js
 import React, { useEffect, useState } from 'react';
 import { StyleSheet, Text, View } from 'react-native';
 import axios from 'axios';
 import API_URL from '../services/apiurl';
 
+
 const ItemsComponent = () => {
   const [items, setItems] = useState([]);
   const [error, setError] = useState(null);
+
 
   useEffect(() => {
     // Fetch data from the Laravel API endpoint
@@ -24,6 +25,7 @@ const ItemsComponent = () => {
       });
   }, []);
 
+
   if (error) {
     return (
       <View>
@@ -32,8 +34,9 @@ const ItemsComponent = () => {
     );
   }
 
+
   return (
-    <View>
+    <View style={styles.container}>
       <Text style={styles.header}>Items List</Text>
       <View style={styles.tableHeader}>
         <Text style={styles.tableHeaderText}>Item Name</Text>
@@ -41,7 +44,7 @@ const ItemsComponent = () => {
         <Text style={styles.tableHeaderText}>Category</Text>
       </View>
       {items.map((item) => (
-        <View key={item.item_id} style={styles.tableRow}>
+        <View  key={item.item_id} style={styles.tableRow}>
           <Text style={styles.tableRowText}>{item.item_name}</Text>
           <Text style={styles.tableRowText}>{item.price}</Text>
           <Text style={styles.tableRowText}>{item.category}</Text>
@@ -51,11 +54,20 @@ const ItemsComponent = () => {
   );
 };
 
+
 const styles = StyleSheet.create({
+  container: {
+    flex: 1,
+    backgroundColor: "#add8e6",
+  },
+
+
   header: {
     fontSize: 20,
     fontWeight: 'bold',
     marginBottom: 10,
+    padding: 10,
+    textAlign: "center",
   },
   tableHeader: {
     flexDirection: 'row',
@@ -75,11 +87,14 @@ const styles = StyleSheet.create({
     height: 30,
     backgroundColor: '#ffffff',
     marginHorizontal: 10,
+   
   },
   tableRowText: {
     flex: 1,
     textAlign: 'center',
+   
   },
 });
+
 
 export default ItemsComponent;

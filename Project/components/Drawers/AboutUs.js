@@ -19,6 +19,7 @@ const AboutUs = () => {
           <Text style={styles.header}>OUR TEAM</Text>
         </View>
 
+
         <View style={styles.memberContainer}>
           <Image style={styles.tinyLogo} source={require('./pictures/Buwanding_Aladdin.jpg')} />
           <Text style={styles.memberName}>Buwanding, Aladdin</Text>
@@ -27,6 +28,7 @@ const AboutUs = () => {
             Group Leading Computer hacker, responsible for debugging and checking for errors in the code.
           </Text>
         </View>
+
 
         <View style={styles.memberContainer}>
           <Image style={styles.tinyLogo} source={require('./pictures/Juaton.png')} />
@@ -37,6 +39,7 @@ const AboutUs = () => {
           </Text>
         </View>
 
+
         <View style={styles.memberContainer}>
           <Image style={styles.tinyLogo} source={require('./pictures/Alingig.png')} />
           <Text style={styles.memberName}>Alingig, Raphael</Text>
@@ -46,6 +49,7 @@ const AboutUs = () => {
           </Text>
         </View>
 
+
         <View style={styles.memberContainer}>
           <Image style={styles.tinyLogo} source={require('./pictures/Ibarra.png')} />
           <Text style={styles.memberName}>Ibarra, Ray Anthony</Text>
@@ -54,7 +58,7 @@ const AboutUs = () => {
             Group Designer, responsible for UI design in the program.
           </Text>
         </View>
-        <View style={styles.footer}>
+      <View style={styles.footer}>
       <View style={styles.footerContent}>
         <Text style={styles.footerText}>Contact us at: markjundyjuaton01@gmail.com</Text>
       </View>
@@ -69,7 +73,9 @@ const AboutUs = () => {
   );
 };
 
+
 export default AboutUs;
+
 
 const styles = StyleSheet.create({
   container: {
@@ -79,13 +85,16 @@ const styles = StyleSheet.create({
     paddingTop: 40,
   },
 
+
   scrollContainer: {
     flexGrow: 1,
   },
 
+
   section: {
     marginBottom: 20,
   },
+
 
   header: {
     fontSize: 25,
@@ -96,6 +105,7 @@ const styles = StyleSheet.create({
     textAlign: 'center',
   },
 
+
   memberContainer: {
     backgroundColor: '#ffe4b5',
     borderRadius: 15,
@@ -105,6 +115,7 @@ const styles = StyleSheet.create({
     alignItems: 'center',
   },
 
+
   memberName: {
     fontSize: 18,
     fontWeight: 'bold',
@@ -113,23 +124,27 @@ const styles = StyleSheet.create({
     textAlign: 'center',
   },
 
+
   memberRole: {
     fontSize: 16,
-    color: '#a9a9a9',
+    color: '#cd853f',
     marginBottom: 5,
     justifyContent: 'center',
     textAlign: 'center',
   },
 
+
   memberDescription: {
     fontSize: 14,
     color: '#000000',
-    textAlign: 'center',
+    textAlign: 'justify',
+    padding: 10,
   },
-
+// FOOTER
   tinyLogo: {
     width: 100,
     height: 100,
+    borderRadius: 10,
   },
   footer: {
     backgroundColor: '#333',
@@ -138,13 +153,16 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     justifyContent: 'space-between',
     alignItems: 'center',
+
+
   },
   footerContent: {
     flex: 1,
   },
   footerText: {
     color: '#fff',
-    marginBottom: 5,
+
+
   },
   socialIcons: {
     flexDirection: 'row',

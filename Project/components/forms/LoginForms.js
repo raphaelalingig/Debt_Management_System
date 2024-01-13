@@ -36,9 +36,9 @@ const LoginForm = () => {
         await AsyncStorage.setItem('rememberMe', rememberMe.toString());
   
         if (result.role === 1) {
-          navigation.navigate('MainPage');
+          navigation.replace('MainPage');
         } else if (result.role === 2) {
-          navigation.navigate('DebtorPage');
+          navigation.replace('DebtorPage');
         }
       }
     } catch (e) {

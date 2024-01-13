@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { View, Text, Button, ActivityIndicator } from 'react-native';
+import { StyleSheet ,View , Text, Button, ActivityIndicator } from 'react-native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import axios from 'axios';
 import { Feather } from '@expo/vector-icons';
@@ -7,10 +7,12 @@ import { useNavigation } from '@react-navigation/native';
 import { Card, Title, Paragraph } from 'react-native-paper';
 import API_URL from '../services/apiurl';
 
+
 const AccountPage = ({ route }) => {
   const [userData, setUserData] = useState(null);
   const [loading, setLoading] = useState(true);
   const navigation = useNavigation();
+
 
   useEffect(() => {
     const fetchUserData = async () => {
@@ -29,8 +31,10 @@ const AccountPage = ({ route }) => {
       }
     };
 
+
     fetchUserData();
   }, []);
+
 
   const handleLogout = async () => {
     try {
@@ -41,7 +45,9 @@ const AccountPage = ({ route }) => {
     }
   };
 
+
   // Update the handleResetPassword function in your React Native code
+
 
 const handleResetPassword = async () => {
   try {
@@ -50,11 +56,14 @@ const handleResetPassword = async () => {
       Authorization: `Bearer ${authToken}`,
     };
 
+
     const payload = {
       email: userData.email,
     };
 
+
     const response = await axios.post(API_URL + 'send-reset-email', payload, { headers });
+
 
     console.log('Password reset email sent successfully:', response.data);
     alert('Password reset email sent successfully. Check your email.');
@@ -65,7 +74,9 @@ const handleResetPassword = async () => {
   }
 };
 
-  
+
+ 
+
 
   if (loading) {
     return (
@@ -75,8 +86,9 @@ const handleResetPassword = async () => {
     );
   }
 
+
   return (
-    <View style={{ flex: 1, alignItems: 'center', justifyContent: 'center', padding: 20 }}>
+    <View style={styles.container}>
       <Feather
         name="user"
         size={72}
@@ -84,29 +96,47 @@ const handleResetPassword = async () => {
         style={styles.userLogo}
       />
       {userData ? (
-        <Card style={{ marginVertical: 20, width: '100%' }}>
+        <Card style={{ marginVertical: 20, width: '90%',}}>
           <Card.Content>
             <Title>User Information</Title>
             <Paragraph>User ID: {userData.id}</Paragraph>
             <Paragraph>Name: {userData.name}</Paragraph>
             <Paragraph>Email: {userData.email}</Paragraph>
-            <Paragraph>Previledges: {userData.role}</Paragraph>
+            <Paragraph>Privilege: {userData.role}</Paragraph>
+            <Button title="Reset Password" onPress={() => navigation.navigate("ResetPassword",{userData})} disabled={loading} />
           </Card.Content>
         </Card>
       ) : (
         <Text>Error fetching user data</Text>
       )}
-      <Button title="Reset Password" onPress={() => navigation.navigate("ResetPassword",{userData})} disabled={loading} />
-
       <Button title="Logout" onPress={handleLogout} />
     </View>
   );
 };
 
-const styles = {
+
+
+
+const styles = StyleSheet.create({
+  container: {
+    flex: 1, alignItems: 'center',
+    justifyContent: 'center',
+    padding: 20,
+    backgroundColor: "white",
+  },
+
+
   userLogo: {
     marginBottom: 20,
+    padding: 50,
+    backgroundColor: "#f8f8ff",
+    borderRadius: 150,
+    elevation: 5,
   },
-};
+
+
+ 
+});
+
 
 export default AccountPage;
