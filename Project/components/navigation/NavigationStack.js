@@ -154,7 +154,7 @@ const NavigationStack = () => {
           name="ResetPassword"
           component={ResetPasswordScreen}
           options={({ navigation }) => ({
-            title: "Account",
+            title: "Reset Password",
             headerStyle: {
               backgroundColor: "#BAE8E8",
             },
