@@ -107,7 +107,6 @@ const AddUtang = ({ route, navigation }) => {
           <View style={styles.contentContainer}>
             
             <View style={styles.details}>
-              <Text>Debtor ID: {debtorInfo?.d_id} </Text>
               <View style={styles.autoCompleteContainer}>
               <TextInput
                 placeholder="Item:"
@@ -172,13 +171,17 @@ export default AddUtang;
 const styles = StyleSheet.create({
   scrollView: {
     flexGrow: 1,
+    backgroundColor: "red",
   },
   container: {
     flex: 1,
     alignItems: "center",
     backgroundColor: "#BAE8E8",
+    paddingTop: 100,
+    paddingBottom: 300,
   },
   contentContainer: {
+    flex: 1,
     padding: 20,
     backgroundColor: "white",
     borderRadius: 30,

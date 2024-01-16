@@ -41,7 +41,7 @@ const Transactions = ({ navigation }) => {
   };
 
   return (
-    <ScrollView style={{ flex: 1 }}>
+    <ScrollView style={{ flex: 1, backgroundColor: "#BAE8E8"}}>
       <View style={styles.container}>
       {searchMode ? (
           <View style={styles.searchContainer}>

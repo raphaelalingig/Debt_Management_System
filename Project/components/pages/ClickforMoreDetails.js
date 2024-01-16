@@ -536,7 +536,7 @@ const PayModalContent = ({ setPayModalVisible }) => {
                       }}
                       underlayColor="#DDDDDD"
                     >
-                      <Text style={styles.buttonText}>Pay</Text>
+                      <Text style={{color: "white"}}>Pay</Text>
                     </TouchableOpacity>
                   </DataTable.Cell>
                   <DataTable.Cell>
@@ -642,8 +642,8 @@ const styles = StyleSheet.create({
   tableDebt: {
     padding: 5,
     backgroundColor: "white",
-    width: 370,
-    borderRadius: 30,
+    width: 345,
+    borderRadius: 15,
     marginTop: 10,
   },
   tableTitle: {
@@ -681,10 +681,11 @@ const styles = StyleSheet.create({
     marginTop: 22,
   },
   modalView: {
+    flex: 1,
     margin: 20,
     backgroundColor: "white",
-    borderRadius: 20,
-    padding: 35,
+    borderRadius: 15,
+    padding: 15,
     alignItems: "center",
     shadowColor: "#000",
     shadowOffset: {
@@ -694,21 +695,27 @@ const styles = StyleSheet.create({
     shadowOpacity: 0.25,
     shadowRadius: 4,
     elevation: 5,
+    justifyContent: "center",
+    marginBottom: 220,
+    marginTop: 150,
   },
   modalContent: {
+    flex: 1,
     backgroundColor: 'white',
-    borderRadius: 20,
-    padding: 20,
-    width: '80%',
+    borderRadius: 10,
+    padding: 10,
     alignItems: 'center',
   },
+
   modalTitle: {
     fontSize: 24,
     fontWeight: 'bold',
     marginBottom: 20,
   },
   detailsContainer: {
+    flex: 1,
     flexDirection: 'row',
+    paddingLeft: 50,
     marginBottom: 10,
     alignItems: 'center',
   },
@@ -745,6 +752,7 @@ const styles = StyleSheet.create({
     borderRadius: 10,
     paddingVertical: 5,
     paddingHorizontal: 5,
+    width: 30,
     left: 100,
   },
   buttonText: {

@@ -91,25 +91,27 @@ const handleResetPassword = async () => {
     <View style={styles.container}>
       <Feather
         name="user"
-        size={72}
+        size={100}
         color="black"
         style={styles.userLogo}
       />
       {userData ? (
-        <Card style={{ marginVertical: 20, width: '90%',}}>
-          <Card.Content>
-            <Title>User Information</Title>
-            <Paragraph>User ID: {userData.id}</Paragraph>
-            <Paragraph>Name: {userData.name}</Paragraph>
-            <Paragraph>Email: {userData.email}</Paragraph>
-            <Paragraph>Privilege: {userData.role}</Paragraph>
-            <Button title="Reset Password" onPress={() => navigation.navigate("ResetPassword",{userData})} disabled={loading} />
-          </Card.Content>
-        </Card>
+        <View style={styles.content}>
+          <View>
+            <Title style={styles.header} >User Information</Title>
+            <Paragraph style={styles.textcontent} >User ID: {userData.id}</Paragraph>
+            <Paragraph style={styles.textcontent} >Name: {userData.name}</Paragraph>
+            <Paragraph style={styles.textcontent} >Email: {userData.email}</Paragraph>
+            <Paragraph style={styles.textcontent} >Privilege: {userData.role}</Paragraph>
+          </View>
+        </View>
       ) : (
         <Text>Error fetching user data</Text>
       )}
-      <Button title="Logout" onPress={handleLogout} />
+          <View style={styles.button}>
+            <Button title="Reset Password" onPress={() => navigation.navigate("ResetPassword",{userData})} disabled={loading} />
+            <Button title="Logout" onPress={handleLogout} />
+          </View>
     </View>
   );
 };
@@ -117,17 +119,20 @@ const handleResetPassword = async () => {
 
 
 
+
 const styles = StyleSheet.create({
   container: {
-    flex: 1, alignItems: 'center',
-    justifyContent: 'center',
+    flex: 1,
+    alignItems: 'center',
+    justifyContent: 'space-evenly',
     padding: 20,
     backgroundColor: "white",
   },
 
-
+  
   userLogo: {
-    marginBottom: 20,
+    flex: 1,
+    marginBottom: 25,
     padding: 50,
     backgroundColor: "#f8f8ff",
     borderRadius: 150,
@@ -135,8 +140,47 @@ const styles = StyleSheet.create({
   },
 
 
+  content: {
+    flex: 2,
+    alignItems: 'flex-start',
+    width: '100%',
+    paddingLeft: 50,
+    backgroundColor: "white"
+  },
+
+
+  button: {
+    flex: 1,
+    flexDirection: 'column',
+    justifyContent: 'space-around',
+    padding: 20,
+    margin: 20,
+    borderRadius: 50,
+    backgroundColor: 'white'
+  },
+
+
+  textcontent: {
+    flex: 1,
+    fontSize: 15,
+    textAlign: 'justify',
+    marginLeft: 50,
+  },
+
+
+  header: {
+    flex: 1,
+    fontSize: 25,
+    textAlign: 'center',
+    marginBottom: 20,
+
+
+  }
+
+
  
 });
+
 
 
 export default AccountPage;
