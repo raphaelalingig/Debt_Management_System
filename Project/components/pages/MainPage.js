@@ -43,27 +43,27 @@ export default function MainPage({ navigation, route }) {
     const calculateDueStatus = (due_date, d_id) => {
       const currentDate = new Date();
       if (!due_date) {
-        setDue("Not Due")
-        // Handle the case when due_date is null
-        updateDebtorStatus(due, d_id)
         return { status: "Not Due", color: "black" };
       }
       const dueDate = new Date(due_date);
-  
+
       if (dueDate.toDateString() === currentDate.toDateString()) {
-        setDue("Due Today")
-        updateDebtorStatus(due, d_id)
         return { status: "Due Today", color: "orange" };
       } else if (dueDate < currentDate) {
-        setDue("Overdue")
-        updateDebtorStatus(due, d_id)
         return { status: "Overdue", color: "red" };
-      } else if (dueDate > currentDate){
-        setDue("Due")
-        updateDebtorStatus(due, d_id)
+      } else if (dueDate > currentDate) {
         return { status: "Due", color: "blue" };
       }
     };
+
+    useEffect(() => {
+      // Update debtor status and set due when debtors change
+      debtors.forEach((debtor) => {
+        const calculatedDueStatus = calculateDueStatus(debtor.due_date, debtor.d_id);
+        setDue(calculatedDueStatus.status);
+        updateDebtorStatus(debtor.d_id, calculatedDueStatus.status);
+      });
+    }, [debtors]);
   
 
     const handleDebtorClick = (item) => {
@@ -82,14 +82,14 @@ export default function MainPage({ navigation, route }) {
       debtor.d_name.toLowerCase().includes(searchTerm.toLowerCase())
     );
 
-    const updateDebtorStatus = async (d_id, due) => {
-      const status = due;
+    const updateDebtorStatus = async (d_id, status) => {
       try {
+        const url = API_URL + 'updatestatus/' + d_id;
+        const data = {
+          status: status,
+        };
         // Make the API request to update the status
-        const response = await axios.put(
-          API_URL + 'updatestatus/' + d_id,
-          due
-        );
+        const response = await axios.put(url, data);
 
         // Log the response for debugging (you can remove this in production)
         console.log("Update Debtor Status Response:", response.data);
@@ -98,6 +98,7 @@ export default function MainPage({ navigation, route }) {
         console.error("Error updating debtor status:", error);
       }
     };
+    
 
     return (
       <View style={styles.container}>

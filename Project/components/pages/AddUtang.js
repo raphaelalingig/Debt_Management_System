@@ -98,6 +98,32 @@ const AddUtang = ({ route, navigation }) => {
     }
   };
 
+  
+  const checkStatus = async (balance) =>{
+    try{
+      if(uthangsData.length > 0){
+        if(balance <= 0){
+          const newDataAmount = 0.00
+        const response = await axios.post(
+          API_URL + 'checkbalance/' + debtorInfo.d_id,
+          newDataAmount 
+        );
+    
+        if (response.status === 200) {
+          console.log('Check successful');
+          // Handle success
+        } else {
+          console.error('Check failed:', response.data.error || 'Unknown error');
+          // Handle failure
+        }
+      } 
+         
+      }
+    }catch (error) {
+      console.error('Error during checkBalance:', error.message || 'Unknown error');
+      }
+  }
+
   return (
     <FlatList
       contentContainerStyle={styles.scrollView}
