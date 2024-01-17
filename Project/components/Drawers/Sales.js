@@ -99,6 +99,7 @@ const Sales = () => {
           </View>
         )}
 
+        <View style={styles.intable}>
         {sales?.length > 0 ? (
           <DataTable>
           <DataTable.Header>
@@ -151,6 +152,7 @@ const Sales = () => {
           saleDetails={selectedSale}
         />
       </View>
+      </View>
     </ScrollView>
   );
 };
@@ -158,38 +160,54 @@ const Sales = () => {
 export default Sales;
 
 const styles = StyleSheet.create({
-  container: {
+  intable: {
     flex: 1,
-    backgroundColor: "#BAE8E8",
+    margin: 10,
+    padding: 5,
+    backgroundColor: "white",
   },
+
   tableSales: {
+    flex: 1,
+    flexDirection: 'column',
+    justifyContent: 'space-around',
+    alignItems: 'stretch',
     padding: 5,
     backgroundColor: "white",
     width: 370,
-    borderRadius: 30,
+    borderRadius: 10,
     marginTop: 10,
   },
+
   buttonContainer: {
+    flex: 1,
     flexDirection: "row",
     justifyContent: "space-around",
     marginVertical: 10,
   },
+
   searchContainer: {
+    flex: 1,
     flexDirection: "row",
     justifyContent: "space-around",
     marginVertical: 10,
+    padding: 10,
     alignItems: "center",
   },
+
   tableTitle: {
     fontWeight: "bold",
   },
+
   noSalesText: {
     textAlign: "center",
     fontSize: 16,
     marginTop: 20,
   },
+
   searchbox: {
     marginRight: 10,
     width: "40%",
   }
+
 });

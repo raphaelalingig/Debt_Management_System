@@ -66,7 +66,7 @@ const styles = StyleSheet.create({
     fontSize: 20,
     fontWeight: 'bold',
     marginBottom: 10,
-    padding: 10,
+    paddingTop: 10,
     textAlign: "center",
   },
   tableHeader: {
@@ -78,8 +78,11 @@ const styles = StyleSheet.create({
   },
   tableHeaderText: {
     flex: 1,
+    color: "white",
+    paddingTop: 10,
     textAlign: 'center',
     fontWeight: 'bold',
+    backgroundColor: "#6495ed"
   },
   tableRow: {
     flexDirection: 'row',
@@ -91,6 +94,7 @@ const styles = StyleSheet.create({
   },
   tableRowText: {
     flex: 1,
+    margin: 5,
     textAlign: 'center',
    
   },
