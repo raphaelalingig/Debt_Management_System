@@ -7,7 +7,7 @@ import API_URL from "../services/apiurl";
 import axios from "axios";
 
 const EditProfile = ({ route, navigation }) => {
-  const { debtorInfo } = route.params;
+  const { debtorInfo, calculatedDueStatus } = route.params;
   const [isModalVisible, setIsModalVisible] = useState(false);
   const [d_name, setDebtorName] = useState(debtorInfo?.d_name || "");
   const [phone, setPhone] = useState(debtorInfo?.phone || "");
@@ -152,7 +152,7 @@ const EditProfile = ({ route, navigation }) => {
 
             <TouchableOpacity
               onPress={() =>
-                navigation.navigate("ClickforMoreDetails", { debtorInfo })
+                navigation.navigate("ClickforMoreDetails", { debtorInfo, calculatedDueStatus })
               }
             >
               <Button

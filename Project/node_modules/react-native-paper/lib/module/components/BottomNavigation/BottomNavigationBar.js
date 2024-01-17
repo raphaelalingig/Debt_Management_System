@@ -193,6 +193,7 @@ const BottomNavigationBar = _ref2 => {
     inactiveColor,
     keyboardHidesNavigationBar = Platform.OS === 'android',
     style,
+    activeIndicatorStyle,
     labeled = true,
     animationEasing,
     onTabPress,
@@ -505,7 +506,7 @@ const BottomNavigationBar = _ref2 => {
             scaleX: outlineScale
           }],
           backgroundColor: theme.colors.secondaryContainer
-        }]
+        }, activeIndicatorStyle]
       }), /*#__PURE__*/React.createElement(Animated.View, {
         style: [styles.iconWrapper, isV3 && styles.v3IconWrapper, {
           opacity: isV3 ? v3ActiveOpacity : activeOpacity

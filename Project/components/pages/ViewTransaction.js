@@ -1,11 +1,12 @@
-import { StyleSheet, View, ScrollView, TextInput} from "react-native";
-import React, { useState } from "react";
+import { StyleSheet, View, ScrollView, TextInput, BackHandler} from "react-native";
+import React, { useState, useEffect } from "react";
 import { DataTable, Text, TouchableRipple, Button  } from "react-native-paper";
 import { useFocusEffect } from "@react-navigation/native";
 import axios from "axios";
 import TransactionInfoModal from "../pages/TransactionsInfo";
 import API_URL from "../services/apiurl";
-import { Print } from "expo";
+import * as Print from 'expo-print';
+
 
 const Transactions = ({ navigation, route }) => {
   const [transactions, setTransactions] = useState([]);
@@ -13,7 +14,7 @@ const Transactions = ({ navigation, route }) => {
   const [isModalVisible, setIsModalVisible] = useState(false);
   const [searchDate, setSearchDate] = useState("");
   const [searchMode, setSearchMode] = useState(false);
-  const { debtorInfo } = route.params;
+  const { debtorInfo, calculatedDueStatus } = route.params;
 
   useFocusEffect(
     React.useCallback(() => {
@@ -28,6 +29,20 @@ const Transactions = ({ navigation, route }) => {
         });
     }, [])
   );
+  useEffect(() => {
+    const backAction = () => {
+      // Handle the back button press
+      // For example, navigate back or perform other actions
+      navigation.goBack();
+      return true; // Prevent default behavior (exit the app)
+    };
+
+    const backHandler = BackHandler.addEventListener('hardwareBackPress', backAction);
+
+    // Clean up the event listener when the component is unmounted
+    return () => backHandler.remove();
+  }, [navigation]);
+
   
   const handlePrintReceipt = async () => {
     // Perform logic to print receipt
@@ -37,11 +52,52 @@ const Transactions = ({ navigation, route }) => {
 
   const generateReceiptContent = () => {
     // Generate the content of the receipt based on transactions
-    // Example: Concatenate transaction details into a string
-    let receiptContent = "";
+    // Format the content as an HTML table
+    let receiptContent = `
+      <html>
+        <head>
+          <style>
+            table {
+              width: 100%;
+              border-collapse: collapse;
+              margin-bottom: 10px;
+            }
+            th, td {
+              border: 1px solid #ddd;
+              padding: 8px;
+              text-align: left;
+            }
+            .debtorName {
+              font-size: 20px;
+              font-weight: bold;
+            }
+          </style>
+        </head>
+        <body>
+        <p class="debtorName">Customer: ${debtorInfo.d_name}</p>
+          <table>
+            <tr>
+              <th>ID</th>
+              <th>Transaction</th>
+              <th>Debtor</th>
+              <th>Date</th>
+            </tr>`;
+  
     transactions.forEach((item) => {
-      receiptContent += `${item.h_id} | ${item.transaction} | ${item.name} | ${item.date}\n`;
+      receiptContent += `
+        <tr>
+          <td>${item.h_id}</td>
+          <td>${item.transaction}</td>
+          <td>${item.name}</td>
+          <td>${item.date}</td>
+        </tr>`;
     });
+  
+    receiptContent += `
+          </table>
+        </body>
+      </html>`;
+  
     return receiptContent;
   };
 
@@ -61,6 +117,7 @@ const Transactions = ({ navigation, route }) => {
   return (
     <ScrollView style={{ flex: 1 }}>
       <View style={styles.container}>
+      <Text style={styles.debtorName}>Debtor Name: {debtorInfo.d_name}</Text>
       {searchMode ? (
           <View style={styles.searchContainer}>
             <TextInput
@@ -162,5 +219,10 @@ const styles = StyleSheet.create({
     flexDirection: "row",
     justifyContent: "space-around",
     marginVertical: 10,
+  },
+  debtorName: {
+    fontSize: 20,
+    fontWeight: "bold",
+    marginTop: 10,
   },
 });

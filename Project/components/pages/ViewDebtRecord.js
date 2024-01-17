@@ -9,8 +9,7 @@ import { ToastAndroid } from "react-native";
 
 
 const ViewDebtRecord = ({ navigation, route }) => {
-  const { selectedUthang } = route.params;
-  const { debtorInfo } = route.params;
+  const { selectedUthang, debtorInfo, calculatedDueStatus } = route.params;
   const [loading, setLoading] = React.useState(false);
   const [isError, setIsError] = React.useState(false);
   const [item_id, setItemId] = useState("");
@@ -107,7 +106,7 @@ const ViewDebtRecord = ({ navigation, route }) => {
           if (result?.data?.uthang) {
               // Access the updated Uthang data
               console.log(result.data.uthang);
-              navigation.navigate("ClickforMoreDetails", { debtorInfo });
+              navigation.navigate("ClickforMoreDetails", { debtorInfo, calculatedDueStatus });
           } else {
               // Handle error if needed
               console.log(result?.data?.error || result?.message);
@@ -169,7 +168,7 @@ const ViewDebtRecord = ({ navigation, route }) => {
               >Save</Button>
             </TouchableOpacity>
             
-            <TouchableOpacity onPress={() => navigation.navigate("ClickforMoreDetails",{debtorInfo})}>
+            <TouchableOpacity onPress={() => navigation.navigate("ClickforMoreDetails",{debtorInfo, calculatedDueStatus})}>
               <Button 
                 style={{ backgroundColor: "red" }}
                 disabled={loading}

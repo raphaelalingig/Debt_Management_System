@@ -67,6 +67,7 @@ const ClickforMoreDetails = ({ route, navigation }) => {
       setReloadData(true);
     }
   }
+  
 
   useEffect(() => {
     if (reloadData) {
@@ -220,8 +221,14 @@ const ClickforMoreDetails = ({ route, navigation }) => {
       setLoading(true);
       try {
         const url = API_URL + 'deleteutangs/' + debtorInfo.d_id;
-        const response = await axios.delete(url);
+        
+        // Assuming data_amount is the amount you want to send
+        const parsedPayment = parseFloat(payment);
+        const data_amount = parsedPayment; // Replace this with your actual data_amount
     
+        const response = await axios.delete(url, {
+          data: { data_amount } // Include data_amount in the request body
+        });
         if (response.status === 200 || response.status === 204) {
           console.log('Utangs paid successfully');
           setReloadData(true);
@@ -378,7 +385,7 @@ const ClickforMoreDetails = ({ route, navigation }) => {
           style={styles.editButton}
           onPress={() =>
             navigation.navigate("ViewDebtRecord", {
-              selectedUthang, debtorInfo 
+              selectedUthang, debtorInfo, calculatedDueStatus 
             })
           }
         >
@@ -482,13 +489,13 @@ const PayModalContent = ({ setPayModalVisible }) => {
             <View style={{ flexDirection: "row", marginTop: 15, gap: 5 }}>
               <TouchableOpacity
                 style={styles.button}
-                onPress={() => navigation.navigate("ViewTransaction", { debtorInfo })}
+                onPress={() => navigation.navigate("ViewTransaction", { debtorInfo, calculatedDueStatus })}
               >
                 <Text style={styles.buttonText}>Transactions</Text>
               </TouchableOpacity>
               <TouchableOpacity
                 style={styles.button}
-                onPress={() => navigation.navigate("EditProfile", { debtorInfo })}
+                onPress={() => navigation.navigate("EditProfile", { debtorInfo, calculatedDueStatus })}
               >
                 <Text style={styles.buttonText}>Edit Profile</Text>
               </TouchableOpacity>
@@ -551,7 +558,7 @@ const PayModalContent = ({ setPayModalVisible }) => {
               <Text style={styles.noUthangsText}>NO UTHANGS TO SHOW</Text>
             )}
           </View>
-          <TouchableOpacity onPress={() => navigation.navigate("AddUtang", { debtorInfo })}>
+          <TouchableOpacity onPress={() => navigation.navigate("AddUtang", { debtorInfo, calculatedDueStatus })}>
             <AntDesign
               style={styles.plusButton}
               name="pluscircle"

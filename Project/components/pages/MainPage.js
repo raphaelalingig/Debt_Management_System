@@ -32,21 +32,44 @@ export default function MainPage({ navigation, route }) {
       }, []) // The empty dependency array ensures that this effect runs only once when the component mounts
     );
 
-    const calculateDueStatus = (due_date) => {
+    useEffect(() => {
+      // Calculate due status and update debtor status when debtors change
+      debtors.forEach((debtor) => {
+        const calculatedDueStatus = calculateDueStatus(debtor.due_date, debtor.d_id);
+        updateDebtorStatus(debtor.d_id, calculatedDueStatus.status);
+      });
+    }, [debtors]);
+
+    const calculateDueStatus = (due_date, d_id) => {
       const currentDate = new Date();
+      if (!due_date) {
+        setDue("Not Due")
+        // Handle the case when due_date is null
+        updateDebtorStatus(due, d_id)
+        return { status: "Not Due", color: "black" };
+      }
       const dueDate = new Date(due_date);
   
       if (dueDate.toDateString() === currentDate.toDateString()) {
+        setDue("Due Today")
+        updateDebtorStatus(due, d_id)
         return { status: "Due Today", color: "orange" };
       } else if (dueDate < currentDate) {
+        setDue("Overdue")
+        updateDebtorStatus(due, d_id)
         return { status: "Overdue", color: "red" };
-      } else {
+      } else if (dueDate > currentDate){
+        setDue("Due")
+        updateDebtorStatus(due, d_id)
         return { status: "Due", color: "blue" };
       }
     };
+  
 
     const handleDebtorClick = (item) => {
       const calculatedDueStatus = calculateDueStatus(item.due_date);
+
+
   
       navigation.navigate("ClickforMoreDetails", {
         debtorInfo: item,
@@ -58,6 +81,23 @@ export default function MainPage({ navigation, route }) {
     const filteredDebtors = debtors.filter((debtor) =>
       debtor.d_name.toLowerCase().includes(searchTerm.toLowerCase())
     );
+
+    const updateDebtorStatus = async (d_id, due) => {
+      const status = due;
+      try {
+        // Make the API request to update the status
+        const response = await axios.put(
+          API_URL + 'updatestatus/' + d_id,
+          due
+        );
+
+        // Log the response for debugging (you can remove this in production)
+        console.log("Update Debtor Status Response:", response.data);
+      } catch (error) {
+        // Handle errors (log or display an error message)
+        console.error("Error updating debtor status:", error);
+      }
+    };
 
     return (
       <View style={styles.container}>
@@ -126,7 +166,7 @@ export default function MainPage({ navigation, route }) {
                     <Text style={styles.debtorInfo}>Balance: {item.phone}</Text>
                     <Text>
                       <Text style={{fontSize: 16, marginBottom: 5, color: "black" }}>Status: </Text>
-                      <Text style={{ ...styles.debtorInfo, color: calculateDueStatus(item.due_date).color }}>
+                      <Text style={{ ...styles.debtorInfo, color: calculateDueStatus(item.due_date, item.d_id).color }}>
                         {calculateDueStatus(item.due_date).status}
                       </Text>
                     </Text>
