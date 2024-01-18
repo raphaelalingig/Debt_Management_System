@@ -534,7 +534,7 @@ const PayModalContent = ({ setPayModalVisible }) => {
                 ))}
                 <DataTable.Row>
                   <DataTable.Cell></DataTable.Cell>
-                  <DataTable.Cell></DataTable.Cell>
+                  <DataTable.Cell></DataTable.Cell>awd
                   <DataTable.Cell>
                   <TouchableOpacity
                       style={styles.pbutton}
