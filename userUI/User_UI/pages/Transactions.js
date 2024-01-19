@@ -2,6 +2,8 @@ import { View, StyleSheet, ScrollView } from "react-native";
 import React from "react";
 import { Appbar, Avatar, Button, Card, Text, Title } from "react-native-paper";
 import { DataTable } from "react-native-paper";
+import { AntDesign } from "@expo/vector-icons";
+import { TouchableOpacity } from "react-native-gesture-handler";
 
 const Transactions = () => {
   return (
@@ -16,15 +18,19 @@ const Transactions = () => {
           onPress={() => {}}
         />
       </Appbar.Header>
+
       <ScrollView style={{ maxHeight: 300, shadowOpacity: 80, elevation: 15 }}>
         <DataTable style={styles.table}>
           <DataTable.Header>
             <DataTable.Title>Qty.</DataTable.Title>
-            <DataTable.Title>Item</DataTable.Title>
-            <DataTable.Title>Total</DataTable.Title>
-            <DataTable.Title>Date</DataTable.Title>
+            <DataTable.Title style={{ marginLeft: 20 }}>Item</DataTable.Title>
+            <DataTable.Title style={{ left: 20 }}>Total</DataTable.Title>
+            <DataTable.Title style={{ left: 60 }}>Date</DataTable.Title>
+            <DataTable.Title style={{ left: 40 }}>
+              <AntDesign name="filter" size={18} color="gray" />
+            </DataTable.Title>
           </DataTable.Header>
-          <DataTable.Row>
+          <DataTable.Row style={{ flex: 1, justifyContent: "space-evenly" }}>
             <DataTable.Cell>2</DataTable.Cell>
             <DataTable.Cell>Beer</DataTable.Cell>
             <DataTable.Cell>₱120.00</DataTable.Cell>
