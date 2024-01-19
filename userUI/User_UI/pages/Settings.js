@@ -1,11 +1,33 @@
-import { StyleSheet, TouchableOpacity, View } from "react-native";
-import React from "react";
+import {
+  StyleSheet,
+  TouchableOpacity,
+  View,
+  Modal,
+  TouchableWithoutFeedback,
+} from "react-native";
+import React, { useState } from "react";
+
 import { Appbar, Avatar, Button, Card, Text, Title } from "react-native-paper";
 import { FontAwesome } from "@expo/vector-icons";
 import { MaterialIcons } from "@expo/vector-icons";
 import { MaterialCommunityIcons } from "@expo/vector-icons";
-
+import { EvilIcons } from "@expo/vector-icons";
+import { Zocial } from "@expo/vector-icons";
 const Settings = () => {
+  const [modalVisible, setModalVisible] = useState(false);
+
+  const openModal = () => {
+    setModalVisible(true);
+  };
+
+  const closeModal = () => {
+    setModalVisible(false);
+  };
+
+  const handleModalPress = (e) => {
+    e.stopPropagation(); // Prevent closing modal when clicking inside the modal
+  };
+
   return (
     <View style={styles.container}>
       <Appbar.Header style={styles.headerContainer}>
@@ -39,17 +61,71 @@ const Settings = () => {
             />
             <Text variant="titleMedium">Name: User</Text>
           </TouchableOpacity>
-          <TouchableOpacity style={styles.buttonSettings}>
+          <Modal
+            animationType="slide"
+            transparent={true}
+            visible={modalVisible}
+            onRequestClose={closeModal}
+          >
+            <TouchableWithoutFeedback onPress={closeModal}>
+              <View style={styles.modalContainer}>
+                <View style={styles.modalContent} onPress={handleModalPress}>
+                  <Text variant="titleLarge" style={styles.modalTitle}>
+                    My Details:{" "}
+                  </Text>
+                  <View style={styles.modalTextnIconAligned}>
+                    <EvilIcons
+                      name="user"
+                      size={24}
+                      color="black"
+                      style={styles.modalIcons}
+                    />
+                    <Text variant="titleMedium">Name: User</Text>
+                  </View>
+                  <View style={styles.modalTextnIconAligned}>
+                    <MaterialIcons
+                      name="place"
+                      size={24}
+                      color="black"
+                      style={styles.modalIcons}
+                    />
+                    <Text variant="titleMedium">Address: Sample Address</Text>
+                  </View>
+                  <View style={styles.modalTextnIconAligned}>
+                    <MaterialIcons
+                      name="phone"
+                      size={24}
+                      color="black"
+                      style={styles.modalIcons}
+                    />
+                    <Text variant="titleMedium">Phone Number: 020202020</Text>
+                  </View>
+                  <View style={styles.modalTextnIconAligned}>
+                    <Zocial
+                      name="email"
+                      size={24}
+                      color="black"
+                      style={styles.modalIcons}
+                    />
+                    <Text variant="titleMedium">Email: user@gmail.com</Text>
+                  </View>
+                  <TouchableOpacity onPress={closeModal}></TouchableOpacity>
+                </View>
+              </View>
+            </TouchableWithoutFeedback>
+          </Modal>
+          <TouchableOpacity style={styles.buttonSettings} onPress={openModal}>
             <MaterialCommunityIcons
-              name="account-edit-outline"
+              name="account-details"
               size={24}
               color="black"
               style={{ marginRight: 5, marginLeft: 15 }}
             />
-            <Text variant="titleMedium">Edit Profile</Text>
+            <Text variant="titleMedium">My Details</Text>
           </TouchableOpacity>
+
           <TouchableOpacity style={styles.buttonSettings}>
-            <MaterialCommunityIcons 
+            <MaterialCommunityIcons
               name="account-lock-open-outline"
               size={24}
               color="black"
@@ -122,5 +198,28 @@ const styles = StyleSheet.create({
     shadowOpacity: 80,
     elevation: 15,
     marginTop: 70,
+  },
+
+  modalContainer: {
+    flex: 1,
+    justifyContent: "center",
+    alignItems: "center",
+    backgroundColor: "rgba(0, 0, 0, 0.5)",
+  },
+  modalContent: {
+    backgroundColor: "white",
+    padding: 20,
+    borderRadius: 10,
+    gap: 10,
+    elevation: 5,
+  },
+  modalTitle: {
+    marginBottom: 10,
+  },
+  modalTextnIconAligned: {
+    flexDirection: "row",
+  },
+  modalIcons: {
+    marginRight: 5,
   },
 });

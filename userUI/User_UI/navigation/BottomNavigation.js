@@ -17,9 +17,15 @@ const AnimatedIcon = ({ name, size, color, isFocused }) => {
 const BottomNavigation = () => {
   return (
     <Tab.Navigator
-      tabBarOptions={{
-        activeTintColor: "black",
-      }}
+      screenOptions={({ route }) => ({
+        tabBarActiveTintColor: "black",
+        tabBarStyle: [
+          {
+            display: "flex",
+          },
+          null,
+        ],
+      })}
     >
       <Tab.Screen
         name="Home"
@@ -38,7 +44,6 @@ const BottomNavigation = () => {
         component={Transactions}
         options={({ route }) => ({
           headerShown: false,
-
           tabBarIcon: ({ color, size }) => (
             <AnimatedIcon
               name="newspaper-outline"
@@ -58,7 +63,6 @@ const BottomNavigation = () => {
         component={Settings}
         options={({ route }) => ({
           headerShown: false,
-
           tabBarIcon: ({ color, size }) => (
             <Feather name="settings" size={24} color={color} />
           ),
