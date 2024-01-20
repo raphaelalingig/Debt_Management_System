@@ -13,7 +13,7 @@ import EnterModal from './EnterAmount';
 import ConfirmModal from './Confirm';
 
 const ClickforMoreDetails = ({ route, navigation }) => {
-  const { debtorInfo, calculatedDueStatus } = route.params;
+  const { debtorInfo} = route.params;
   const [loading, setLoading] = React.useState(false);
   const [uthangsData, setUthangsData] = useState([]);
   const [payment, setPayment] =  React.useState(0.00);
@@ -86,7 +86,7 @@ const ClickforMoreDetails = ({ route, navigation }) => {
           setUthangsData(response.data);
           
  
-          if(calculatedDueStatus.status === "Overdue"){
+          if(debtorInfo.status === "Overdue"){
             setDue_fee(0.01);
           }else{
             setDue_fee(0);
@@ -317,7 +317,7 @@ const ClickforMoreDetails = ({ route, navigation }) => {
           if(uthangsData.length > 0){
             if(balance <= 0){
               const newDataAmount = 0.00
-            const response = await axios.post(
+              const response = await axios.post(
               API_URL + 'checkbalance/' + debtorInfo.d_id,
               newDataAmount 
             );
@@ -336,8 +336,7 @@ const ClickforMoreDetails = ({ route, navigation }) => {
           console.error('Error during checkBalance:', error.message || 'Unknown error');
           }
       }
-
-
+  
   const renderModalContent = () => {
     if (!selectedUthang) {
       return null;
@@ -463,6 +462,31 @@ const PayModalContent = ({ setPayModalVisible }) => {
     </View>
   );
 };
+const calculateStatusColor = () => {
+  const status = debtorInfo.status;
+
+  if(status === "Not Due"){
+    return {color: "black" };
+  }else if(status === "Due"){
+    return {color: "blue" };
+  }else if(status === "Due Today"){
+    return {color: "orange" };
+  }else if(status === "Overdue"){
+    return {color: "red" };
+  }
+
+}
+useEffect(() => {
+  const backHandler = BackHandler.addEventListener(
+    "hardwareBackPress",
+    () => {
+      navigation.navigate("MainPage");
+      return true;
+    }
+  );
+
+  return () => backHandler.remove();
+}, [isFocused]);
 
 
 
@@ -479,23 +503,23 @@ const PayModalContent = ({ setPayModalVisible }) => {
               <EvilIcons name="user" size={230} color="black" />
             </View>
             <View style={styles.details}>
-              <Text>Name: {debtorInfo.d_name}</Text>
-              <Text>Phone: {debtorInfo.phone}</Text>
-              <Text>Address: {debtorInfo.address}</Text>
-              <Text>Email: {debtorInfo.email}</Text>
-              <Text>Due Date: {debtorInfo.due_date}    <Text style={{color:calculatedDueStatus.color}}>{calculatedDueStatus.status}</Text></Text>
+              <Text><Text style={{fontWeight: "bold",}}>Name: </Text>{debtorInfo.d_name}</Text>
+              <Text><Text style={{fontWeight: "bold",}}>Phone: </Text>{debtorInfo.phone}</Text>
+              <Text><Text style={{fontWeight: "bold",}}>Address: </Text>{debtorInfo.address}</Text>
+              <Text><Text style={{fontWeight: "bold",}}>Email: </Text>{debtorInfo.email}</Text>
+              <Text><Text style={{fontWeight: "bold",}}>Due Date: </Text>{debtorInfo.due_date}    /     <Text style={{color:calculateStatusColor().color}}>{debtorInfo.status}</Text></Text>
       
             </View>
             <View style={{ flexDirection: "row", marginTop: 15, gap: 5 }}>
               <TouchableOpacity
                 style={styles.button}
-                onPress={() => navigation.navigate("ViewTransaction", { debtorInfo, calculatedDueStatus })}
+                onPress={() => navigation.navigate("ViewTransaction", { debtorInfo})}
               >
                 <Text style={styles.buttonText}>Transactions</Text>
               </TouchableOpacity>
               <TouchableOpacity
                 style={styles.button}
-                onPress={() => navigation.navigate("EditProfile", { debtorInfo, calculatedDueStatus })}
+                onPress={() => navigation.navigate("EditProfile", { debtorInfo})}
               >
                 <Text style={styles.buttonText}>Edit Profile</Text>
               </TouchableOpacity>
@@ -534,7 +558,7 @@ const PayModalContent = ({ setPayModalVisible }) => {
                 ))}
                 <DataTable.Row>
                   <DataTable.Cell></DataTable.Cell>
-                  <DataTable.Cell></DataTable.Cell>awd
+                  <DataTable.Cell></DataTable.Cell>
                   <DataTable.Cell>
                   <TouchableOpacity
                       style={styles.pbutton}
@@ -558,7 +582,7 @@ const PayModalContent = ({ setPayModalVisible }) => {
               <Text style={styles.noUthangsText}>NO UTHANGS TO SHOW</Text>
             )}
           </View>
-          <TouchableOpacity onPress={() => navigation.navigate("AddUtang", { debtorInfo, calculatedDueStatus })}>
+          <TouchableOpacity onPress={() => navigation.navigate("AddUtang", { debtorInfo})}>
             <AntDesign
               style={styles.plusButton}
               name="pluscircle"
