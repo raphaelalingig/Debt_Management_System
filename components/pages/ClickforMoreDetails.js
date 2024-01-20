@@ -558,7 +558,7 @@ useEffect(() => {
                 ))}
                 <DataTable.Row>
                   <DataTable.Cell></DataTable.Cell>
-                  <DataTable.Cell></DataTable.Cell>awd
+                  <DataTable.Cell></DataTable.Cell>
                   <DataTable.Cell>
                   <TouchableOpacity
                       style={styles.pbutton}
