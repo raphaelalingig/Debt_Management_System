@@ -38,7 +38,7 @@ const LoginForm = () => {
         if (result.role === 1) {
           navigation.replace('MainPage');
         } else if (result.role === 2) {
-          navigation.replace('DebtorPage');
+          navigation.replace('UserMainPage');
         }
       }
     } catch (e) {

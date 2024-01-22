@@ -4,7 +4,7 @@ import { StyleSheet, View, Text, ScrollView, TouchableOpacity } from "react-nati
 import { FontAwesome } from "@expo/vector-icons";
 import { DataTable } from "react-native-paper";
 
-const MainPage = () => {
+const UserMainPage = () => {
   return (
     <View style={styles.container}>
       <UserHeader />
@@ -41,7 +41,7 @@ const MainPage = () => {
   );
 };
 
-export default MainPage;
+export default UserMainPage;
 
 const styles = StyleSheet.create({
   container: {

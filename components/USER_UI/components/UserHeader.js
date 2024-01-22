@@ -19,7 +19,6 @@ export default UserHeader;
 const styles = StyleSheet.create({
   container: {
     backgroundColor: "#BAE8E8",
-    marginTop: 25,
     marginBottom: 25,
   },
   titleMedium: {

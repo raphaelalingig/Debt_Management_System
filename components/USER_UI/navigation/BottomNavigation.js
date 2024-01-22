@@ -1,6 +1,6 @@
 import React from "react";
 import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
-import MainPage from "../pages/MainPage";
+import UserMainPage from "../pages/UserMainPage";
 import Settings from "../pages/Settings";
 import Transactions from "../pages/Transactions";
 import { Feather, AntDesign, Ionicons } from "@expo/vector-icons";
@@ -29,7 +29,7 @@ const BottomNavigation = () => {
     >
       <Tab.Screen
         name="Home"
-        component={MainPage}
+        component={UserMainPage}
         options={({ route }) => ({
           headerShown: false,
           tabBarIcon: ({ color, size }) => (

@@ -13,7 +13,7 @@ import { MaterialIcons } from "@expo/vector-icons";
 import { MaterialCommunityIcons } from "@expo/vector-icons";
 import { EvilIcons } from "@expo/vector-icons";
 import { Zocial } from "@expo/vector-icons";
-const Settings = () => {
+const Settings = ({ navigation }) => {
   const [modalVisible, setModalVisible] = useState(false);
 
   const openModal = () => {
@@ -153,7 +153,6 @@ export default Settings;
 const styles = StyleSheet.create({
   headerContainer: {
     backgroundColor: "#BAE8E8",
-    marginTop: 25,
     marginBottom: 25,
   },
   titleMedium: {

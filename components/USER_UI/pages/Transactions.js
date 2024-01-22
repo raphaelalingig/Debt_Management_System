@@ -3,7 +3,6 @@ import React from "react";
 import { Appbar, Avatar, Button, Card, Text, Title } from "react-native-paper";
 import { DataTable } from "react-native-paper";
 import { AntDesign } from "@expo/vector-icons";
-import { TouchableOpacity } from "react-native-gesture-handler";
 
 const Transactions = () => {
   return (
@@ -46,7 +45,6 @@ export default Transactions;
 const styles = StyleSheet.create({
   headerContainer: {
     backgroundColor: "#BAE8E8",
-    marginTop: 25,
     marginBottom: 25,
   },
   titleMedium: {
