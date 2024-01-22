@@ -14,6 +14,9 @@ import ConfirmModal from './Confirm';
 
 const ClickforMoreDetails = ({ route, navigation }) => {
   const { debtorInfo} = route.params;
+  const [debtor, setDebtor] = useState([]);
+  const [balanceData, setBalanceData] = useState(0)
+  const [color, setColor] = useState([]);
   const [loading, setLoading] = React.useState(false);
   const [uthangsData, setUthangsData] = useState([]);
   const [payment, setPayment] =  React.useState(0.00);
@@ -27,47 +30,7 @@ const ClickforMoreDetails = ({ route, navigation }) => {
   const [reloadData, setReloadData] = useState(false);
   const [isError, setIsError] = React.useState(false);
   const [due_fee, setDue_fee] = useState(0);
-  
 
-  const full = async () => {
-    const paymentNumber = parseFloat(payment);
-    const balanceNumber = parseFloat(balance);
-    if(payment === 0){
-      setPayment(String(balance));
-    }else if(payment != balance){
-      setPayment(String(balance));
-    }else{
-      console.log("Is payment = balance",paymentNumber === balance);
-      await setCon(true)
-      
-    }
-  }
-
-  const partial = async () => {
-    if(payment === 0){
-    setEnterModalVisible(true)
-  }else{
-    await setCon(true)
-  }
-  }
-
-  
-
-  const confirmed = async () =>{
-    setCon(false)
-
-    const paymentNumber = parseFloat(payment);
-    const balanceNumber = parseFloat(balance);
-
-    if(paymentNumber === balanceNumber){
-      await updateDataAmount(debtorInfo.d_id, 0);
-      await deleteUtangs(debtorInfo.d_id);
-    }else{
-      await handlePay();
-      setReloadData(true);
-    }
-  }
-  
 
   useEffect(() => {
     if (reloadData) {
@@ -79,6 +42,18 @@ const ClickforMoreDetails = ({ route, navigation }) => {
 
 
   const fetchData = useCallback(() => {
+    if (debtorInfo.d_id) {
+      axios
+        .get(API_URL + 'debtor/' + debtorInfo.d_id)
+        .then((response) => {
+          setDebtor(response.data);
+          calculateStatusColor(response.data);
+        })
+        .catch((error) => {
+          console.error('Error fetching data:', error);
+          console.error('Response data:', error.response.data);
+        });
+    }
     if (debtorInfo.d_id) {
       axios
         .get(API_URL + 'uthangs/' + debtorInfo.d_id)
@@ -127,12 +102,51 @@ const ClickforMoreDetails = ({ route, navigation }) => {
     };
   }, [navigation, fetchData]);
 
+  const full = async () => {
+    const paymentNumber = parseFloat(payment);
+    const balanceNumber = parseFloat(balance);
+    if(payment === 0){
+      setPayment(String(balance));
+    }else if(payment != balance){
+      setPayment(String(balance));
+    }else{
+      console.log("Is payment = balance",paymentNumber === balance);
+      await setCon(true)
+      
+    }
+  }
+
+  const partial = async () => {
+    if(payment === 0){
+    setEnterModalVisible(true)
+  }else{
+    await setCon(true)
+  }
+  }
+
+  
+
+  const confirmed = async () =>{
+    setCon(false)
+
+    const paymentNumber = parseFloat(payment);
+    const balanceNumber = parseFloat(balance);
+
+    if(paymentNumber === balanceNumber){
+      await updateDataAmount(debtorInfo.d_id, 0);
+      await deleteUtangs(debtorInfo.d_id);
+    }else{
+      await handlePay();
+      setReloadData(true);
+    }
+  }
+
   const grandTotal = uthangsData
   .filter(item => typeof item.total === 'number' || (typeof item.total === 'string' && item.total.trim() !== ''))
   .reduce((sum, item) => sum + parseFloat(item.total), 0);
   const interest  = (grandTotal * due_fee) + grandTotal;
   const percent = interest - grandTotal;
-  const balance = interest - debtorInfo.data_amount;
+  const balance = interest - debtor.data_amount;
   
   const payAmount = (balance) => {
     if (selectedUthang.total > balance) {
@@ -233,6 +247,7 @@ const ClickforMoreDetails = ({ route, navigation }) => {
           console.log('Utangs paid successfully');
           setReloadData(true);
           setPayModalVisible(!paymodalVisible);
+          setPayment(0);
         } else {
           console.error('Error deleting utangs:', response.data.message || 'Unknown error');
         }
@@ -270,8 +285,11 @@ const ClickforMoreDetails = ({ route, navigation }) => {
         const responseData = await response.json();
         console.log(responseData);
     
-        if (response.ok) {
+        if (response.status === 200 || response.status === 204) {
+          console.log('Payment Successful');
+          setReloadData(true);
           setPayModalVisible(!paymodalVisible);
+          setPayment(0);
           ToastAndroid.show('Payment Successful', ToastAndroid.SHORT);
     
           if (newBalance === 0) {
@@ -415,11 +433,11 @@ const PayModalContent = ({ setPayModalVisible }) => {
       </View>
       <View style={styles.paydetailsContainer}>
         <Text style={styles.paydetailLabel}>Data Payment:</Text>
-        <Text style={styles.paydetailValue}>₱{debtorInfo.data_amount}</Text>
+        <Text style={styles.paydetailValue}>₱{debtor.data_amount}</Text>
       </View>
       <View style={styles.paydetailsContainer}>
         <Text style={styles.paydetailLabel}>Last Payment:</Text>
-        <Text style={styles.paydetailValue}>{debtorInfo.last_payment_date}</Text>
+        <Text style={styles.paydetailValue}>{debtor.last_payment_date}</Text>
       </View>
       <View style={styles.paydetailsContainer}>
         <Text style={styles.paydetailLabel}>Balance:</Text>
@@ -462,20 +480,21 @@ const PayModalContent = ({ setPayModalVisible }) => {
     </View>
   );
 };
-const calculateStatusColor = () => {
-  const status = debtorInfo.status;
+const calculateStatusColor = (debtor) => {
+  const status = debtor.status;
 
   if(status === "Not Due"){
-    return {color: "black" };
+    setColor("black");
   }else if(status === "Due"){
-    return {color: "blue" };
+    setColor("blue");
   }else if(status === "Due Today"){
-    return {color: "orange" };
+    setColor("orange");
   }else if(status === "Overdue"){
-    return {color: "red" };
+    setColor("red");
   }
-
 }
+
+
 useEffect(() => {
   const backHandler = BackHandler.addEventListener(
     "hardwareBackPress",
@@ -507,7 +526,7 @@ useEffect(() => {
               <Text><Text style={{fontWeight: "bold",}}>Phone: </Text>{debtorInfo.phone}</Text>
               <Text><Text style={{fontWeight: "bold",}}>Address: </Text>{debtorInfo.address}</Text>
               <Text><Text style={{fontWeight: "bold",}}>Email: </Text>{debtorInfo.email}</Text>
-              <Text><Text style={{fontWeight: "bold",}}>Due Date: </Text>{debtorInfo.due_date}    /     <Text style={{color:calculateStatusColor().color}}>{debtorInfo.status}</Text></Text>
+              <Text><Text style={{fontWeight: "bold",}}>Due Date: </Text>{debtor.due_date}    /     <Text style={{color:color, fontWeight:'bold'}}>{debtor.status}</Text></Text>
       
             </View>
             <View style={{ flexDirection: "row", marginTop: 15, gap: 5 }}>

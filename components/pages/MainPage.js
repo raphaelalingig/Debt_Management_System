@@ -35,14 +35,6 @@ const DebtorList = () => {
       });
   }, []));
 
-  useEffect(() => {
-    // Calculate balances for newly added debtors or changed balances
-    debtors.forEach((debtor) => {
-      if (!balances[debtor.d_id]) {
-        calculateBalance(debtor.d_id);
-      }
-    });
-  }, [debtors, balances]);
 
   const calculateStatusColor = (status) => {
     if (status === "Not Due") {
