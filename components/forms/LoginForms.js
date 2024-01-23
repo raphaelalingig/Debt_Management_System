@@ -1,15 +1,21 @@
 import { StyleSheet, TouchableOpacity, ToastAndroid, View } from "react-native";
 import React, { useState } from "react";
-import { Button, Card, TextInput, Text, HelperText, Checkbox } from "react-native-paper";
+import {
+  Button,
+  Card,
+  TextInput,
+  Text,
+  HelperText,
+  Checkbox,
+} from "react-native-paper";
 import { useNavigation } from "@react-navigation/native";
 import { Formik } from "formik";
 import * as Yup from "yup";
-import AsyncStorage from '@react-native-async-storage/async-storage';
+import AsyncStorage from "@react-native-async-storage/async-storage";
 import { Ionicons } from "@expo/vector-icons";
 import { MaterialIcons } from "@expo/vector-icons";
 import fetchServices from "../services/fetchServices";
 import API_URL from "../services/apiurl";
-
 
 const LoginForm = () => {
   const [rememberMe, setRememberMe] = useState(false);
@@ -25,25 +31,25 @@ const LoginForm = () => {
 
   const handleLogin = async (values, rememberMe) => {
     try {
-      const url = API_URL + 'login';
+      const url = API_URL + "login";
       const result = await fetchServices.postData(url, values);
-  
+
       if (result.message != null) {
         showToast(result?.message);
       } else {
         // Save the token and rememberMe flag to AsyncStorage
-        await AsyncStorage.setItem('authToken', result.token);
-        await AsyncStorage.setItem('rememberMe', rememberMe.toString());
-  
+        await AsyncStorage.setItem("authToken", result.token);
+        await AsyncStorage.setItem("rememberMe", rememberMe.toString());
+
         if (result.role === 1) {
-          navigation.replace('MainPage');
+          navigation.replace("MainPage");
         } else if (result.role === 2) {
-          navigation.replace('UserMainPage');
+          navigation.replace("UserMainPage");
         }
       }
     } catch (e) {
-      console.error('API Error:', e);
-      showToast('Something went wrong. Please try again.');
+      console.error("API Error:", e);
+      showToast("Something went wrong. Please try again.");
     }
   };
 
@@ -82,7 +88,19 @@ const LoginForm = () => {
         }) => {
           return (
             <View styles={{ flex: 1 }}>
-              <Text variant="displayMedium">Welcome Back</Text>
+              <Text
+                variant="displaySmall"
+                style={{
+                  fontStyle: "italic",
+                  textDecorationLine: "underline",
+                  width: "100%",
+                  textAlign: "center",
+                  marginBottom: 20,
+                }}
+              >
+                "Welcome Back"
+              </Text>
+
               <Text style={{ fontWeight: "bold", color: "black" }}>
                 Log in to your account
               </Text>
@@ -131,7 +149,7 @@ const LoginForm = () => {
               )}
               <View style={styles.checkboxContainer}>
                 <Checkbox
-                  status={rememberMe ? 'checked' : 'unchecked'}
+                  status={rememberMe ? "checked" : "unchecked"}
                   onPress={() => setRememberMe(!rememberMe)}
                 />
                 <Text>Remember Me</Text>
@@ -168,7 +186,7 @@ const LoginForm = () => {
                 <TouchableOpacity
                   loading={isSubmitting}
                   disabled={isSubmitting}
-                  mode="elevated" 
+                  mode="elevated"
                   onPress={handleSubmit}
                   style={{
                     marginTop: 10,

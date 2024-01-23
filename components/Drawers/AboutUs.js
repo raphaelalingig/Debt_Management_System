@@ -149,6 +149,7 @@ const styles = StyleSheet.create({
     marginBottom: 15,
     elevation: 5,
     alignItems: "center",
+    
   },
 
   memberName: {
