@@ -133,7 +133,10 @@ const Settings = ({ navigation }) => {
             />
             <Text variant="titleMedium">Reset Password</Text>
           </TouchableOpacity>
-          <TouchableOpacity style={styles.logoutButton}>
+          <TouchableOpacity
+            style={styles.logoutButton}
+            onPress={() => navigation.navigate("LoginForms")}
+          >
             <MaterialIcons
               name="logout"
               size={24}
