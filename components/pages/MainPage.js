@@ -11,75 +11,98 @@ import { AntDesign } from "@expo/vector-icons";
 
 export default function MainPage({ navigation, route }) {
 
-const DebtorList = () => {
+  const DebtorList = () => {
     
-  const [debtors, setDebtors] = useState([]);
-  const [searchTerm, setSearchTerm] = useState("");
-  const [balances, setBalances] = useState([]);
+    const [debtors, setDebtors] = useState([]);
+    const [searchTerm, setSearchTerm] = useState("");
+    const [due, setDue] = useState("");
 
-  useFocusEffect(
-    React.useCallback(() => {
-    // Fetch data from the Laravel API endpoint
-    axios
-        .get(API_URL + 'debtors')
-      .then((response) => {
-        setDebtors(response.data);
-        // Calculate balances for each debtor
-        response.data.forEach((debtor) => {
-          calculateBalance(debtor.d_id);
-        });
-      })
-      .catch((error) => {
-        console.error('Error fetching data:', error);
-        console.error('Response data:', error.response.data);
+    useFocusEffect(
+      React.useCallback(() => {
+        // Fetch data from the Laravel API endpoint
+        axios
+          .get(API_URL + 'debtors')
+          .then((response) => {
+            setDebtors(response.data);
+          })
+          .catch((error) => {
+            console.error('Error fetching data:', error);
+            console.error('Response data:', error.response.data);
+          });
+      }, []) // The empty dependency array ensures that this effect runs only once when the component mounts
+    );
+
+    useEffect(() => {
+      // Calculate due status and update debtor status when debtors change
+      debtors.forEach((debtor) => {
+        const calculatedDueStatus = calculateDueStatus(debtor.due_date, debtor.d_id);
+        updateDebtorStatus(debtor.d_id, calculatedDueStatus.status);
       });
-  }, []));
+    }, [debtors]);
 
+    const calculateDueStatus = (due_date, d_id) => {
+      const currentDate = new Date();
+      if (!due_date) {
+        return { status: "Not Due", color: "black" };
+      }
+      const dueDate = new Date(due_date);
 
-  const calculateStatusColor = (status) => {
-    if (status === "Not Due") {
-      return { color: "black" };
-    } else if (status === "Due") {
-      return { color: "blue", fontWeight: "bold" };
-    } else if (status === "Due Today") {
-      return { color: "orange", fontWeight: "bold" };
-    } else if (status === "Overdue") {
-      return { color: "red", fontWeight: "bold" };
-    }
-  };
+      if (dueDate.toDateString() === currentDate.toDateString()) {
+        return { status: "Due Today", color: "orange" };
+      } else if (dueDate < currentDate) {
+        return { status: "Overdue", color: "red" };
+      } else if (dueDate > currentDate) {
+        return { status: "Due", color: "blue" };
+      }
+    };
 
-  const handleDebtorClick = (item) => {
-    navigation.navigate("ClickforMoreDetails", {
-      debtorInfo: item,
-      uthangsData: item.uthangsData,
-    });
-  };
-
-  const calculateBalance = async (d_id) => {
-  try {
-    const response = await axios.get(API_URL + "balance/" + d_id);
-    const newBalance = response.data.totalAmount;
-    
-    if (balances[d_id] !== newBalance) {
-      setBalances((prevBalances) => ({
-        ...prevBalances,
-        [d_id]: newBalance,
-      }));
-    }
-  } catch (error) {
-    console.error("Error fetching uthangs data:", error);
-  }
-};
-
+    useEffect(() => {
+      // Update debtor status and set due when debtors change
+      debtors.forEach((debtor) => {
+        const calculatedDueStatus = calculateDueStatus(debtor.due_date, debtor.d_id);
+        setDue(calculatedDueStatus.status);
+        updateDebtorStatus(debtor.d_id, calculatedDueStatus.status);
+      });
+    }, [debtors]);
   
 
-  const filteredDebtors = debtors.filter((debtor) =>
-    debtor.d_name.toLowerCase().includes(searchTerm.toLowerCase())
-  );
+    const handleDebtorClick = (item) => {
+      const calculatedDueStatus = calculateDueStatus(item.due_date);
 
-  return (
-    <View style={styles.container}>
-      <TouchableOpacity style={styles.menuLogo}>
+
+  
+      navigation.navigate("ClickforMoreDetails", {
+        debtorInfo: item,
+        uthangsData: item.uthangsData,
+        calculatedDueStatus, // Include the calculatedDueStatus in navigation parameters
+      });
+    };
+
+    const filteredDebtors = debtors.filter((debtor) =>
+      debtor.d_name.toLowerCase().includes(searchTerm.toLowerCase())
+    );
+
+    const updateDebtorStatus = async (d_id, status) => {
+      try {
+        const url = API_URL + 'updatestatus/' + d_id;
+        const data = {
+          status: status,
+        };
+        // Make the API request to update the status
+        const response = await axios.put(url, data);
+
+        // Log the response for debugging (you can remove this in production)
+        console.log("Update Debtor Status Response:", response.data);
+      } catch (error) {
+        // Handle errors (log or display an error message)
+        console.error("Error updating debtor status:", error);
+      }
+    };
+    
+
+    return (
+      <View style={styles.container}>
+        <TouchableOpacity style={styles.menuLogo}>
           <MaterialCommunityIcons
             name="menu"
             size={24}
@@ -121,11 +144,11 @@ const DebtorList = () => {
             <Text>Transactions</Text>
           </View>
         </TouchableOpacity>
-      <FlatList
-        data={filteredDebtors}
-        keyExtractor={(item) => item.d_id.toString()}
-        renderItem={({ item }) => (
-          <TouchableOpacity onPress={() => handleDebtorClick(item)}>
+        <FlatList
+          data={filteredDebtors}
+          keyExtractor={(item) => item.d_id.toString()}
+          renderItem={({ item }) => (
+            <TouchableOpacity onPress={() => handleDebtorClick(item)}>
             <View style={styles.customersList}>
               <View style={{ flexDirection: "row" }}>
                 <Feather
@@ -137,37 +160,24 @@ const DebtorList = () => {
                 <View style={styles.verticalLine}></View>
                 <View style={styles.userDetails}>
                   <View style={styles.debtorBox}>
-                    {item.showDebtorId ? (
-                      <Text style={styles.debtorInfo}>Id: {item.d_id}</Text>
-                    ) : null}
-                    <Text style={styles.debtorInfo}>
-                      Name: <Text style={styles.debtorInfo1}>{item.d_name}</Text>
-                    </Text>
-                    <Text style={styles.debtorInfo}>
-                      Balance: ₱
-                      <Text style={styles.debtorInfo1}>
-                        {balances[item.d_id] || 0}
-                      </Text>
-                    </Text>
+                  {item.showDebtorId ? (
+                        <Text style={styles.debtorInfo}>Id: {item.d_id}</Text>
+                      ) : null}
+                    <Text style={styles.debtorInfo}>Name: {item.d_name}</Text>
+                    <Text style={styles.debtorInfo}>Balance: {item.phone}</Text>
                     <Text>
-                      <Text style={styles.debtorInfo}>Status: </Text>
-                      <Text
-                        style={{
-                          ...styles.debtorInfo1,
-                          color: calculateStatusColor(item.status).color,
-                          fontWeight: calculateStatusColor(item.status).fontWeight,
-                        }}
-                      >
-                        {item.status}
+                      <Text style={{fontSize: 16, marginBottom: 5, color: "black" }}>Status: </Text>
+                      <Text style={{ ...styles.debtorInfo, color: calculateDueStatus(item.due_date, item.d_id).color }}>
+                        {calculateDueStatus(item.due_date).status}
                       </Text>
                     </Text>
                   </View>
                 </View>
               </View>
             </View>
-          </TouchableOpacity>
-        )}
-      />
+            </TouchableOpacity>
+          )}
+        />
         <TouchableOpacity onPress={() => navigation.navigate("AddDebtor")}>
         <AntDesign
           style={styles.plusButton}
@@ -235,14 +245,9 @@ const DebtorList = () => {
     debtorBox: {
       padding: 10,
     },
-    debtorInfo1: {
-      fontSize: 16,
-      marginBottom: 5,
-    },
     debtorInfo: {
       fontSize: 16,
       marginBottom: 5,
-      fontWeight: "bold",
     },
     deleteButton: {
       position: "absolute",

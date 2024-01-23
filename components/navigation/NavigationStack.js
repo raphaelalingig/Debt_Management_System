@@ -27,13 +27,15 @@ import SalesInfo from "../Drawers/SalesInfo";
 import LogoutScreen from "../Drawers/LogoutScreen";
 import Mail from "../Drawers/Mail";
 import Mailpage from "../Drawers/OpenMail";
-import { TouchableOpacity, StyleSheet, View } from "react-native";
+import {TouchableOpacity, StyleSheet, View}  from "react-native";
 import BottomNavigation from "../USER_UI/navigation/BottomNavigation";
+
 
 const Stack = createNativeStackNavigator();
 const Drawer = createDrawerNavigator();
 
 const DrawerNavigator = ({ navigation }) => (
+  
   <Drawer.Navigator>
     <Drawer.Screen
       name="Home"
@@ -159,6 +161,7 @@ const NavigationStack = () => {
             },
             headerRight: () => (
               <View style={styles.headerRightContainer}>
+                
                 <TouchableOpacity
                   style={styles.mailButton}
                   onPress={() => navigation.navigate("Mail")}
@@ -213,7 +216,7 @@ const NavigationStack = () => {
             },
           }}
         />
-
+        
         <Stack.Screen
           name="AddDebtor"
           component={AddDebtor}
@@ -271,13 +274,13 @@ const NavigationStack = () => {
         />
         <Stack.Screen
           options={{ headerShown: false }}
-          name="UserMainPage"
-          component={BottomNavigation}
+          name="MainPage"
+          component={DrawerNavigator}
         />
         <Stack.Screen
           options={{ headerShown: false }}
-          name="MainPage"
-          component={MainPage}
+          name="UserMainPage"
+          component={BottomNavigation}
         />
         <Stack.Screen
           options={{ headerShown: false }}
@@ -294,11 +297,7 @@ const NavigationStack = () => {
           name="MailPage"
           component={Mailpage}
         />
-        
-
-
-
-
+               
         <Stack.Screen
           name="DebtorPage"
           component={DebtorPage}

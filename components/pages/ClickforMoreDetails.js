@@ -13,10 +13,7 @@ import EnterModal from './EnterAmount';
 import ConfirmModal from './Confirm';
 
 const ClickforMoreDetails = ({ route, navigation }) => {
-  const { debtorInfo} = route.params;
-  const [debtor, setDebtor] = useState([]);
-  const [balanceData, setBalanceData] = useState(0)
-  const [color, setColor] = useState([]);
+  const { debtorInfo, calculatedDueStatus } = route.params;
   const [loading, setLoading] = React.useState(false);
   const [uthangsData, setUthangsData] = useState([]);
   const [payment, setPayment] =  React.useState(0.00);
@@ -30,7 +27,47 @@ const ClickforMoreDetails = ({ route, navigation }) => {
   const [reloadData, setReloadData] = useState(false);
   const [isError, setIsError] = React.useState(false);
   const [due_fee, setDue_fee] = useState(0);
+  
 
+  const full = async () => {
+    const paymentNumber = parseFloat(payment);
+    const balanceNumber = parseFloat(balance);
+    if(payment === 0){
+      setPayment(String(balance));
+    }else if(payment != balance){
+      setPayment(String(balance));
+    }else{
+      console.log("Is payment = balance",paymentNumber === balance);
+      await setCon(true)
+      
+    }
+  }
+
+  const partial = async () => {
+    if(payment === 0){
+    setEnterModalVisible(true)
+  }else{
+    await setCon(true)
+  }
+  }
+
+  
+
+  const confirmed = async () =>{
+    setCon(false)
+
+    const paymentNumber = parseFloat(payment);
+    const balanceNumber = parseFloat(balance);
+
+    if(paymentNumber === balanceNumber){
+      await updateDataAmount(debtorInfo.d_id, 0);
+      await deleteUtangs(debtorInfo.d_id);
+    }else{
+      await handlePay();
+      setReloadData(true);
+    }
+  }
+  
 
   useEffect(() => {
     if (reloadData) {
@@ -44,24 +81,12 @@ const ClickforMoreDetails = ({ route, navigation }) => {
   const fetchData = useCallback(() => {
     if (debtorInfo.d_id) {
       axios
-        .get(API_URL + 'debtor/' + debtorInfo.d_id)
-        .then((response) => {
-          setDebtor(response.data);
-          calculateStatusColor(response.data);
-        })
-        .catch((error) => {
-          console.error('Error fetching data:', error);
-          console.error('Response data:', error.response.data);
-        });
-    }
-    if (debtorInfo.d_id) {
-      axios
         .get(API_URL + 'uthangs/' + debtorInfo.d_id)
         .then((response) => {
           setUthangsData(response.data);
           
  
-          if(debtorInfo.status === "Overdue"){
+          if(calculatedDueStatus.status === "Overdue"){
             setDue_fee(0.01);
           }else{
             setDue_fee(0);
@@ -102,51 +127,12 @@ const ClickforMoreDetails = ({ route, navigation }) => {
     };
   }, [navigation, fetchData]);
 
-  const full = async () => {
-    const paymentNumber = parseFloat(payment);
-    const balanceNumber = parseFloat(balance);
-    if(payment === 0){
-      setPayment(String(balance));
-    }else if(payment != balance){
-      setPayment(String(balance));
-    }else{
-      console.log("Is payment = balance",paymentNumber === balance);
-      await setCon(true)
-      
-    }
-  }
-
-  const partial = async () => {
-    if(payment === 0){
-    setEnterModalVisible(true)
-  }else{
-    await setCon(true)
-  }
-  }
-
-  
-
-  const confirmed = async () =>{
-    setCon(false)
-
-    const paymentNumber = parseFloat(payment);
-    const balanceNumber = parseFloat(balance);
-
-    if(paymentNumber === balanceNumber){
-      await updateDataAmount(debtorInfo.d_id, 0);
-      await deleteUtangs(debtorInfo.d_id);
-    }else{
-      await handlePay();
-      setReloadData(true);
-    }
-  }
-
   const grandTotal = uthangsData
   .filter(item => typeof item.total === 'number' || (typeof item.total === 'string' && item.total.trim() !== ''))
   .reduce((sum, item) => sum + parseFloat(item.total), 0);
   const interest  = (grandTotal * due_fee) + grandTotal;
   const percent = interest - grandTotal;
-  const balance = interest - debtor.data_amount;
+  const balance = interest - debtorInfo.data_amount;
   
   const payAmount = (balance) => {
     if (selectedUthang.total > balance) {
@@ -247,7 +233,6 @@ const ClickforMoreDetails = ({ route, navigation }) => {
           console.log('Utangs paid successfully');
           setReloadData(true);
           setPayModalVisible(!paymodalVisible);
-          setPayment(0);
         } else {
           console.error('Error deleting utangs:', response.data.message || 'Unknown error');
         }
@@ -285,11 +270,8 @@ const ClickforMoreDetails = ({ route, navigation }) => {
         const responseData = await response.json();
         console.log(responseData);
     
-        if (response.status === 200 || response.status === 204) {
-          console.log('Payment Successful');
-          setReloadData(true);
+        if (response.ok) {
           setPayModalVisible(!paymodalVisible);
-          setPayment(0);
           ToastAndroid.show('Payment Successful', ToastAndroid.SHORT);
     
           if (newBalance === 0) {
@@ -335,7 +317,7 @@ const ClickforMoreDetails = ({ route, navigation }) => {
           if(uthangsData.length > 0){
             if(balance <= 0){
               const newDataAmount = 0.00
-              const response = await axios.post(
+            const response = await axios.post(
               API_URL + 'checkbalance/' + debtorInfo.d_id,
               newDataAmount 
             );
@@ -354,7 +336,8 @@ const ClickforMoreDetails = ({ route, navigation }) => {
           console.error('Error during checkBalance:', error.message || 'Unknown error');
           }
       }
-  
+
+
   const renderModalContent = () => {
     if (!selectedUthang) {
       return null;
@@ -433,11 +416,11 @@ const PayModalContent = ({ setPayModalVisible }) => {
       </View>
       <View style={styles.paydetailsContainer}>
         <Text style={styles.paydetailLabel}>Data Payment:</Text>
-        <Text style={styles.paydetailValue}>₱{debtor.data_amount}</Text>
+        <Text style={styles.paydetailValue}>₱{debtorInfo.data_amount}</Text>
       </View>
       <View style={styles.paydetailsContainer}>
         <Text style={styles.paydetailLabel}>Last Payment:</Text>
-        <Text style={styles.paydetailValue}>{debtor.last_payment_date}</Text>
+        <Text style={styles.paydetailValue}>{debtorInfo.last_payment_date}</Text>
       </View>
       <View style={styles.paydetailsContainer}>
         <Text style={styles.paydetailLabel}>Balance:</Text>
@@ -480,32 +463,6 @@ const PayModalContent = ({ setPayModalVisible }) => {
     </View>
   );
 };
-const calculateStatusColor = (debtor) => {
-  const status = debtor.status;
-
-  if(status === "Not Due"){
-    setColor("black");
-  }else if(status === "Due"){
-    setColor("blue");
-  }else if(status === "Due Today"){
-    setColor("orange");
-  }else if(status === "Overdue"){
-    setColor("red");
-  }
-}
-
-
-useEffect(() => {
-  const backHandler = BackHandler.addEventListener(
-    "hardwareBackPress",
-    () => {
-      navigation.navigate("MainPage");
-      return true;
-    }
-  );
-
-  return () => backHandler.remove();
-}, [isFocused]);
 
 
 
@@ -522,23 +479,23 @@ useEffect(() => {
               <EvilIcons name="user" size={230} color="black" />
             </View>
             <View style={styles.details}>
-              <Text><Text style={{fontWeight: "bold",}}>Name: </Text>{debtorInfo.d_name}</Text>
-              <Text><Text style={{fontWeight: "bold",}}>Phone: </Text>{debtorInfo.phone}</Text>
-              <Text><Text style={{fontWeight: "bold",}}>Address: </Text>{debtorInfo.address}</Text>
-              <Text><Text style={{fontWeight: "bold",}}>Email: </Text>{debtorInfo.email}</Text>
-              <Text><Text style={{fontWeight: "bold",}}>Due Date: </Text>{debtor.due_date}    /     <Text style={{color:color, fontWeight:'bold'}}>{debtor.status}</Text></Text>
+              <Text>Name: {debtorInfo.d_name}</Text>
+              <Text>Phone: {debtorInfo.phone}</Text>
+              <Text>Address: {debtorInfo.address}</Text>
+              <Text>Email: {debtorInfo.email}</Text>
+              <Text>Due Date: {debtorInfo.due_date}    <Text style={{color:calculatedDueStatus.color}}>{calculatedDueStatus.status}</Text></Text>
       
             </View>
             <View style={{ flexDirection: "row", marginTop: 15, gap: 5 }}>
               <TouchableOpacity
                 style={styles.button}
-                onPress={() => navigation.navigate("ViewTransaction", { debtorInfo})}
+                onPress={() => navigation.navigate("ViewTransaction", { debtorInfo, calculatedDueStatus })}
               >
                 <Text style={styles.buttonText}>Transactions</Text>
               </TouchableOpacity>
               <TouchableOpacity
                 style={styles.button}
-                onPress={() => navigation.navigate("EditProfile", { debtorInfo})}
+                onPress={() => navigation.navigate("EditProfile", { debtorInfo, calculatedDueStatus })}
               >
                 <Text style={styles.buttonText}>Edit Profile</Text>
               </TouchableOpacity>
@@ -577,7 +534,7 @@ useEffect(() => {
                 ))}
                 <DataTable.Row>
                   <DataTable.Cell></DataTable.Cell>
-                  <DataTable.Cell></DataTable.Cell>
+                  <DataTable.Cell></DataTable.Cell>awd
                   <DataTable.Cell>
                   <TouchableOpacity
                       style={styles.pbutton}
@@ -601,7 +558,7 @@ useEffect(() => {
               <Text style={styles.noUthangsText}>NO UTHANGS TO SHOW</Text>
             )}
           </View>
-          <TouchableOpacity onPress={() => navigation.navigate("AddUtang", { debtorInfo})}>
+          <TouchableOpacity onPress={() => navigation.navigate("AddUtang", { debtorInfo, calculatedDueStatus })}>
             <AntDesign
               style={styles.plusButton}
               name="pluscircle"
