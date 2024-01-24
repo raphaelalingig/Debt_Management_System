@@ -5,17 +5,46 @@ import {
   Modal,
   TouchableWithoutFeedback,
 } from "react-native";
-import React, { useState } from "react";
-
+import React, { useState, useEffect, useCallback } from "react";
+import AsyncStorage from '@react-native-async-storage/async-storage';
 import { Appbar, Avatar, Button, Card, Text, Title } from "react-native-paper";
 import { FontAwesome } from "@expo/vector-icons";
 import { MaterialIcons } from "@expo/vector-icons";
 import { MaterialCommunityIcons } from "@expo/vector-icons";
 import { EvilIcons } from "@expo/vector-icons";
 import { Zocial } from "@expo/vector-icons";
+import axios from "axios";
+import API_URL from "../../services/apiurl";
+
 const Settings = ({ navigation }) => {
   const [modalVisible, setModalVisible] = useState(false);
+  const [user, setUser] = useState('');
+  const [debtor,setDebtor] = useState([]);
 
+  const getUsers = async () => {
+    const storedD_id = await AsyncStorage.getItem('d_id');
+    setUser(storedD_id);
+  };
+
+  const fetchData = useCallback(() => {
+    getUsers()
+    if (user) {
+      axios
+        .get(API_URL + 'debtor/' + user)
+        .then((response) => {
+          setDebtor(response.data);
+        })
+        .catch((error) => {
+          console.error('Error fetching data:', error);
+          console.error('Response data:', error.response.data);
+        });
+    }
+  }, [user]);
+
+  useEffect(() => {
+    fetchData();
+  }, [fetchData]);
+  
   const openModal = () => {
     setModalVisible(true);
   };
@@ -27,6 +56,17 @@ const Settings = ({ navigation }) => {
   const handleModalPress = (e) => {
     e.stopPropagation(); // Prevent closing modal when clicking inside the modal
   };
+
+  const handleLogout = async () => {
+    try {
+      await AsyncStorage.removeItem('authToken');
+      navigation.navigate('Intro');
+    } catch (error) {
+      console.error('Error during logout:', error);
+    }
+  };
+
+  
 
   return (
     <View style={styles.container}>
@@ -59,7 +99,7 @@ const Settings = ({ navigation }) => {
               color="black"
               style={{ marginRight: 5, marginLeft: 15 }}
             />
-            <Text variant="titleMedium">Name: User</Text>
+            <Text variant="titleMedium">Name: {debtor.d_name}</Text>
           </TouchableOpacity>
           <Modal
             animationType="slide"
@@ -80,7 +120,7 @@ const Settings = ({ navigation }) => {
                       color="black"
                       style={styles.modalIcons}
                     />
-                    <Text variant="titleMedium">Name: User</Text>
+                    <Text variant="titleMedium">Name: {debtor.d_name}</Text>
                   </View>
                   <View style={styles.modalTextnIconAligned}>
                     <MaterialIcons
@@ -89,7 +129,7 @@ const Settings = ({ navigation }) => {
                       color="black"
                       style={styles.modalIcons}
                     />
-                    <Text variant="titleMedium">Address: Sample Address</Text>
+                    <Text variant="titleMedium">Address: {debtor.address}</Text>
                   </View>
                   <View style={styles.modalTextnIconAligned}>
                     <MaterialIcons
@@ -98,7 +138,7 @@ const Settings = ({ navigation }) => {
                       color="black"
                       style={styles.modalIcons}
                     />
-                    <Text variant="titleMedium">Phone Number: 020202020</Text>
+                    <Text variant="titleMedium">Phone Number: {debtor.phone}</Text>
                   </View>
                   <View style={styles.modalTextnIconAligned}>
                     <Zocial
@@ -107,7 +147,7 @@ const Settings = ({ navigation }) => {
                       color="black"
                       style={styles.modalIcons}
                     />
-                    <Text variant="titleMedium">Email: user@gmail.com</Text>
+                    <Text variant="titleMedium">Email: {debtor.email}</Text>
                   </View>
                   <TouchableOpacity onPress={closeModal}></TouchableOpacity>
                 </View>
@@ -133,7 +173,8 @@ const Settings = ({ navigation }) => {
             />
             <Text variant="titleMedium">Reset Password</Text>
           </TouchableOpacity>
-          <TouchableOpacity style={styles.logoutButton}>
+          <TouchableOpacity style={styles.logoutButton}
+           onPress={handleLogout}>
             <MaterialIcons
               name="logout"
               size={24}

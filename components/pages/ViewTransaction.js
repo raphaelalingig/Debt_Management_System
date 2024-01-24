@@ -3,7 +3,7 @@ import React, { useState, useEffect } from "react";
 import { DataTable, Text, TouchableRipple, Button  } from "react-native-paper";
 import { useFocusEffect } from "@react-navigation/native";
 import axios from "axios";
-import TransactionInfoModal from "../pages/TransactionsInfo";
+import TransactionInfoModal from "../pages/TransactionsInfoDebtor";
 import API_URL from "../services/apiurl";
 import * as Print from 'expo-print';
 
@@ -71,27 +71,57 @@ const Transactions = ({ navigation, route }) => {
               font-size: 20px;
               font-weight: bold;
             }
+            .totalRow {
+              font-weight: bold;
+            }
           </style>
         </head>
         <body>
+        <p class="debtorName">StoreName: Mark Jundy Store</p>
         <p class="debtorName">Customer: ${debtorInfo.d_name}</p>
           <table>
             <tr>
               <th>ID</th>
               <th>Transaction</th>
-              <th>Debtor</th>
+              <th>Price</th>
+              <th>Payment</th>
               <th>Date</th>
             </tr>`;
+  
+    let totalPrice = 0;
+    let totalPayment = 0;
   
     transactions.forEach((item) => {
       receiptContent += `
         <tr>
           <td>${item.h_id}</td>
           <td>${item.transaction}</td>
-          <td>${item.name}</td>
+          <td>${item.price !== null ? item.price : ''}</td>
+          <td>${item.payment !== null ? item.payment : ''}</td>
           <td>${item.date}</td>
         </tr>`;
+  
+      // Calculate total price and total payment
+      totalPrice += item.price !== null ? parseFloat(item.price) : 0;
+      totalPayment += item.payment !== null ? parseFloat(item.payment) : 0;
     });
+  
+    // Calculate the difference between total price and total payment
+    const difference = totalPrice - totalPayment;
+  
+    // Add the total row with the difference column
+    receiptContent += `
+      <tr class="totalRow">
+        <td colspan="2">Total</td>
+        <td>${totalPrice.toFixed(2)}</td>
+        <td>${totalPayment.toFixed(2)}</td>
+        <td>${difference.toFixed(2)}</td>
+      </tr>
+      <tr class="totalRow">
+        <td colspan="4"></td>
+        <td>Balance</td>
+        `;
+      
   
     receiptContent += `
           </table>
@@ -146,9 +176,9 @@ const Transactions = ({ navigation, route }) => {
         {transactions?.length > 0 ? (
           <DataTable style={styles.table}>
             <DataTable.Header>
-              <DataTable.Title style={styles.smallerColumn}>ID</DataTable.Title>
               <DataTable.Title style={styles.biggerColumn}>Transaction</DataTable.Title>
-              <DataTable.Title>Debtor</DataTable.Title>
+              <DataTable.Title>Price</DataTable.Title>
+              <DataTable.Title>Payment</DataTable.Title>
               <DataTable.Title>Date</DataTable.Title>
             </DataTable.Header>
 
@@ -161,9 +191,9 @@ const Transactions = ({ navigation, route }) => {
                 }}
               >
                 <DataTable.Row>
-                  <DataTable.Cell style={styles.smallerColumn}>{item.h_id}</DataTable.Cell>
                   <DataTable.Cell style={styles.biggerColumn}>{item.transaction}</DataTable.Cell>
-                  <DataTable.Cell>{item.name}</DataTable.Cell>
+                  <DataTable.Cell>{item.price}</DataTable.Cell>
+                  <DataTable.Cell>{item.payment}</DataTable.Cell>
                   <DataTable.Cell>{item.date}</DataTable.Cell>
                 </DataTable.Row>
               </TouchableRipple>

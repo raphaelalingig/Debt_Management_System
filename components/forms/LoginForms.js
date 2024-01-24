@@ -12,7 +12,6 @@ import API_URL from "../services/apiurl";
 
 
 const LoginForm = () => {
-  const [rememberMe, setRememberMe] = useState(false);
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [text, setText] = useState("");
@@ -23,7 +22,7 @@ const LoginForm = () => {
     ToastAndroid.show(message, 3000);
   };
 
-  const handleLogin = async (values, rememberMe) => {
+  const handleLogin = async (values) => {
     try {
       const url = API_URL + 'login';
       const result = await fetchServices.postData(url, values);
@@ -33,7 +32,6 @@ const LoginForm = () => {
       } else {
         // Save the token and rememberMe flag to AsyncStorage
         await AsyncStorage.setItem('authToken', result.token);
-        await AsyncStorage.setItem('rememberMe', rememberMe.toString());
   
         if (result.role === 1) {
           navigation.replace('MainPage');

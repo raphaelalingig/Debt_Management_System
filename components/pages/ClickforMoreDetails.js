@@ -15,7 +15,6 @@ import ConfirmModal from './Confirm';
 const ClickforMoreDetails = ({ route, navigation }) => {
   const { debtorInfo} = route.params;
   const [debtor, setDebtor] = useState([]);
-  const [balanceData, setBalanceData] = useState(0)
   const [color, setColor] = useState([]);
   const [loading, setLoading] = React.useState(false);
   const [uthangsData, setUthangsData] = useState([]);

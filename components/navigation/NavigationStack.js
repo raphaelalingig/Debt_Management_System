@@ -113,7 +113,7 @@ const DrawerNavigator = ({ navigation }) => (
 const NavigationStack = () => {
   return (
     <NavigationContainer>
-      <Stack.Navigator initialRouteName="MainPage">
+      <Stack.Navigator initialRouteName="Intro">
         <Stack.Screen
           options={{ headerShown: false }}
           name="Intro"
@@ -159,6 +159,7 @@ const NavigationStack = () => {
             },
             headerRight: () => (
               <View style={styles.headerRightContainer}>
+
                 <TouchableOpacity
                   style={styles.mailButton}
                   onPress={() => navigation.navigate("Mail")}
@@ -277,7 +278,7 @@ const NavigationStack = () => {
         <Stack.Screen
           options={{ headerShown: false }}
           name="MainPage"
-          component={MainPage}
+          component={DrawerNavigator}
         />
         <Stack.Screen
           options={{ headerShown: false }}
@@ -295,10 +296,6 @@ const NavigationStack = () => {
           component={Mailpage}
         />
         
-
-
-
-
         <Stack.Screen
           name="DebtorPage"
           component={DebtorPage}
