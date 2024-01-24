@@ -1,6 +1,12 @@
 import React, { useState, useEffect } from "react";
 import { StyleSheet, View, ScrollView } from "react-native";
-import { DataTable, Text, Button, TextInput, TouchableRipple } from "react-native-paper";
+import {
+  DataTable,
+  Text,
+  Button,
+  TextInput,
+  TouchableRipple,
+} from "react-native-paper";
 import axios from "axios";
 import SalesInfoModal from "../Drawers/SalesInfo";
 import API_URL from "../services/apiurl";
@@ -73,7 +79,7 @@ const Sales = () => {
         {searchMode ? (
           <View style={styles.searchContainer}>
             <TextInput
-            style={styles.searchbox}
+              style={styles.searchbox}
               label="Search Date"
               value={searchDate}
               onChangeText={(text) => setSearchDate(text)}
@@ -87,71 +93,86 @@ const Sales = () => {
           </View>
         ) : (
           <View style={styles.buttonContainer}>
-            <Button mode="contained" onPress={showAllSales}>
-              All
+            <Button
+              mode="contained"
+              onPress={showAllSales}
+              style={styles.buttonStyle}
+            >
+              <Text>All</Text>
             </Button>
-            <Button mode="contained" onPress={filterTodaySales}>
-              Today
+            <Button
+              mode="contained"
+              onPress={filterTodaySales}
+              style={styles.buttonStyle}
+            >
+              <Text>Today</Text>
             </Button>
-            <Button mode="contained" onPress={() => setSearchMode(true)}>
-              Search Date
+            <Button
+              mode="contained"
+              onPress={() => setSearchMode(true)}
+              style={styles.buttonStyle}
+            >
+              <Text>Search Date</Text>
             </Button>
           </View>
         )}
 
         <View style={styles.intable}>
-        {sales?.length > 0 ? (
-          <DataTable>
-          <DataTable.Header>
-            <DataTable.Title>Id</DataTable.Title>
-            <DataTable.Title>Item</DataTable.Title>
-            <DataTable.Title>Quantity</DataTable.Title>
-            <DataTable.Title>Price</DataTable.Title>
-            <DataTable.Title>Debtor</DataTable.Title>
-            <DataTable.Title>Date</DataTable.Title>
-          </DataTable.Header>
+          {sales?.length > 0 ? (
+            <DataTable>
+              <DataTable.Header>
+                <DataTable.Title>Id</DataTable.Title>
+                <DataTable.Title>Item</DataTable.Title>
+                <DataTable.Title>Quantity</DataTable.Title>
+                <DataTable.Title>Price</DataTable.Title>
+                <DataTable.Title>Debtor</DataTable.Title>
+                <DataTable.Title>Date</DataTable.Title>
+              </DataTable.Header>
 
-          {sales.map((item) => (
-            <TouchableRipple
-              key={item.sale_id}
-              onPress={() => {
-                setSelectedSale(item);
-                setIsModalVisible(true);
-              }}
-            >
+              {sales.map((item) => (
+                <TouchableRipple
+                  key={item.sale_id}
+                  onPress={() => {
+                    setSelectedSale(item);
+                    setIsModalVisible(true);
+                  }}
+                >
+                  <DataTable.Row>
+                    <DataTable.Cell>{item.sale_id}</DataTable.Cell>
+                    <DataTable.Cell>{item.item_name}</DataTable.Cell>
+                    <DataTable.Cell>{item.quantity_sold}</DataTable.Cell>
+                    <DataTable.Cell>₱{item.price}</DataTable.Cell>
+                    <DataTable.Cell>{item.debtor_name}</DataTable.Cell>
+                    <DataTable.Cell>{item.sale_date}</DataTable.Cell>
+                  </DataTable.Row>
+                </TouchableRipple>
+              ))}
+
+              {/* Grand Total Row */}
               <DataTable.Row>
-                <DataTable.Cell>{item.sale_id}</DataTable.Cell>
-                <DataTable.Cell>{item.item_name}</DataTable.Cell>
-                <DataTable.Cell>{item.quantity_sold}</DataTable.Cell>
-                <DataTable.Cell>₱{item.price}</DataTable.Cell>
-                <DataTable.Cell>{item.debtor_name}</DataTable.Cell>
-                <DataTable.Cell>{item.sale_date}</DataTable.Cell>
+                <DataTable.Cell></DataTable.Cell>
+                <DataTable.Cell></DataTable.Cell>
+                <DataTable.Cell></DataTable.Cell>
+                <DataTable.Cell>
+                  <Text style={styles.tableTitle}>Grand Total:</Text>
+                </DataTable.Cell>
+                <DataTable.Cell>
+                  <Text style={styles.tableTitle}>
+                    {" "}
+                    ₱{grandTotal.toFixed(2)}
+                  </Text>
+                </DataTable.Cell>
               </DataTable.Row>
-            </TouchableRipple>
-          ))}
-
-          {/* Grand Total Row */}
-          <DataTable.Row>
-            <DataTable.Cell></DataTable.Cell>
-            <DataTable.Cell></DataTable.Cell>
-            <DataTable.Cell></DataTable.Cell>
-            <DataTable.Cell>
-              <Text style={styles.tableTitle}>Grand Total:</Text>
-            </DataTable.Cell>
-            <DataTable.Cell>
-              <Text style={styles.tableTitle}> ₱{grandTotal.toFixed(2)}</Text>
-            </DataTable.Cell>
-          </DataTable.Row>
-          </DataTable>
-        ) : (
-          <Text style={styles.noSalesText}>NO CURRENT SALES TO SHOW</Text>
-        )}
-        <SalesInfoModal
-          isVisible={isModalVisible}
-          onCancel={handleCancel}
-          saleDetails={selectedSale}
-        />
-      </View>
+            </DataTable>
+          ) : (
+            <Text style={styles.noSalesText}>NO CURRENT SALES TO SHOW</Text>
+          )}
+          <SalesInfoModal
+            isVisible={isModalVisible}
+            onCancel={handleCancel}
+            saleDetails={selectedSale}
+          />
+        </View>
       </View>
     </ScrollView>
   );
@@ -169,9 +190,9 @@ const styles = StyleSheet.create({
 
   tableSales: {
     flex: 1,
-    flexDirection: 'column',
-    justifyContent: 'space-around',
-    alignItems: 'stretch',
+    flexDirection: "column",
+    justifyContent: "space-around",
+    alignItems: "stretch",
     padding: 5,
     backgroundColor: "white",
     width: 370,
@@ -208,6 +229,9 @@ const styles = StyleSheet.create({
   searchbox: {
     marginRight: 10,
     width: "40%",
-  }
-
+  },
+  buttonStyle: {
+    backgroundColor: "#FFD803",
+    color: "black",
+  },
 });

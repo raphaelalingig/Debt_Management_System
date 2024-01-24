@@ -152,7 +152,7 @@ const EditProfile = ({ route, navigation }) => {
 
             <TouchableOpacity
               onPress={() =>
-                navigation.navigate("ClickforMoreDetails", { debtorInfo })
+                navigation.navigate("ClickforMoreDetails", { debtorInfo, calculatedDueStatus })
               }
             >
               <Button

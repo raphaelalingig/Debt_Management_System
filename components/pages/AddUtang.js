@@ -88,7 +88,7 @@ const AddUtang = ({ route, navigation }) => {
         showToast(result?.message);
     } else {
         showToast(result?.message);
-        navigation.navigate('ClickforMoreDetails', { debtorInfo });
+        navigation.navigate('ClickforMoreDetails', { debtorInfo, calculatedDueStatus });
     }
     } catch (e) {
       showToast(e.toString());
@@ -177,7 +177,7 @@ const AddUtang = ({ route, navigation }) => {
                   </Button>
                 </TouchableOpacity>
                 <TouchableOpacity
-                  onPress={() => navigation.navigate("ClickforMoreDetails",{debtorInfo})}
+                  onPress={() => navigation.navigate("ClickforMoreDetails",{debtorInfo, calculatedDueStatus})}
                 >
                   <Button style={{ backgroundColor: "#DB0202" }}>
                     <Text style={{ color: "white" }}>Cancel</Text>

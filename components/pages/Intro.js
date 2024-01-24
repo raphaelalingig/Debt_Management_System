@@ -64,7 +64,7 @@ const styles = StyleSheet.create({
     alignItems: "center",
     backgroundColor: "#BAE8E8",
   },
-  titlebox: {
+  titlebox:{
     backgroundColor: "#E3F6F5",
     borderRadius: 15,
     marginBottom: 150,

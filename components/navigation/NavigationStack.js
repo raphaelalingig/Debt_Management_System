@@ -58,6 +58,10 @@ const DrawerNavigator = ({ navigation }) => (
         drawerLabelStyle: {
           color: "black",
         },
+        title: "Inventory of Items",
+        headerStyle: {
+          backgroundColor: "#B2DFEB",
+        },
       }}
     />
     <Drawer.Screen
@@ -75,6 +79,10 @@ const DrawerNavigator = ({ navigation }) => (
         drawerLabelStyle: {
           color: "black",
         },
+        title: "About Us",
+        headerStyle: {
+          backgroundColor: "#B2DFEB",
+        },
       }}
     />
     <Drawer.Screen
@@ -91,6 +99,10 @@ const DrawerNavigator = ({ navigation }) => (
         drawerLabel: "Sales",
         drawerLabelStyle: {
           color: "black",
+        },
+        title: "Sales",
+        headerStyle: {
+          backgroundColor: "#B2DFEB",
         },
       }}
     />
@@ -272,13 +284,13 @@ const NavigationStack = () => {
         />
         <Stack.Screen
           options={{ headerShown: false }}
-          name="UserMainPage"
-          component={BottomNavigation}
+          name="MainPage"
+          component={DrawerNavigator}
         />
         <Stack.Screen
           options={{ headerShown: false }}
-          name="MainPage"
-          component={DrawerNavigator}
+          name="UserMainPage"
+          component={BottomNavigation}
         />
         <Stack.Screen
           options={{ headerShown: false }}
