@@ -9,6 +9,7 @@ import MainPage from "../pages/MainPage";
 import Items from "../Drawers/Items";
 import Aboutus from "../Drawers/AboutUs";
 import ResetPasswordScreen from "../Drawers/ResetPassword";
+import ResetPasswordScreenUser from "../USER_UI/pages/ResetPasswordUser";
 import Reset from "../Drawers/Reset";
 import Account from "../Drawers/Account";
 import { FontAwesome5 } from "@expo/vector-icons";
@@ -25,8 +26,6 @@ import Auto from "../pages/Confirmation";
 import Sales from "../Drawers/Sales";
 import SalesInfo from "../Drawers/SalesInfo";
 import LogoutScreen from "../Drawers/LogoutScreen";
-import Mail from "../Drawers/Mail";
-import Mailpage from "../Drawers/OpenMail";
 import { TouchableOpacity, StyleSheet, View } from "react-native";
 import BottomNavigation from "../USER_UI/navigation/BottomNavigation";
 
@@ -169,32 +168,17 @@ const NavigationStack = () => {
             headerStyle: {
               backgroundColor: "#BAE8E8",
             },
-            headerRight: () => (
-              <View style={styles.headerRightContainer}>
-
-                <TouchableOpacity
-                  style={styles.mailButton}
-                  onPress={() => navigation.navigate("Mail")}
-                >
-                  <MaterialCommunityIcons
-                    name="email"
-                    size={30}
-                    color="black"
-                  />
-                </TouchableOpacity>
-                <TouchableOpacity
-                  style={styles.logoutButton}
-                  onPress={() => navigation.navigate("Logout")}
-                >
-                  <MaterialCommunityIcons
-                    name="logout"
-                    size={24}
-                    color="black"
-                  />
-                </TouchableOpacity>
-              </View>
-            ),
           })}
+        />
+        <Stack.Screen
+          name="ResetPasswordUser"
+          component={ResetPasswordScreenUser}
+          options={{
+            title: "Account",
+            headerStyle: {
+              backgroundColor: "#BAE8E8",
+            },
+          }}
         />
         <Stack.Screen
           name="Reset"
@@ -298,17 +282,6 @@ const NavigationStack = () => {
           component={LogoutScreen}
         />
         <Stack.Screen
-          options={{ headerShown: false }}
-          name="Mail"
-          component={Mail}
-        />
-        <Stack.Screen
-          options={{ headerShown: false }}
-          name="MailPage"
-          component={Mailpage}
-        />
-        
-        <Stack.Screen
           name="DebtorPage"
           component={DebtorPage}
           options={({ navigation }) => ({
@@ -324,16 +297,6 @@ const NavigationStack = () => {
                 >
                   <MaterialCommunityIcons
                     name="account"
-                    size={30}
-                    color="black"
-                  />
-                </TouchableOpacity>
-                <TouchableOpacity
-                  style={styles.mailButton}
-                  onPress={() => navigation.navigate("Mail")}
-                >
-                  <MaterialCommunityIcons
-                    name="email"
                     size={30}
                     color="black"
                   />
@@ -363,9 +326,6 @@ const styles = StyleSheet.create({
     marginRight: 10,
   },
   accountButton: {
-    marginRight: 10,
-  },
-  mailButton: {
     marginRight: 10,
   },
   logoutButton: {},

@@ -1,5 +1,5 @@
 import { StyleSheet, TouchableOpacity, ToastAndroid } from "react-native";
-import API_URL from "../services/apiurl";
+import API_URL from "../../services/apiurl";
 import React, { useState, useEffect } from "react";
 import { EvilIcons } from "@expo/vector-icons";
 import { TextInput, Text, Button } from "react-native-paper";
@@ -7,7 +7,7 @@ import { View, Alert } from "react-native";
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import axios from 'axios';
 
-const ResetPasswordScreen = ({ route, navigation }) => {
+const ResetPasswordScreenUser = ({ route, navigation }) => {
   const [oldPassword, setOldPassword] = useState("");
   const [newPassword, setNewPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
@@ -171,7 +171,7 @@ const ResetPasswordScreen = ({ route, navigation }) => {
   );
 };
 
-export default ResetPasswordScreen;
+export default ResetPasswordScreenUser;
 const styles = StyleSheet.create({
   container: {
     flex: 1,

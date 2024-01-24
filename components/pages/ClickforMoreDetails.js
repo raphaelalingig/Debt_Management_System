@@ -551,7 +551,7 @@ useEffect(() => {
               <DataTable>
                 <DataTable.Header>
                   <DataTable.Title>Item</DataTable.Title>
-                  <DataTable.Title>Quantity</DataTable.Title>
+                  <DataTable.Title>Qty</DataTable.Title>
                   <DataTable.Title>Price</DataTable.Title>
                   <DataTable.Title>Total</DataTable.Title>
                   <DataTable.Title>Date</DataTable.Title>

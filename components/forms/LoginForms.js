@@ -122,7 +122,7 @@ const LoginForm = () => {
           handleChange,
           handleBlur,
           handleSubmit,
-          isSubmitting,
+          isValidating,
           errors,
           touched,
           setTouched,
@@ -209,7 +209,7 @@ const LoginForm = () => {
               </View>
               <Card.Actions>
                 <TouchableOpacity
-                  disabled={isSubmitting}
+                  disabled={isValidating}
                   onPress={() => navigation.navigate("Intro")}
                   style={{
                     marginTop: 10,
@@ -225,8 +225,8 @@ const LoginForm = () => {
                   <Text style={{ marginLeft: 5 }}>Back</Text>
                 </TouchableOpacity>
                 <TouchableOpacity
-                  loading={isSubmitting}
-                  disabled={isSubmitting}
+                  loading={isValidating}
+                  disabled={isValidating} 
                   mode="elevated"
                   onPress={handleSubmit}
                   style={{

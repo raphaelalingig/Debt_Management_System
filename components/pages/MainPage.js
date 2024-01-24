@@ -42,7 +42,6 @@ export default function MainPage({ navigation, route }) {
             });
 
             setDebtors(updatedDebtors);
-            checkAsyncStorage();
           } else {
             console.error("Invalid response format:", response.data);
           }
@@ -76,20 +75,6 @@ export default function MainPage({ navigation, route }) {
   const filteredDebtors = debtors.filter((debtor) =>
     debtor.d_name.toLowerCase().includes(searchTerm.toLowerCase())
   );
-
-  const checkAsyncStorage = async () => {
-    try {
-      const storedEmail = await AsyncStorage.getItem("userEmail");
-      const storedPassword = await AsyncStorage.getItem("userPassword");
-      const storedToken = await AsyncStorage.getItem("authToken");
-  
-      console.log("Stored Email:", storedEmail);
-      console.log("Stored Password:", storedPassword);
-      console.log("Stored Token:", storedToken);
-    } catch (error) {
-      console.error("Error checking AsyncStorage:", error);
-    }
-  };
 
   return (
     <View style={styles.container}>

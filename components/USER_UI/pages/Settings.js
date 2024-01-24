@@ -19,6 +19,7 @@ import API_URL from "../../services/apiurl";
 const Settings = ({ navigation }) => {
   const [modalVisible, setModalVisible] = useState(false);
   const [user, setUser] = useState('');
+  const [resetPasswordPressed, setResetPasswordPressed] = useState(false);
   const [debtor,setDebtor] = useState([]);
 
   const getUsers = async () => {
@@ -65,6 +66,14 @@ const Settings = ({ navigation }) => {
       console.error('Error during logout:', error);
     }
   };
+
+  useEffect(() => {
+    // Use the effect to handle navigation when 'ResetPassword' is pressed
+    if (resetPasswordPressed) {
+      navigation.navigate('ResetPasswordUser');
+      setResetPasswordPressed(false); // Reset the flag after navigation
+    }
+  }, [navigation, resetPasswordPressed]);
 
   
 
@@ -164,7 +173,10 @@ const Settings = ({ navigation }) => {
             <Text variant="titleMedium">My Details</Text>
           </TouchableOpacity>
 
-          <TouchableOpacity style={styles.buttonSettings}>
+          <TouchableOpacity
+            style={styles.buttonSettings}
+            onPress={() => setResetPasswordPressed(true)}
+          >
             <MaterialCommunityIcons
               name="account-lock-open-outline"
               size={24}

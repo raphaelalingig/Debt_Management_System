@@ -145,7 +145,7 @@ const Transactions = ({ navigation, route }) => {
   };
 
   return (
-    <ScrollView style={{ flex: 1 }}>
+    <ScrollView style={{ flex: 1, backgroundColor: '#BAE8E8' }}>
       <View style={styles.container}>
       <Text style={styles.debtorName}>Debtor Name: {debtorInfo.d_name}</Text>
       {searchMode ? (
@@ -216,6 +216,7 @@ export default Transactions;
 
 const styles = StyleSheet.create({
   container: {
+    margin: 15,
     backgroundColor: "#BAE8E8",
   },
   table: {

@@ -1,10 +1,14 @@
-import { StyleSheet, TouchableOpacity, View } from "react-native";
+import { StyleSheet, TouchableOpacity, View, Image } from "react-native";
 import React from "react";
 import { Button, Text } from "react-native-paper";
 
+const logo = require("../pages/pictures/Logo.png");
 const Intro = ({ navigation }) => {
   return (
     <View style={styles.container}>
+      <View style={styles.logocont}>
+        <Image source={logo} style={styles.image} />
+      </View>
       <View style={styles.titlebox}>
         <Text variant="headlineSmall" style={styles.titleText}>
           UTHANGS
@@ -64,7 +68,7 @@ const styles = StyleSheet.create({
     alignItems: "center",
     backgroundColor: "#BAE8E8",
   },
-  titlebox:{
+  titlebox: {
     backgroundColor: "#E3F6F5",
     borderRadius: 15,
     marginBottom: 150,
@@ -103,5 +107,17 @@ const styles = StyleSheet.create({
   signupContainer: {
     marginTop: 10,
     flexDirection: "row",
+  },
+  logocont: {
+    padding: 10,
+    justifyContent: "center",
+    alignItems: "center",
+  },
+
+  image: {
+    width: 250,
+    height: 250,
+    borderRadius: 150
+    
   },
 });
