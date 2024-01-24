@@ -412,9 +412,10 @@ const ClickforMoreDetails = ({ route, navigation }) => {
   );
 };
 
+// DARI ANG SA PAYMENT NGA BOX
 const PayModalContent = ({ setPayModalVisible }) => {
   return (
-    <View style={styles.modalContent}>
+    <View style={styles.modalContent1}>
       <TouchableOpacity
         style={styles.closeButton}
         onPress={() => setPayModalVisible(false)}
@@ -633,7 +634,7 @@ useEffect(() => {
             onRequestClose={() => setModalVisible(!modalVisible)}
           >
             <View style={styles.centeredView}>
-              <View style={styles.modalView}>
+              <View style={styles.modalView1}>
                 {renderModalContent()}
               </View>
             </View>
@@ -729,7 +730,7 @@ const styles = StyleSheet.create({
     alignItems: "center",
     marginTop: 22,
   },
-  modalView: {
+  modalView1: {
     flex: 1,
     margin: 20,
     backgroundColor: "white",
@@ -748,7 +749,37 @@ const styles = StyleSheet.create({
     marginBottom: 220,
     marginTop: 150,
   },
+
+  modalView: {
+    flex: 1,
+    margin: 20,
+    backgroundColor: "white",
+    borderRadius: 15,
+    padding: 15,
+    alignItems: "center",
+    shadowColor: "#000",
+    shadowOffset: {
+      width: 2,
+      height: 5,
+    },
+    shadowOpacity: 0.25,
+    shadowRadius: 4,
+    elevation: 5,
+    justifyContent: "center",
+    marginBottom: 120,
+    marginTop: 150,
+  },
+  
+
   modalContent: {
+    flex: 1,
+    backgroundColor: 'white',
+    borderRadius: 10,
+    padding: 10,
+    alignItems: 'center',
+  },
+
+  modalContent1: {
     flex: 1,
     backgroundColor: 'white',
     borderRadius: 10,
