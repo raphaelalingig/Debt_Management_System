@@ -1,5 +1,5 @@
 import { StyleSheet, TouchableOpacity, ToastAndroid, View } from "react-native";
-import React, { useState } from "react";
+import React, { useState, useEffect, useCallback } from "react";
 import {
   Button,
   Card,
@@ -10,6 +10,7 @@ import {
 } from "react-native-paper";
 import { useNavigation } from "@react-navigation/native";
 import { Formik } from "formik";
+import { useFormik } from 'formik';
 import * as Yup from "yup";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { Ionicons } from "@expo/vector-icons";
@@ -18,12 +19,50 @@ import fetchServices from "../services/fetchServices";
 import API_URL from "../services/apiurl";
 
 const LoginForm = () => {
+
+  const formik = useFormik({
+    initialValues: { email: '', password: '' },
+    onSubmit: async (values) => {
+      await handleLogin(values, rememberMe);
+    },
+    validationSchema: validationSchema,
+  });
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
-  const [text, setText] = useState("");
-  const [showPass, setShowPass] = React.useState(false);
+  const [showPass, setShowPass] = useState(false);
+  const [rememberMe, setRememberMe] = useState(false);
   const navigation = useNavigation();
 
+
+  const saveCredentials = useCallback(async (values) => {
+    try {
+      await AsyncStorage.setItem("userEmail", values.email);
+      await AsyncStorage.setItem("userPassword", values.password);
+      console.log("Credentials saved successfully");
+    } catch (error) {
+      console.error("Error saving credentials:", error);
+    }
+  }, []);
+  
+  useEffect(() => {
+    const loadCredentials = async () => {
+      try {
+        const storedEmail = await AsyncStorage.getItem('userEmail');
+        const storedPassword = await AsyncStorage.getItem('userPassword');
+
+        if (storedEmail && storedPassword) {
+          formik.setValues({ email: storedEmail, password: storedPassword });
+          setRememberMe(true);
+          console.log('Credentials loaded successfully');
+        }
+      } catch (error) {
+        console.error('Error loading credentials:', error);
+      }
+    };
+
+    loadCredentials();
+  }, [formik.setValues]);
+ 
   const showToast = (message = "Something went wrong") => {
     ToastAndroid.show(message, 3000);
   };
@@ -36,9 +75,12 @@ const LoginForm = () => {
       if (result.message != null) {
         showToast(result?.message);
       } else {
-        // Save the token and rememberMe flag to AsyncStorage
-        await AsyncStorage.setItem('authToken', result.token);
-  
+        await AsyncStorage.setItem("authToken", result.token);
+
+        if (rememberMe) {
+          await saveCredentials(values);
+        }
+
         if (result.role === 1) {
           navigation.replace("MainPage");
         } else if (result.role === 2) {
@@ -52,11 +94,15 @@ const LoginForm = () => {
   };
 
   const validationSchema = Yup.object().shape({
-    email: Yup.string()
-      .email("Invalid Email")
-      .required("Please enter your email"),
+    email: Yup.string().email("Invalid Email").required("Please enter your email"),
     password: Yup.string().required("Please enter your password"),
   });
+
+  const handleRememberMe = () => {
+    setRememberMe((prevRememberMe) => {
+      return !prevRememberMe;
+    });
+  };
 
   return (
     <View
@@ -68,11 +114,8 @@ const LoginForm = () => {
       }}
     >
       <Formik
-        initialValues={{ email: "", password: "" }}
-        onSubmit={async (values) => {
-          await handleLogin(values, rememberMe);
-        }}
-        validationSchema={validationSchema}
+        {...formik}
+        onSubmit={formik.handleSubmit}
       >
         {({
           values,
@@ -83,6 +126,7 @@ const LoginForm = () => {
           errors,
           touched,
           setTouched,
+          setValues,
         }) => {
           return (
             <View styles={{ flex: 1 }}>
@@ -108,13 +152,12 @@ const LoginForm = () => {
                 label="Email"
                 left={<TextInput.Icon icon="email" />}
                 style={{ marginTop: 10 }}
-                defaultValue={values.email}
-                value={values.email}
+                value={formik.values.email}
                 keyboardType="email-address"
-                onChangeText={handleChange("email")}
-                onBlur={handleBlur("email")}
-                error={errors.email && touched.email}
-                onFocus={() => setTouched({ email: true }, false)}
+                onChangeText={formik.handleChange('email')}
+                onBlur={formik.handleBlur('email')}
+                error={formik.errors.email && formik.touched.email}
+                onFocus={() => formik.setTouched({ email: true }, false)}
               />
               {errors.email && touched.email && (
                 <HelperText type="error" visible={errors.email}>
@@ -129,16 +172,16 @@ const LoginForm = () => {
                 secureTextEntry={!showPass}
                 right={
                   <TextInput.Icon
-                    icon={showPass ? "eye" : "eye-off"}
+                    icon={showPass ? 'eye' : 'eye-off'}
                     onPress={() => setShowPass(!showPass)}
                   />
                 }
                 style={{ marginTop: 10 }}
-                value={values.password}
-                onChangeText={handleChange("password")}
-                onBlur={handleBlur("password")}
-                error={errors.password && touched.password}
-                onFocus={() => setTouched({ password: true }, false)}
+                value={formik.values.password}
+                onChangeText={formik.handleChange('password')}
+                onBlur={formik.handleBlur('password')}
+                error={formik.errors.password && formik.touched.password}
+                onFocus={() => formik.setTouched({ password: true }, false)}
               />
               {errors.password && touched.password && (
                 <HelperText type="error" visible={errors.password}>
@@ -146,10 +189,10 @@ const LoginForm = () => {
                 </HelperText>
               )}
               <View style={styles.checkboxContainer}>
-                <Checkbox
-                  status={rememberMe ? "checked" : "unchecked"}
-                  onPress={() => setRememberMe(!rememberMe)}
-                />
+              <Checkbox
+                status={rememberMe ? "checked" : "unchecked"}
+                onPress={handleRememberMe}
+              />
                 <Text>Remember Me</Text>
               </View>
               <View style={styles.signupContainer}>

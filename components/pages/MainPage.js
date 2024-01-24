@@ -8,6 +8,7 @@ import { Feather } from "@expo/vector-icons";
 import axios from "axios";
 import API_URL from "../services/apiurl";
 import { AntDesign } from "@expo/vector-icons";
+import AsyncStorage from "@react-native-async-storage/async-storage";
 
 export default function MainPage({ navigation, route }) {
   const [debtors, setDebtors] = useState([]);
@@ -41,6 +42,7 @@ export default function MainPage({ navigation, route }) {
             });
 
             setDebtors(updatedDebtors);
+            checkAsyncStorage();
           } else {
             console.error("Invalid response format:", response.data);
           }
@@ -74,6 +76,20 @@ export default function MainPage({ navigation, route }) {
   const filteredDebtors = debtors.filter((debtor) =>
     debtor.d_name.toLowerCase().includes(searchTerm.toLowerCase())
   );
+
+  const checkAsyncStorage = async () => {
+    try {
+      const storedEmail = await AsyncStorage.getItem("userEmail");
+      const storedPassword = await AsyncStorage.getItem("userPassword");
+      const storedToken = await AsyncStorage.getItem("authToken");
+  
+      console.log("Stored Email:", storedEmail);
+      console.log("Stored Password:", storedPassword);
+      console.log("Stored Token:", storedToken);
+    } catch (error) {
+      console.error("Error checking AsyncStorage:", error);
+    }
+  };
 
   return (
     <View style={styles.container}>
