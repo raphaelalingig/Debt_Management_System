@@ -19,66 +19,62 @@ const AccountPage = ({ route }) => {
   const [loading, setLoading] = useState(true);
   const navigation = useNavigation();
 
-
   useEffect(() => {
     const fetchUserData = async () => {
       try {
-        const authToken = await AsyncStorage.getItem('authToken');
+        const authToken = await AsyncStorage.getItem("authToken");
         const headers = {
-          'Content-Type': 'application/json',
+          "Content-Type": "application/json",
           Authorization: `Bearer ${authToken}`,
         };
         const response = await axios.get(API_URL + 'userdata', { headers });
         setUserData(response.data);
       } catch (error) {
-        console.error('Error fetching user data:', error);
+        console.error("Error fetching user data:", error);
       } finally {
         setLoading(false);
       }
     };
 
-
     fetchUserData();
   }, []);
 
-
   const handleLogout = async () => {
     try {
-      await AsyncStorage.removeItem('authToken');
-      navigation.navigate('Intro');
+      await AsyncStorage.removeItem("authToken");
+      navigation.navigate("Intro");
     } catch (error) {
-      console.error('Error during logout:', error);
+      console.error("Error during logout:", error);
     }
   };
 
+  // const handleResetPassword = async () => {
+  //   try {
+  //     const authToken = await AsyncStorage.getItem('authToken');
+  //     const headers = {
+  //       Authorization: `Bearer ${authToken}`,
+  //     };
 
-  // Update the handleResetPassword function in your React Native code
+  //     const response = await axios.post(API_URL + "send-reset-email", payload, {
+  //       headers,
+  //     });
 
-
-  const handleResetPassword = async () => {
-    try {
-      const authToken = await AsyncStorage.getItem('authToken');
-      const headers = {
-        Authorization: `Bearer ${authToken}`,
-      };
-
-
-      const payload = {
-        email: userData.email,
-      };
+  //     const payload = {
+  //       email: userData.email,
+  //     };
 
       
-    const response = await axios.post(API_URL + 'send-reset-email', payload, { headers });
+  //   const response = await axios.post(API_URL + 'send-reset-email', payload, { headers });
 
 
-      console.log('Password reset email sent successfully:', response.data);
-      alert('Password reset email sent successfully. Check your email.');
-    } catch (error) {
-      console.error('Error sending password reset email:', error.response);
-      // Handle the error, e.g., show an error message
-      alert('Failed to send password reset email. Please try again.');
-    }
-  };
+  //     console.log('Password reset email sent successfully:', response.data);
+  //     alert('Password reset email sent successfully. Check your email.');
+  //   } catch (error) {
+  //     console.error('Error sending password reset email:', error.response);
+  //     // Handle the error, e.g., show an error message
+  //     alert('Failed to send password reset email. Please try again.');
+  //   }
+  // };
 
 
  
@@ -103,12 +99,7 @@ const roles = (userRole) => {
 
   return (
     <View style={styles.container}>
-      <Feather
-        name="user"
-        size={100}
-        color="black"
-        style={styles.userLogo}
-      />
+      <Feather name="user" size={100} color="black" style={styles.userLogo} />
       {userData ? (
         <View style={styles.content}>
           <View>
@@ -139,10 +130,6 @@ const roles = (userRole) => {
     </View>
   );
 };
-
-
-
-
 
 const styles = StyleSheet.create({
   container: {
