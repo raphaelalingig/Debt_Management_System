@@ -422,7 +422,6 @@ const ClickforMoreDetails = ({ route, navigation }) => {
               navigation.navigate("ViewDebtRecord", {
                 selectedUthang,
                 debtorInfo,
-                calculatedDueStatus,
               })
             }
           >

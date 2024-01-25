@@ -1,15 +1,14 @@
 import { StyleSheet, View, TouchableOpacity, FlatList } from "react-native";
-import React, { useState, useEffect} from "react";
+import React, { useState, useEffect } from "react";
 import { TextInput, Text, Button } from "react-native-paper";
 import { EvilIcons } from "@expo/vector-icons";
-import ConfirmationModal from './Confirmation';
+import ConfirmationModal from "./Confirmation";
 import API_URL from "../services/apiurl";
 import axios from "axios";
 import { ToastAndroid } from "react-native";
 
-
 const ViewDebtRecord = ({ navigation, route }) => {
-  const { selectedUthang, debtorInfo, calculatedDueStatus } = route.params;
+  const { selectedUthang, debtorInfo } = route.params;
   const [loading, setLoading] = React.useState(false);
   const [isError, setIsError] = React.useState(false);
   const [item_id, setItemId] = useState("");
@@ -17,24 +16,26 @@ const ViewDebtRecord = ({ navigation, route }) => {
   const [quantity, setQuantity] = useState("");
   const [query, setQuery] = useState("");
   const [suggestions, setSuggestions] = useState([]);
+  const [isInputClicked, setIsInputClicked] = useState(false);
 
   const items = [
-    { id: 1, name: 'Rice' },
-    { id: 2, name: 'Egg' },
-    { id: 3, name: 'Bread' },,
-    { id: 4, name: 'Powdered Milk' },
-    { id: 5, name: 'Softdrink' },
-    { id: 6, name: 'Juice' },
-    { id: 7, name: 'Coffee' },
-    { id: 8, name: 'Sugar' },
-    { id: 9, name: 'Bleach' },
-    { id: 10, name: 'Soap' },
-    { id: 11, name: 'Beer' },
+    { id: 1, name: "Rice" },
+    { id: 2, name: "Egg" },
+    { id: 3, name: "Bread" },
+    ,
+    { id: 4, name: "Powdered Milk" },
+    { id: 5, name: "Softdrink" },
+    { id: 6, name: "Juice" },
+    { id: 7, name: "Coffee" },
+    { id: 8, name: "Sugar" },
+    { id: 9, name: "Bleach" },
+    { id: 10, name: "Soap" },
+    { id: 11, name: "Beer" },
   ];
 
   const handleInputChange = (text) => {
     setQuery(text);
-    if (text === '' && isInputClicked) {
+    if (text === "" && isInputClicked) {
       // Clear suggestions and reset the input click state
       setSuggestions([]);
       setIsInputClicked(false);
@@ -55,7 +56,11 @@ const ViewDebtRecord = ({ navigation, route }) => {
     setItemId(item.id);
     setQuantity(selectedUthang.quantity.toString());
     setSuggestions([]);
-    setEditedData({ ...editedData, item: item.name, quantity: selectedUthang.quantity.toString() });
+    setEditedData({
+      ...editedData,
+      item: item.name,
+      quantity: selectedUthang.quantity.toString(),
+    });
   };
 
   // Assuming you want to allow editing and have local state for it
@@ -67,7 +72,6 @@ const ViewDebtRecord = ({ navigation, route }) => {
   useEffect(() => {
     setEditedData({ ...editedData, quantity: quantity });
   }, [quantity]);
-
 
   const showToast = (message = "Something wen't wrong") => {
     ToastAndroid.show(message, 3000);
@@ -83,44 +87,44 @@ const ViewDebtRecord = ({ navigation, route }) => {
         return false;
       }
 
-
       if (!selectedUthang?.u_id) {
-          console.error("Missing 'u_id' in selectedUthang");
-          return;
+        console.error("Missing 'u_id' in selectedUthang");
+        return;
       }
       if (item_id === null) {
-        console.warn("item_id is null. Setting to default value or handling accordingly.");
+        console.warn(
+          "item_id is null. Setting to default value or handling accordingly."
+        );
         setItemId(selectedUthang.item_id); // Set to a default item_id or handle this case accordingly
       }
-  
 
-      const url = API_URL + 'updateutang/' + selectedUthang.u_id;
+      const url = API_URL + "updateutang/" + selectedUthang.u_id;
       const data = {
-          quantity: quantity,
-          item_id: item_id,
+        quantity: quantity,
+        item_id: item_id,
       };
 
       console.log("Request URL:", url);
       const result = await axios.put(url, data);
 
-          if (result?.data?.uthang) {
-              // Access the updated Uthang data
-              console.log(result.data.uthang);
-              navigation.navigate("ClickforMoreDetails", { debtorInfo, calculatedDueStatus });
-          } else {
-              // Handle error if needed
-              console.log(result?.data?.error || result?.message);
-          }
-
-  } catch (e) {
+      if (result?.data?.uthang) {
+        // Access the updated Uthang data
+        console.log(result.data.uthang);
+        navigation.navigate("ClickforMoreDetails", {
+          debtorInfo,
+        });
+      } else {
+        // Handle error if needed
+        console.log(result?.data?.error || result?.message);
+      }
+    } catch (e) {
       showToast(e.toString());
       console.error(e);
-  } finally {
+    } finally {
       setLoading(false);
       console.log("Edited Data:", editedData);
-  }
+    }
   };
-  
 
   return (
     <View style={styles.container}>
@@ -130,54 +134,72 @@ const ViewDebtRecord = ({ navigation, route }) => {
         </View>
         <View style={styles.autoCompleteContainer}>
           <TextInput
-              placeholder={selectedUthang.item_name}
-              label="Item"
-              mode="outlined"
-              value={query}
-              onChangeText={handleInputChange}
-              onFocus={handleInputClick}
-            />
-              <FlatList
-                data={suggestions}
-                renderItem={({ item }) => (
-                  <TouchableOpacity onPress={() => handleItemPress(item)}>
-                    <View style={styles.suggestionItem}>
-                      <Text>{item.name}</Text>
-                    </View>
-                  </TouchableOpacity>
-                )}
-                keyExtractor={(item) => item.id.toString()} // assuming id is a number
-              />
-              </View>
-              <TextInput
-                style={styles.quantityInput}
-                placeholder={selectedUthang.quantity.toString()}
-                label="Quantity"
-                mode="outlined"
-                value={quantity.toString()}
-                onChangeText={setQuantity}
-                error={isError}
-              />
-          </View>
-          <View style={{ marginTop: 20, gap: 5 }}>
-            <TouchableOpacity onPress={handleSave}>
-              <Button 
+            placeholder={selectedUthang.item_name}
+            label="Item"
+            mode="outlined"
+            value={query}
+            onChangeText={handleInputChange}
+            onFocus={handleInputClick}
+            style={{ marginTop: 20, width: 250 }}
+          />
+          <FlatList
+            data={suggestions}
+            renderItem={({ item }) => (
+              <TouchableOpacity onPress={() => handleItemPress(item)}>
+                <View style={styles.suggestionItem}>
+                  <Text>{item.name}</Text>
+                </View>
+              </TouchableOpacity>
+            )}
+            keyExtractor={(item) => item.id.toString()} // assuming id is a number
+          />
+        </View>
+        <TextInput
+          style={styles.quantityInput}
+          placeholder={selectedUthang.quantity.toString()}
+          label="Quantity"
+          mode="outlined"
+          value={quantity.toString()}
+          onChangeText={setQuantity}
+          error={isError}
+        />
+        <View
+          style={{
+            flexDirection: "row",
+            marginLeft: 120,
+            gap: 5,
+            marginTop: 5,
+          }}
+        >
+          <TouchableOpacity
+            onPress={() =>
+              navigation.navigate("ClickforMoreDetails", {
+                debtorInfo,
+              })
+            }
+          >
+            <Button
+              style={{ backgroundColor: "red" }}
               disabled={loading}
               loading={loading}
-              style={styles.button}
-              >Save</Button>
-            </TouchableOpacity>
-            
-            <TouchableOpacity onPress={() => navigation.navigate("ClickforMoreDetails",{debtorInfo, calculatedDueStatus})}>
-              <Button 
-                style={{ backgroundColor: "red" }}
-                disabled={loading}
-              loading={loading}>
-                <Text style={{ color: "white" }}>Cancel</Text>
-              </Button>
-            </TouchableOpacity>
-          </View>
-        </View>    
+            >
+              <Text variant="titleSmall" style={{ color: "white" }}>
+                Cancel
+              </Text>
+            </Button>
+          </TouchableOpacity>
+          <TouchableOpacity onPress={handleSave}>
+            <Button disabled={loading} loading={loading} style={styles.button}>
+              <Text variant="titleSmall" style={{ color: "white" }}>
+                Save
+              </Text>
+            </Button>
+          </TouchableOpacity>
+        </View>
+      </View>
+
+      <View style={{ marginTop: 20, gap: 5 }}></View>
+    </View>
   );
 };
 
@@ -205,7 +227,7 @@ const styles = StyleSheet.create({
     left: 135,
   },
   button: {
-    backgroundColor: "#FFD803",
+    backgroundColor: "green",
   },
   autoCompleteContainer: {
     position: "relative",
@@ -215,8 +237,8 @@ const styles = StyleSheet.create({
   },
 
   quantityInput: {
-    height: 50,
     marginBottom: 10,
+    width: 250,
   },
   suggestionItem: {
     height: 40, // Adjust the height according to your preference
