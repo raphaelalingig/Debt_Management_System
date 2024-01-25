@@ -145,7 +145,7 @@ const EditProfile = ({ route, navigation }) => {
           ></TextInput>
           <View style={{ marginTop: 20, gap: 5 }}>
             <View
-              style={{ gap: 5, flexDirection: "row", justifyContent: "center" }}
+              style={{ gap: 5, flexDirection: "row", justifyContent: "center", marginBottom: 4 }}
             >
               <TouchableOpacity onPress={handleSave}>
                 <Button
@@ -216,7 +216,6 @@ const styles = StyleSheet.create({
   },
   displayPicture: {},
   details: {
-    marginTop: 20,
     gap: 10,
   },
   actionButton: {
