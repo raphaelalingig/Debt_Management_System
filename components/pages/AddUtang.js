@@ -14,27 +14,28 @@ const AddUtang = ({ route, navigation }) => {
   const [quantity, setQuantity] = useState("");
   const [loading, setLoading] = React.useState(false);
   const [isError, setIsError] = React.useState(false);
-  const [query, setQuery] = useState('');
+  const [query, setQuery] = useState("");
   const [suggestions, setSuggestions] = useState([]);
   const [isInputClicked, setIsInputClicked] = useState(false);
 
   const items = [
-    { id: 1, name: 'Rice' },
-    { id: 2, name: 'Egg' },
-    { id: 3, name: 'Bread' },,
-    { id: 4, name: 'Powdered Milk' },
-    { id: 5, name: 'Softdrink' },
-    { id: 6, name: 'Juice' },
-    { id: 7, name: 'Coffee' },
-    { id: 8, name: 'Sugar' },
-    { id: 9, name: 'Bleach' },
-    { id: 10, name: 'Soap' },
-    { id: 11, name: 'Beer' },
+    { id: 1, name: "Rice" },
+    { id: 2, name: "Egg" },
+    { id: 3, name: "Bread" },
+    ,
+    { id: 4, name: "Powdered Milk" },
+    { id: 5, name: "Softdrink" },
+    { id: 6, name: "Juice" },
+    { id: 7, name: "Coffee" },
+    { id: 8, name: "Sugar" },
+    { id: 9, name: "Bleach" },
+    { id: 10, name: "Soap" },
+    { id: 11, name: "Beer" },
   ];
 
   const handleInputChange = (text) => {
     setQuery(text);
-    if (text === '' && isInputClicked) {
+    if (text === "" && isInputClicked) {
       // Clear suggestions and reset the input click state
       setSuggestions([]);
       setIsInputClicked(false);
@@ -55,7 +56,6 @@ const AddUtang = ({ route, navigation }) => {
     setItemId(item.id); // Set the item ID
     setSuggestions([]);
   };
-
 
   const showToast = (message = "Something wen't wrong") => {
     ToastAndroid.show(message, 3000);
@@ -80,16 +80,19 @@ const AddUtang = ({ route, navigation }) => {
 
       const result = await fetchServices.postData(url, data);
       console.log("API Response:", result); // Log the entire response
-      if (result?.error === 'Total price exceeds 1000 for this item') {
-        showToast('Total price exceeds 1000 for this item');
-    } else if (result?.error === 'Exceeded maximum total of Debt') {
-      showToast('Exceeded maximum total of Debt');
-    } else if (result?.message !== 'Uthang added successfully') {
+      if (result?.error === "Total price exceeds 1000 for this item") {
+        showToast("Total price exceeds 1000 for this item");
+      } else if (result?.error === "Exceeded maximum total of Debt") {
+        showToast("Exceeded maximum total of Debt");
+      } else if (result?.message !== "Uthang added successfully") {
         showToast(result?.message);
-    } else {
+      } else {
         showToast(result?.message);
-        navigation.navigate('ClickforMoreDetails', { debtorInfo, calculatedDueStatus });
-    }
+        navigation.navigate("ClickforMoreDetails", {
+          debtorInfo,
+          calculatedDueStatus,
+        });
+      }
     } catch (e) {
       showToast(e.toString());
       console.error(e); // Log the error directly
@@ -98,31 +101,35 @@ const AddUtang = ({ route, navigation }) => {
     }
   };
 
-  
-  const checkStatus = async (balance) =>{
-    try{
-      if(uthangsData.length > 0){
-        if(balance <= 0){
-          const newDataAmount = 0.00
-        const response = await axios.post(
-          API_URL + 'checkbalance/' + debtorInfo.d_id,
-          newDataAmount 
-        );
-    
-        if (response.status === 200) {
-          console.log('Check successful');
-          // Handle success
-        } else {
-          console.error('Check failed:', response.data.error || 'Unknown error');
-          // Handle failure
+  const checkStatus = async (balance) => {
+    try {
+      if (uthangsData.length > 0) {
+        if (balance <= 0) {
+          const newDataAmount = 0.0;
+          const response = await axios.post(
+            API_URL + "checkbalance/" + debtorInfo.d_id,
+            newDataAmount
+          );
+
+          if (response.status === 200) {
+            console.log("Check successful");
+            // Handle success
+          } else {
+            console.error(
+              "Check failed:",
+              response.data.error || "Unknown error"
+            );
+            // Handle failure
+          }
         }
-      } 
-         
       }
-    }catch (error) {
-      console.error('Error during checkBalance:', error.message || 'Unknown error');
-      }
-  }
+    } catch (error) {
+      console.error(
+        "Error during checkBalance:",
+        error.message || "Unknown error"
+      );
+    }
+  };
 
   return (
     <FlatList
@@ -131,29 +138,28 @@ const AddUtang = ({ route, navigation }) => {
       renderItem={() => (
         <View style={styles.container}>
           <View style={styles.contentContainer}>
-            
             <View style={styles.details}>
               <View style={styles.autoCompleteContainer}>
-              <TextInput
-                placeholder="Item:"
-                label="Item"
-                mode="outlined"
-                value={query}
-                onChangeText={handleInputChange}
-                onFocus={handleInputClick} 
-                error={isError}
-              />
-              <FlatList
-                data={suggestions}
-                renderItem={({ item }) => (
-                  <TouchableOpacity onPress={() => handleItemPress(item)}>
-                    <View style={styles.suggestionItem}>
-                      <Text>{item.name}</Text>
-                    </View>
-                  </TouchableOpacity>
-                )}
-                keyExtractor={(item) => item.id.toString()} // assuming id is a number
-              />
+                <TextInput
+                  placeholder="Item:"
+                  label="Item"
+                  mode="outlined"
+                  value={query}
+                  onChangeText={handleInputChange}
+                  onFocus={handleInputClick}
+                  error={isError}
+                />
+                <FlatList
+                  data={suggestions}
+                  renderItem={({ item }) => (
+                    <TouchableOpacity onPress={() => handleItemPress(item)}>
+                      <View style={styles.suggestionItem}>
+                        <Text>{item.name}</Text>
+                      </View>
+                    </TouchableOpacity>
+                  )}
+                  keyExtractor={(item) => item.id.toString()} // assuming id is a number
+                />
               </View>
               <TextInput
                 style={styles.quantityInput}
@@ -166,6 +172,18 @@ const AddUtang = ({ route, navigation }) => {
               />
 
               <View style={styles.actionButton}>
+                <TouchableOpacity
+                  onPress={() =>
+                    navigation.navigate("ClickforMoreDetails", {
+                      debtorInfo,
+                      calculatedDueStatus,
+                    })
+                  }
+                >
+                  <Button style={{ backgroundColor: "#DB0202" }}>
+                    <Text style={{ color: "white" }}>Cancel</Text>
+                  </Button>
+                </TouchableOpacity>
                 <TouchableOpacity>
                   <Button
                     disabled={loading}
@@ -174,13 +192,6 @@ const AddUtang = ({ route, navigation }) => {
                     onPress={handleAddUtang}
                   >
                     <Text style={{ color: "white" }}>Save</Text>
-                  </Button>
-                </TouchableOpacity>
-                <TouchableOpacity
-                  onPress={() => navigation.navigate("ClickforMoreDetails",{debtorInfo, calculatedDueStatus})}
-                >
-                  <Button style={{ backgroundColor: "#DB0202" }}>
-                    <Text style={{ color: "white" }}>Cancel</Text>
                   </Button>
                 </TouchableOpacity>
               </View>

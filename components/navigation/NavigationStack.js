@@ -90,7 +90,7 @@ const DrawerNavigator = ({ navigation }) => (
       options={{
         drawerIcon: () => (
           <MaterialCommunityIcons
-            name="account-group"
+            name="cash-multiple"
             size={24}
             color="black"
           />

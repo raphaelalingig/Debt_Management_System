@@ -1,5 +1,6 @@
-import React from 'react';
-import { Modal, View, Text, TouchableOpacity, StyleSheet } from 'react-native';
+import React from "react";
+import { Modal, View, TouchableOpacity, StyleSheet } from "react-native";
+import { Button, Text } from "react-native-paper";
 
 const ConfirmationModal = ({ isVisible, onConfirm, onCancel }) => {
   return (
@@ -11,13 +12,20 @@ const ConfirmationModal = ({ isVisible, onConfirm, onCancel }) => {
     >
       <View style={styles.modalContainer}>
         <View style={styles.modalContent}>
-          <Text style={styles.modalText}>Are you sure?</Text>
+          <Text variant="titleLarge" style={{margin: 20}}>Are you sure?</Text>
           <View style={styles.buttonContainer}>
             <TouchableOpacity style={styles.button} onPress={() => onConfirm()}>
-              <Text style={styles.buttonText}>Yes</Text>
+              <Button>
+                <Text style={styles.buttonText}>Yes</Text>
+              </Button>
             </TouchableOpacity>
-            <TouchableOpacity style={styles.button} onPress={() => onCancel()}>
-              <Text style={styles.buttonText}>No</Text>
+            <TouchableOpacity
+              style={styles.button_no}
+              onPress={() => onCancel()}
+            >
+              <Button>
+                <Text style={styles.buttonText}>No</Text>
+              </Button>
             </TouchableOpacity>
           </View>
         </View>
@@ -29,31 +37,37 @@ const ConfirmationModal = ({ isVisible, onConfirm, onCancel }) => {
 const styles = StyleSheet.create({
   modalContainer: {
     flex: 1,
-    justifyContent: 'center',
-    alignItems: 'center',
-    backgroundColor: 'rgba(0, 0, 0, 0.5)',
+    justifyContent: "center",
+    alignItems: "center",
+    backgroundColor: "rgba(0, 0, 0, 0.5)",
   },
   modalContent: {
-    backgroundColor: 'white',
+    backgroundColor: "white",
     padding: 20,
     borderRadius: 10,
-    alignItems: 'center',
+    alignItems: "center",
   },
   modalText: {
     fontSize: 18,
     marginBottom: 20,
   },
   buttonContainer: {
-    flexDirection: 'row',
+    flexDirection: "row",
   },
   button: {
     margin: 10,
     padding: 10,
     borderRadius: 5,
-    backgroundColor: '#3498db',
+    backgroundColor: "green",
+  },
+  button_no: {
+    margin: 10,
+    padding: 10,
+    borderRadius: 5,
+    backgroundColor: "red",
   },
   buttonText: {
-    color: 'white',
+    color: "white",
     fontSize: 16,
   },
 });

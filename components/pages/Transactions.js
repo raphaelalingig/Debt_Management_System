@@ -1,6 +1,6 @@
-import { StyleSheet, View, ScrollView, TextInput} from "react-native";
+import { StyleSheet, View, ScrollView, TextInput } from "react-native";
 import React, { useState } from "react";
-import { DataTable, Text, TouchableRipple, Button  } from "react-native-paper";
+import { DataTable, Text, TouchableRipple, Button } from "react-native-paper";
 import { useFocusEffect } from "@react-navigation/native";
 import axios from "axios";
 import TransactionInfoModal from "../pages/TransactionsInfo";
@@ -41,35 +41,50 @@ const Transactions = ({ navigation }) => {
   };
 
   return (
-    <ScrollView style={{ flex: 1, backgroundColor: "#BAE8E8"}}>
+    <ScrollView style={{ flex: 1, backgroundColor: "#BAE8E8" }}>
       <View style={styles.container}>
-      {searchMode ? (
+        {searchMode ? (
           <View style={styles.searchContainer}>
             <TextInput
-            style={styles.searchbox}
+              style={styles.searchbox}
               label="Search Date"
               value={searchDate}
               onChangeText={(text) => setSearchDate(text)}
+
             />
-            <Button mode="contained" onPress={searchByDate}>
-                Search
-              </Button>
-              <Button mode="outlined" onPress={handleCancel}>
-                Cancel
-              </Button>
+            <Button
+              mode="contained"
+              onPress={searchByDate}
+              style={{ backgroundColor: "#FFD803" }}
+            >
+              <Text variant="titleSmall">Search</Text>
+            </Button>
+            <Button
+              mode="outlined"
+              onPress={handleCancel}
+              style={{ borderColor: "#FFD803" }}
+            >
+              <Text variant="titleSmall">Cancel</Text>
+            </Button>
           </View>
         ) : (
           <View style={styles.buttonContainer}>
-            <Button mode="contained" onPress={() => setSearchMode(true)}>
-                Search Date
-              </Button>
+            <Button
+              mode="contained"
+              onPress={() => setSearchMode(true)}
+              style={{ backgroundColor: "#FFD803" }}
+            >
+              <Text variant="titleSmall">Search Date</Text>
+            </Button>
           </View>
         )}
         {transactions?.length > 0 ? (
           <DataTable style={styles.table}>
             <DataTable.Header>
               <DataTable.Title style={styles.smallerColumn}>ID</DataTable.Title>
-              <DataTable.Title style={styles.biggerColumn}>Transaction</DataTable.Title>
+              <DataTable.Title style={styles.biggerColumn}>
+                Transaction
+              </DataTable.Title>
               <DataTable.Title>Debtor</DataTable.Title>
               <DataTable.Title>Date</DataTable.Title>
             </DataTable.Header>
@@ -83,8 +98,12 @@ const Transactions = ({ navigation }) => {
                 }}
               >
                 <DataTable.Row>
-                  <DataTable.Cell style={styles.smallerColumn}>{item.h_id}</DataTable.Cell>
-                  <DataTable.Cell style={styles.biggerColumn}>{item.transaction}</DataTable.Cell>
+                  <DataTable.Cell style={styles.smallerColumn}>
+                    {item.h_id}
+                  </DataTable.Cell>
+                  <DataTable.Cell style={styles.biggerColumn}>
+                    {item.transaction}
+                  </DataTable.Cell>
                   <DataTable.Cell>{item.name}</DataTable.Cell>
                   <DataTable.Cell>{item.date}</DataTable.Cell>
                 </DataTable.Row>
@@ -92,7 +111,9 @@ const Transactions = ({ navigation }) => {
             ))}
           </DataTable>
         ) : (
-          <Text style={styles.noSalesText}>NO CURRENT Transactions TO SHOW</Text>
+          <Text style={styles.noSalesText}>
+            NO CURRENT Transactions TO SHOW
+          </Text>
         )}
         <TransactionInfoModal
           isVisible={isModalVisible}
@@ -135,7 +156,8 @@ const styles = StyleSheet.create({
   searchbox: {
     marginRight: 10,
     width: "40%",
-    backgroundColor: "#BFCFE7",
+    backgroundColor: "white",
+    borderRadius: 20,
   },
   buttonContainer: {
     flexDirection: "row",

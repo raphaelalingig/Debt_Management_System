@@ -126,6 +126,7 @@ const EditProfile = ({ route, navigation }) => {
             onChangeText={setAddress}
           ></TextInput>
           <View style={{ marginTop: 20, gap: 5 }}>
+            <View style={{gap: 5, flexDirection: "row", justifyContent: "center"}}>
             <TouchableOpacity onPress={handleSave}>
               <Button
                 style={{ backgroundColor: "#04aa6d" }}
@@ -149,6 +150,7 @@ const EditProfile = ({ route, navigation }) => {
                 </Text>
               </Button>
             </TouchableOpacity>
+            </View>
 
             <TouchableOpacity
               onPress={() =>
