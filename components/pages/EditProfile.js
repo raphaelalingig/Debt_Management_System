@@ -1,4 +1,4 @@
-import { StyleSheet, View, TouchableOpacity, ToastAndroid } from "react-native";
+import { StyleSheet, View, TouchableOpacity, ToastAndroid, Image } from "react-native";
 import React, { useState, useEffect } from "react";
 import { EvilIcons } from "@expo/vector-icons";
 import { TextInput, Text, Button } from "react-native-paper";
@@ -6,19 +6,126 @@ import ConfirmationModal from "./Confirmation";
 import API_URL from "../services/apiurl";
 import axios from "axios";
 import { MaterialCommunityIcons } from "@expo/vector-icons";
+import * as ImagePicker from 'expo-image-picker';
+import base64 from 'base64-js';
 
 const EditProfile = ({ route, navigation }) => {
-  const { debtorInfo, calculatedDueStatus } = route.params;
+  const { debtorInfo } = route.params;
   const [isModalVisible, setIsModalVisible] = useState(false);
   const [d_name, setDebtorName] = useState(debtorInfo?.d_name || "");
   const [phone, setPhone] = useState(debtorInfo?.phone || "");
   const [address, setAddress] = useState(debtorInfo?.address || "");
   const [loading, setLoading] = useState(false);
   const [isError, setIsError] = useState(false);
+  const [image, setImage] = useState(null);
 
-  const showToast = (message = "Something wen't wrong") => {
+  const showToast = (message = "Something went wrong") => {
     ToastAndroid.show(message, 3000);
   };
+
+  useEffect(() => {
+    const getImage = async () => {
+      try {
+        const response = await axios.get(API_URL + 'getImage/' + debtorInfo.d_id, {
+          responseType: 'arraybuffer',
+        });
+    
+        if (response.status !== 200) {
+          console.error("Error fetching picture:", response.data.error);
+        } else {
+          console.log("Response data:", response.data); // Log the response data
+          const base64Image = `data:image/png;base64,${base64.fromByteArray(new Uint8Array(response.data))}`;
+          setImage(base64Image);
+        }
+      } catch (error) {
+        console.error("Error fetching picture:", error.message);
+        console.log(error.response); // Log the entire response for more details
+      }
+    };
+    
+    
+    
+    
+    
+  
+    getImage();
+  }, [debtorInfo]);
+
+  const handlePickImage = async () => {
+    try {
+      const result = await ImagePicker.launchImageLibraryAsync({
+        mediaTypes: ImagePicker.MediaTypeOptions.Images,
+        allowsEditing: true,
+        aspect: [4, 3],
+        quality: 1,
+      });
+  
+      if (result.canceled) {
+        console.log("Image picker was cancelled");
+        return;
+      }
+  
+      let selectedImage;
+  
+      if (result.assets && result.assets.length > 0) {
+        // Use the first asset from the assets array
+        selectedImage = result.assets[0].uri;
+} else if (result.uri) {
+          // Use the selected image URI if available
+          selectedImage = result.uri;
+      }
+  
+
+      setImage(selectedImage);
+    } catch (error) {
+      showToast("Error picking image");
+      console.error("Error picking image:", error);
+    }
+  };
+  
+
+  const handleSavePic = async () => {
+    try {
+      setLoading(true);
+    
+      const imageFormData = new FormData();
+      imageFormData.append("image", {
+        uri: image,
+        type: 'image/jpeg',
+        name: 'user_profile.jpg',
+      });
+  
+      // Assuming you have debtorInfo object with d_id
+      imageFormData.append("d_id", debtorInfo.d_id);
+  
+      const imageUploadResponse = await axios.post(API_URL + "uploadImage", imageFormData, {
+        headers: {
+          'Content-Type': 'multipart/form-data',
+        },
+      });
+  
+      if (imageUploadResponse?.data) {
+        // Adjust this part based on the actual response structure
+        const imageUrl = imageUploadResponse.data; // Change this line accordingly
+  
+        // Further logic to handle the image URL, e.g., save it to another table
+        // ...
+    
+        console.log("Image uploaded successfully:", imageUrl);
+      } else {
+        console.error("Image upload failed:", imageUploadResponse?.data?.error || "Unknown error");
+        showToast("Image upload failed");
+      }
+    } catch (error) {
+      console.error("Error uploading image:", error);
+      showToast("Error uploading image");
+    } finally {
+      setLoading(false);
+    }
+  };
+  
+  
+
   const handleSave = async () => {
     try {
       setLoading(true);
@@ -26,6 +133,7 @@ const EditProfile = ({ route, navigation }) => {
         console.error("Missing 'd_id' in debtorInfo");
         return;
       }
+      
 
       const url = API_URL + "updatedebtor/" + debtorInfo.d_id;
       const data = {
@@ -34,6 +142,9 @@ const EditProfile = ({ route, navigation }) => {
         address: address,
       };
 
+      if (image) {
+        await handleSavePic()
+      }
       console.log("Request URL:", url);
       const result = await axios.put(url, data);
 
@@ -110,12 +221,12 @@ const EditProfile = ({ route, navigation }) => {
     <View style={styles.container}>
       <View style={styles.contentContainer}>
         <View style={styles.displayPicture}>
-          <TouchableOpacity>
-            <MaterialCommunityIcons
-              name="account-edit"
-              size={250}
-              color="black"
-            />
+          <TouchableOpacity onPress={handlePickImage}>
+            {image ? (
+              <Image source={{ uri: image }} style={{ width: 250, height: 250, borderRadius: 125 }} />
+            ) : (
+              <MaterialCommunityIcons name="account-edit" size={250} color="black" />
+            )}
           </TouchableOpacity>
         </View>
         <View style={styles.details}>
@@ -175,8 +286,7 @@ const EditProfile = ({ route, navigation }) => {
             <TouchableOpacity
               onPress={() =>
                 navigation.navigate("ClickforMoreDetails", {
-                  debtorInfo,
-                  calculatedDueStatus,
+                  debtorInfo
                 })
               }
             >

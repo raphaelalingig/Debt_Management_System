@@ -10,6 +10,7 @@ import {
   TextInput,
   ScrollView,
   Modal,
+  Image
 } from "react-native";
 import { useIsFocused } from "@react-navigation/native";
 import { EvilIcons } from "@expo/vector-icons";
@@ -23,6 +24,7 @@ import EnterModal from "./EnterAmount";
 import ConfirmModal from "./Confirm";
 import { Text } from "react-native-paper";
 import { useNavigation } from '@react-navigation/native';
+import base64 from 'base64-js';
 
 const ClickforMoreDetails = ({ route }) => {
   const navigation = useNavigation();
@@ -42,6 +44,8 @@ const ClickforMoreDetails = ({ route }) => {
   const [reloadData, setReloadData] = useState(false);
   const [isError, setIsError] = React.useState(false);
   const [due_fee, setDue_fee] = useState(0);
+  const [image, setImage] = useState(null);
+    
 
   useEffect(() => {
     if (reloadData) {
@@ -49,6 +53,35 @@ const ClickforMoreDetails = ({ route }) => {
       setReloadData(false);
     }
   }, [reloadData, fetchData]);
+
+  useEffect(() => {
+    const getImage = async () => {
+      try {
+        const response = await axios.get(API_URL + 'getImage/' + debtorInfo.d_id, {
+          responseType: 'arraybuffer',
+        });
+    
+        if (response.status !== 200) {
+          console.error("Error fetching picture:", response.data.error);
+        } else {
+console.log("Response data:", response.data); // Log the response data
+          const base64Image = `data:image/png;base64,${base64.fromByteArray(new Uint8Array(response.data))}`;
+          setImage(base64Image);
+        }
+      } catch (error) {
+        console.error("Error fetching picture:", error.message);
+        console.log(error.response); // Log the entire response for more details
+      }
+    };
+        
+      
+
+
+  
+
+      getImage();
+  }, [debtorInfo]);
+  
 
   const fetchData = useCallback(() => {
     if (debtorInfo.d_id) {
@@ -546,8 +579,15 @@ const ClickforMoreDetails = ({ route }) => {
       <ScrollView>
         <View style={styles.container}>
           <View style={styles.contentContainer}>
-            <View style={styles.displayPicture}>
-              <EvilIcons name="user" size={230} color="black" />
+<View style={styles.displayPicture}>
+<View style={styles.displayPicture}>
+                        {image ? (
+                <Image source={{ uri: image }} style={{ width: 200, height: 200 }} />
+              ) : (
+                <EvilIcons name="user" size={230} color="black" />
+              )}
+</View>
+
             </View>
             <View style={styles.details}>
               <Text>

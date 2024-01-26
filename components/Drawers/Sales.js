@@ -7,12 +7,13 @@ import {
   TextInput,
   TouchableRipple,
 } from "react-native-paper";
+import { useFocusEffect } from "@react-navigation/native"; // Import useFocusEffect
 import axios from "axios";
 import SalesInfoModal from "../Drawers/SalesInfo";
 import API_URL from "../services/apiurl";
 import moment from "moment";
 
-const Sales = () => {
+const Sales = ({ navigation }) => {
   const [sales, setSales] = useState([]);
   const [originalSales, setOriginalSales] = useState([]);
   const [selectedSale, setSelectedSale] = useState(null);
@@ -20,20 +21,23 @@ const Sales = () => {
   const [searchMode, setSearchMode] = useState(false);
   const [searchDate, setSearchDate] = useState("");
 
-  useEffect(() => {
-    const fetchData = async () => {
-      try {
-        const response = await axios.get(API_URL + "sales");
-        setSales(response.data);
-        setOriginalSales(response.data);
-      } catch (error) {
-        console.error("Error fetching data:", error);
-        console.error("Response data:", error.response.data);
-      }
-    };
+  // Use useFocusEffect to refetch data when the screen comes into focus
+  useFocusEffect(
+    React.useCallback(() => {
+      const fetchData = async () => {
+        try {
+          const response = await axios.get(API_URL + "sales");
+          setSales(response.data);
+          setOriginalSales(response.data);
+        } catch (error) {
+          console.error("Error fetching data:", error);
+          console.error("Response data:", error.response.data);
+        }
+      };
 
-    fetchData();
-  }, []);
+      fetchData();
+    }, [navigation]) // Add navigation as a dependency
+  );
 
   const grandTotal = sales
     .filter(
@@ -84,11 +88,17 @@ const Sales = () => {
               value={searchDate}
               onChangeText={(text) => setSearchDate(text)}
             />
-            <Button mode="contained" onPress={searchByDate}>
-              Search
+            <Button 
+              mode="contained" 
+              onPress={searchByDate}
+              style={styles.buttonStyle}>
+              <Text>Search</Text>
             </Button>
-            <Button mode="outlined" onPress={handleCancel}>
-              Cancel
+            <Button 
+              mode="outlined" 
+              onPress={handleCancel}
+              >
+              <Text>Cancel</Text>
             </Button>
           </View>
         ) : (

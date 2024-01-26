@@ -144,8 +144,7 @@ const AddUtang = ({ route, navigation }) => {
               <TouchableOpacity
                   onPress={() =>
                     navigation.navigate("ClickforMoreDetails", {
-                      debtorInfo,
-                      calculatedDueStatus,
+                      debtorInfo
                     })
                   }
                 >
