@@ -3,7 +3,7 @@ import React, { useState, useEffect } from "react";
 import { useIsFocused } from "@react-navigation/native";
 import { TextInput, Text, Button } from "react-native-paper";
 import { EvilIcons } from "@expo/vector-icons";
-import ConfirmationModal from './Confirmation';
+import ConfirmationModal from "./Confirmation";
 import API_URL from "../services/apiurl";
 import axios from "axios";
 import { ToastAndroid } from "react-native";
@@ -38,7 +38,7 @@ const ViewDebtRecord = ({ route }) => {
 
   const handleInputChange = (text) => {
     setQuery(text);
-    if (text === '' && isInputClicked) {
+    if (text === "" && isInputClicked) {
       // Clear suggestions and reset the input click state
       setSuggestions([]);
       setIsInputClicked(false);
@@ -59,7 +59,7 @@ const ViewDebtRecord = ({ route }) => {
     setItemId(item.id);
     setQuantity(selectedUthang.quantity.toString());
     setSuggestions([]);
-  setEditedData({
+    setEditedData({
       ...editedData,
       item: item.name,
       quantity: selectedUthang.quantity.toString(),
@@ -75,7 +75,6 @@ const ViewDebtRecord = ({ route }) => {
   useEffect(() => {
     setEditedData({ ...editedData, quantity: quantity });
   }, [quantity]);
-
 
   const showToast = (message = "Something wen't wrong") => {
     ToastAndroid.show(message, 3000);
@@ -93,8 +92,8 @@ const ViewDebtRecord = ({ route }) => {
 
       
       if (!selectedUthang?.u_id) {
-          console.error("Missing 'u_id' in selectedUthang");
-          return;
+        console.error("Missing 'u_id' in selectedUthang");
+        return;
       }
       if (item_id === null) {
         console.warn(
@@ -103,7 +102,7 @@ const ViewDebtRecord = ({ route }) => {
         setItemId(selectedUthang.item_id); // Set to a default item_id or handle this case accordingly
       }
   
-const url = API_URL + "updateutang/" + selectedUthang.u_id;
+    const url = API_URL + "updateutang/" + selectedUthang.u_id;
       const data = {
         quantity: quantity,
         item_id: item_id,

@@ -14,7 +14,7 @@ const AddUtang = ({ route, navigation }) => {
   const [quantity, setQuantity] = useState("");
   const [loading, setLoading] = React.useState(false);
   const [isError, setIsError] = React.useState(false);
-  const [query, setQuery] = useState('');
+  const [query, setQuery] = useState("");
   const [suggestions, setSuggestions] = useState([]);
   const [isInputClicked, setIsInputClicked] = useState(false);
 
@@ -34,7 +34,7 @@ const AddUtang = ({ route, navigation }) => {
 
   const handleInputChange = (text) => {
     setQuery(text);
-    if (text === '' && isInputClicked) {
+    if (text === "" && isInputClicked) {
       // Clear suggestions and reset the input click state
       setSuggestions([]);
       setIsInputClicked(false);
@@ -55,7 +55,6 @@ const AddUtang = ({ route, navigation }) => {
     setItemId(item.id); // Set the item ID
     setSuggestions([]);
   };
-
 
   const showToast = (message = "Something wen't wrong") => {
     ToastAndroid.show(message, 3000);
@@ -80,13 +79,13 @@ const AddUtang = ({ route, navigation }) => {
 
       const result = await fetchServices.postData(url, data);
       console.log("API Response:", result); // Log the entire response
-      if (result?.error === 'Total price exceeds 1000 for this item') {
-        showToast('Total price exceeds 1000 for this item');
-    } else if (result?.error === 'Exceeded maximum total of Debt') {
-      showToast('Exceeded maximum total of Debt');
-    } else if (result?.message !== 'Uthang added successfully') {
+      if (result?.error === "Total price exceeds 1000 for this item") {
+        showToast("Total price exceeds 1000 for this item");
+      } else if (result?.error === "Exceeded maximum total of Debt") {
+        showToast("Exceeded maximum total of Debt");
+      } else if (result?.message !== "Uthang added successfully") {
         showToast(result?.message);
-    } else {
+      } else {
         showToast(result?.message);
         navigation.navigate('ClickforMoreDetails', { debtorInfo });
     }
@@ -110,26 +109,26 @@ const AddUtang = ({ route, navigation }) => {
           <View style={styles.contentContainer}>
                         <View style={styles.details}>
               <View style={styles.autoCompleteContainer}>
-              <TextInput
-                placeholder="Item:"
-                label="Item"
-                mode="outlined"
-                value={query}
-                onChangeText={handleInputChange}
-                onFocus={handleInputClick} 
-                error={isError}
-              />
-              <FlatList
-                data={suggestions}
-                renderItem={({ item }) => (
-                  <TouchableOpacity onPress={() => handleItemPress(item)}>
-                    <View style={styles.suggestionItem}>
-                      <Text>{item.name}</Text>
-                    </View>
-                  </TouchableOpacity>
-                )}
-                keyExtractor={(item) => item.id.toString()} // assuming id is a number
-              />
+                <TextInput
+                  placeholder="Item:"
+                  label="Item"
+                  mode="outlined"
+                  value={query}
+                  onChangeText={handleInputChange}
+                  onFocus={handleInputClick}
+                  error={isError}
+                />
+                <FlatList
+                  data={suggestions}
+                  renderItem={({ item }) => (
+                    <TouchableOpacity onPress={() => handleItemPress(item)}>
+                      <View style={styles.suggestionItem}>
+                        <Text>{item.name}</Text>
+                      </View>
+                    </TouchableOpacity>
+                  )}
+                  keyExtractor={(item) => item.id.toString()} // assuming id is a number
+                />
               </View>
               <TextInput
                 style={styles.quantityInput}
@@ -142,7 +141,7 @@ const AddUtang = ({ route, navigation }) => {
               />
 
               <View style={styles.actionButton}>
-<TouchableOpacity
+              <TouchableOpacity
                   onPress={() =>
                     navigation.navigate("ClickforMoreDetails", {
                       debtorInfo,
@@ -164,7 +163,7 @@ const AddUtang = ({ route, navigation }) => {
                     <Text style={{ color: "white" }}>Save</Text>
                   </Button>
                 </TouchableOpacity>
-                              </View>
+              </View>
             </View>
           </View>
         </View>

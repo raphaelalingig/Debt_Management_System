@@ -1,14 +1,28 @@
-import React from 'react';
-import { Modal, View, Text, TouchableOpacity, StyleSheet, TextInput, ToastAndroid } from 'react-native';
+import React from "react";
+import {
+  Modal,
+  View,
+  TouchableOpacity,
+  StyleSheet,
+  TextInput,
+  ToastAndroid,
+} from "react-native";
+import { Button, Text } from "react-native-paper";
 
-const EnterModal = ({ isVisible, onConfirm, onCancel, onAmountEntered, payment, balance}) => {
+const EnterModal = ({
+  isVisible,
+  onConfirm,
+  onCancel,
+  onAmountEntered,
+  payment,
+  balance,
+}) => {
   const [localPayment, setLocalPayment] = React.useState(0);
 
   const handlePaymentChange = (text) => {
-    const numericValue = text.replace(/[^0-9.]/g, ''); // Allow digits and a dot for decimals
+    const numericValue = text.replace(/[^0-9.]/g, ""); // Allow digits and a dot for decimals
     setLocalPayment(numericValue);
   };
-
 
   const showToast = (message = "Something wen't wrong") => {
     ToastAndroid.show(message, 3000);
@@ -18,7 +32,7 @@ const EnterModal = ({ isVisible, onConfirm, onCancel, onAmountEntered, payment, 
     if (localPayment === 0) {
       showToast("Please input required data");
       return false;
-    }else if(localPayment > balance) {
+    } else if (localPayment > balance) {
       showToast("Please input valid amount");
       return false;
     }
@@ -42,29 +56,37 @@ const EnterModal = ({ isVisible, onConfirm, onCancel, onAmountEntered, payment, 
     >
       <View style={styles.modalContainer}>
         <View style={styles.modalContent}>
-          <Text style={styles.modalText}>Enter Amount</Text>
+          <Text variant="titleLarge">Enter Amount</Text>
 
           <View style={styles.payFieldContainer}>
-        <Text style={styles.pesoSign}>₱</Text>
-        <TextInput
-          style={styles.paymentinput}
-          placeholder="Enter Payment Amount: "
-          keyboardType="numeric"
-          value={localPayment.toString()}
-          onChangeText={handlePaymentChange}
-          editable={true}
-          selectTextOnFocus={true}
-        />
-        
-
-
-      </View>
+            <Text variant="titleLarge" style={styles.pesoSign}>
+              ₱
+            </Text>
+            <TextInput
+              style={styles.paymentinput}
+              placeholder="Enter Payment Amount: "
+              keyboardType="numeric"
+              value={localPayment.toString()}
+              onChangeText={handlePaymentChange}
+              editable={true}
+              selectTextOnFocus={true}
+            />
+          </View>
           <View style={styles.buttonContainer}>
-            <TouchableOpacity style={styles.button} onPress={handleConfirm}>
-              <Text style={styles.buttonText}>Confirm</Text>
-            </TouchableOpacity>
             <TouchableOpacity style={styles.button} onPress={() => onCancel()}>
-              <Text style={styles.buttonText}>Cancel</Text>
+              <Button>
+                <Text style={styles.buttonText}>Cancel</Text>
+              </Button>
+            </TouchableOpacity>
+            <TouchableOpacity
+              style={styles.buttonConfirm}
+              onPress={handleConfirm}
+            >
+              <Button>
+                <Text variant="bodyMedium" style={styles.buttonText}>
+                  Confirm
+                </Text>
+              </Button>
             </TouchableOpacity>
           </View>
         </View>
@@ -76,40 +98,44 @@ const EnterModal = ({ isVisible, onConfirm, onCancel, onAmountEntered, payment, 
 const styles = StyleSheet.create({
   modalContainer: {
     flex: 1,
-    justifyContent: 'center',
-    alignItems: 'center',
-    backgroundColor: 'rgba(0, 0, 0, 0.5)',
+    justifyContent: "center",
+    alignItems: "center",
+    backgroundColor: "rgba(0, 0, 0, 0.5)",
   },
   modalContent: {
-    backgroundColor: 'white',
+    backgroundColor: "white",
     padding: 20,
     borderRadius: 10,
-    alignItems: 'center',
+    alignItems: "center",
   },
   modalText: {
     fontSize: 18,
     marginBottom: 20,
   },
   buttonContainer: {
-    flexDirection: 'row',
+    flexDirection: "row",
   },
   button: {
     margin: 10,
     padding: 10,
     borderRadius: 5,
-    backgroundColor: '#3498db',
+    backgroundColor: "#FFD803",
+  },
+  buttonConfirm: {
+    margin: 10,
+    padding: 10,
+    borderRadius: 5,
+    backgroundColor: "green",
   },
   buttonText: {
-    color: 'white',
+    color: "white",
     fontSize: 16,
   },
   payFieldContainer: {
-    flexDirection: 'row',
+    flexDirection: "row",
     marginTop: 20,
   },
-  pesoSign: {
-    marginTop: 6,
-  },
+  pesoSign: {},
 });
 
 export default EnterModal;

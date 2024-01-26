@@ -94,28 +94,28 @@ const Transactions = ({ navigation, route }) => {
               <th>Payment</th>
               <th>Date</th>
             </tr>`;
-  
+
     let totalPrice = 0;
     let totalPayment = 0;
-  
+
     transactions.forEach((item) => {
       receiptContent += `
         <tr>
           <td>${item.h_id}</td>
           <td>${item.transaction}</td>
-          <td>${item.price !== null ? item.price : ''}</td>
-          <td>${item.payment !== null ? item.payment : ''}</td>
+          <td>${item.price !== null ? item.price : ""}</td>
+          <td>${item.payment !== null ? item.payment : ""}</td>
           <td>${item.date}</td>
         </tr>`;
-  
+
       // Calculate total price and total payment
       totalPrice += item.price !== null ? parseFloat(item.price) : 0;
       totalPayment += item.payment !== null ? parseFloat(item.payment) : 0;
     });
-  
+
     // Calculate the difference between total price and total payment
     const difference = totalPrice - totalPayment;
-  
+
     // Add the total row with the difference column
     receiptContent += `
       <tr class="totalRow">
@@ -133,7 +133,7 @@ const Transactions = ({ navigation, route }) => {
           </table>
         </body>
       </html>`;
-  
+
     return receiptContent;
   };
 
@@ -151,13 +151,13 @@ const Transactions = ({ navigation, route }) => {
   };
 
   return (
-    <ScrollView style={{ flex: 1, backgroundColor: '#BAE8E8' }}>
+    <ScrollView style={{ flex: 1, backgroundColor: "#BAE8E8" }}>
       <View style={styles.container}>
-      <Text style={styles.debtorName}>Debtor Name: {debtorInfo.d_name}</Text>
-      {searchMode ? (
+        <Text style={styles.debtorName}>Debtor Name: {debtorInfo.d_name}</Text>
+        {searchMode ? (
           <View style={styles.searchContainer}>
             <TextInput
-            style={styles.searchbox}
+              style={styles.searchbox}
               label="Search Date"
               value={searchDate}
               onChangeText={(text) => setSearchDate(text)}
@@ -273,7 +273,7 @@ const styles = StyleSheet.create({
     marginRight: 10,
     width: "40%",
     backgroundColor: "white",
-borderRadius: 20,
+  borderRadius: 20,
   },
   buttonContainer: {
     flexDirection: "row",

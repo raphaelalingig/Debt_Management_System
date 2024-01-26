@@ -4,7 +4,7 @@ import React, { useEffect } from "react";
 import { EvilIcons } from "@expo/vector-icons";
 import { TextInput, Text, Button } from "react-native-paper";
 import fetchServices from "../services/fetchServices";
-import { useNavigation, useIsFocused } from '@react-navigation/native';
+import { useNavigation, useIsFocused } from "@react-navigation/native";
 import API_URL from "../services/apiurl";
 
 const AddDebtor = () => {
@@ -21,7 +21,6 @@ const AddDebtor = () => {
     ToastAndroid.show(message, 3000);
   };
 
-
   const handleInsertDebtor = async () => {
     try {
       setLoading(true);
@@ -32,28 +31,27 @@ const AddDebtor = () => {
         return false;
       }
 
-      const url = API_URL+"insertdebtors";
+      const url = API_URL + "insertdebtors";
       const data = {
         d_name,
         email,
         phone,
         address,
       };
- 
 
       const result = await fetchServices.postData(url, data);
-      
+
       if (result?.message != "Debtor added successfully") {
         showToast(result?.message);
         console.log(result?.message);
-      } 
-      if (result?.message == "Debtor added successfully"){
+      }
+      if (result?.message == "Debtor added successfully") {
         showToast(result?.message);
         console.log(result?.message);
         navigation.navigate("MainPage");
         console.log("Navigating to MainPage");
       }
-    } catch (e) {  
+    } catch (e) {
       showToast(e.toString());
     } finally {
       setLoading(false);
@@ -115,23 +113,29 @@ const AddDebtor = () => {
             onChangeText={setAddress}
             error={isError}
           />
-          <View style={{ marginTop: 20, gap: 5 }}>
+          <View
+            style={{
+              marginTop: 20,
+              gap: 5,
+              flexDirection: "row",
+              marginLeft: 120,
+            }}
+          >
+            <TouchableOpacity onPress={() => navigation.navigate("MainPage")}>
+              <Button style={styles.button}>
+                <Text style={{ color: "white" }}>Cancel</Text>
+              </Button>
+            </TouchableOpacity>
             <TouchableOpacity>
-              <Button 
-                style={styles.button}
+              <Button
+                style={{ backgroundColor: "green" }}
                 disabled={loading}
                 loading={loading}
-                onPress={handleInsertDebtor}>
-                  Save
-                  </Button>
+                onPress={handleInsertDebtor}
+              >
+                <Text style={{ color: "white" }}>Save</Text>
+              </Button>
             </TouchableOpacity>
-            
-            <TouchableOpacity
-              onPress={() => navigation.navigate("MainPage")}
-            >
-              <Button style={styles.button}>Cancel</Button>
-            </TouchableOpacity>
-            
           </View>
         </View>
       </View>

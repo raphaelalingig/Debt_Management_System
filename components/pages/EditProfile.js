@@ -5,6 +5,7 @@ import { TextInput, Text, Button } from "react-native-paper";
 import ConfirmationModal from "./Confirmation";
 import API_URL from "../services/apiurl";
 import axios from "axios";
+import { MaterialCommunityIcons } from "@expo/vector-icons";
 
 const EditProfile = ({ route, navigation }) => {
   const { debtorInfo, calculatedDueStatus } = route.params;
@@ -59,7 +60,10 @@ const EditProfile = ({ route, navigation }) => {
       const url = API_URL + "deletedebtor/" + debtorInfo.d_id;
       const response = await axios.delete(url);
 
-      if (response.data && response.data.message === "Cannot delete Debtor, Uthangs still unpaid.") {
+      if (
+        response.data &&
+        response.data.message === "Cannot delete Debtor, Uthangs still unpaid."
+      ) {
         // Log success
         console.log(response.data.message);
         ToastAndroid.show(response.data.message, ToastAndroid.SHORT);
@@ -75,10 +79,18 @@ const EditProfile = ({ route, navigation }) => {
       }
     } catch (error) {
       // Handle network error or other exceptions
-      if (error.response && error.response.status === 422 && error.response.data.message === "Cannot delete Debtor, Uthangs still unpaid.") {
+      if (
+        error.response &&
+        error.response.status === 422 &&
+        error.response.data.message ===
+          "Cannot delete Debtor, Uthangs still unpaid."
+      ) {
         // Handle the specific error scenario where Uthangs are still unpaid
         console.error("Cannot delete Debtor, Uthangs still unpaid.");
-        ToastAndroid.show("Cannot delete Debtor, Uthangs still unpaid.", ToastAndroid.SHORT);
+        ToastAndroid.show(
+          "Cannot delete Debtor, Uthangs still unpaid.",
+          ToastAndroid.SHORT
+        );
       } else {
         // Handle other errors
         console.error("Error deleting debtor:", error.message);
@@ -98,7 +110,13 @@ const EditProfile = ({ route, navigation }) => {
     <View style={styles.container}>
       <View style={styles.contentContainer}>
         <View style={styles.displayPicture}>
-          <EvilIcons name="user" size={256} color="black" />
+          <TouchableOpacity>
+            <MaterialCommunityIcons
+              name="account-edit"
+              size={250}
+              color="black"
+            />
+          </TouchableOpacity>
         </View>
         <View style={styles.details}>
           <TextInput
@@ -126,33 +144,40 @@ const EditProfile = ({ route, navigation }) => {
             onChangeText={setAddress}
           ></TextInput>
           <View style={{ marginTop: 20, gap: 5 }}>
-            <TouchableOpacity onPress={handleSave}>
-              <Button
-                style={{ backgroundColor: "#04aa6d" }}
-                disabled={loading}
-                loading={loading}
-              >
-                <Text variant="bodyMedium" style={{ color: "white" }}>
-                  Save Changes
-                </Text>
-              </Button>
-            </TouchableOpacity>
+            <View
+              style={{ gap: 5, flexDirection: "row", justifyContent: "center", marginBottom: 4 }}
+            >
+              <TouchableOpacity onPress={handleSave}>
+                <Button
+                  style={{ backgroundColor: "#04aa6d" }}
+                  disabled={loading}
+                  loading={loading}
+                >
+                  <Text variant="bodyMedium" style={{ color: "white" }}>
+                    Save Changes
+                  </Text>
+                </Button>
+              </TouchableOpacity>
 
-            <TouchableOpacity onPress={() => setIsModalVisible(true)}>
-              <Button
-                style={{ backgroundColor: "#f44336" }}
-                disabled={loading}
-                loading={loading}
-              >
-                <Text variant="bodyMedium" style={{ color: "white" }}>
-                  Delete Debtor
-                </Text>
-              </Button>
-            </TouchableOpacity>
+              <TouchableOpacity onPress={() => setIsModalVisible(true)}>
+                <Button
+                  style={{ backgroundColor: "#f44336" }}
+                  disabled={loading}
+                  loading={loading}
+                >
+                  <Text variant="bodyMedium" style={{ color: "white" }}>
+                    Delete Debtor
+                  </Text>
+                </Button>
+              </TouchableOpacity>
+            </View>
 
             <TouchableOpacity
               onPress={() =>
-                navigation.navigate("ClickforMoreDetails", { debtorInfo, calculatedDueStatus })
+                navigation.navigate("ClickforMoreDetails", {
+                  debtorInfo,
+                  calculatedDueStatus,
+                })
               }
             >
               <Button
@@ -187,11 +212,10 @@ const styles = StyleSheet.create({
     padding: 20,
     backgroundColor: "white",
     borderRadius: 30,
-    marginTop: 10,
+    marginTop: 25,
   },
   displayPicture: {},
   details: {
-    marginTop: 20,
     gap: 10,
   },
   actionButton: {
