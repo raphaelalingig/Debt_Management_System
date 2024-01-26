@@ -30,30 +30,6 @@ const Intro = ({ navigation }) => {
             Login
           </Button>
         </TouchableOpacity>
-        <TouchableOpacity
-          style={styles.buttonWrapper}
-          onPress={() => navigation.navigate("SignupForm")}
-        >
-          <Button
-            style={styles.regbutton}
-            variant="bodyLarge"
-            labelStyle={styles.buttonText}
-          >
-            Register
-          </Button>
-        </TouchableOpacity>
-      </View>
-      <View style={styles.signupContainer}>
-        <Text variant="bodyMedium">Don't have an account? </Text>
-        <TouchableOpacity>
-          <Text
-            variant="bodyMedium"
-            onPress={() => navigation.navigate("SignupForm")}
-            style={{ color: "#008686" }}
-          >
-            Sign up
-          </Text>
-        </TouchableOpacity>
       </View>
     </View>
   );

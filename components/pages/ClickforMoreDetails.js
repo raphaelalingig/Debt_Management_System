@@ -1,6 +1,16 @@
 import React, { useState, useEffect, useCallback, useFocusEffect } from "react";
-import { KeyboardAvoidingView, Platform } from 'react-native';
-import { Alert, StyleSheet, View, Text, TouchableOpacity, TouchableHighlight, BackHandler, TextInput, ScrollView, Modal } from "react-native";
+import { KeyboardAvoidingView, Platform } from "react-native";
+import {
+  Alert,
+  StyleSheet,
+  View,
+  TouchableOpacity,
+  TouchableHighlight,
+  BackHandler,
+  TextInput,
+  ScrollView,
+  Modal,
+} from "react-native";
 import { useIsFocused } from "@react-navigation/native";
 import { EvilIcons } from "@expo/vector-icons";
 import { DataTable } from "react-native-paper";
@@ -8,17 +18,20 @@ import axios from "axios";
 import { AntDesign } from "@expo/vector-icons";
 import API_URL from "../services/apiurl";
 import { ToastAndroid } from "react-native";
-import ConfirmationModal from './Confirmation';
-import EnterModal from './EnterAmount';
-import ConfirmModal from './Confirm';
+import ConfirmationModal from "./Confirmation";
+import EnterModal from "./EnterAmount";
+import ConfirmModal from "./Confirm";
+import { Text } from "react-native-paper";
+import { useNavigation } from '@react-navigation/native';
 
-const ClickforMoreDetails = ({ route, navigation }) => {
-  const { debtorInfo} = route.params;
+const ClickforMoreDetails = ({ route }) => {
+  const navigation = useNavigation();
+  const { debtorInfo } = route.params;
   const [debtor, setDebtor] = useState([]);
   const [color, setColor] = useState([]);
   const [loading, setLoading] = React.useState(false);
   const [uthangsData, setUthangsData] = useState([]);
-  const [payment, setPayment] =  React.useState(0.00);
+  const [payment, setPayment] = React.useState(0.0);
   const [modalVisible, setModalVisible] = useState(false);
   const [entermodalVisible, setEnterModalVisible] = useState(false);
   const [paymodalVisible, setPayModalVisible] = useState(false);
@@ -30,7 +43,6 @@ const ClickforMoreDetails = ({ route, navigation }) => {
   const [isError, setIsError] = React.useState(false);
   const [due_fee, setDue_fee] = useState(0);
 
-
   useEffect(() => {
     if (reloadData) {
       fetchData();
@@ -38,58 +50,57 @@ const ClickforMoreDetails = ({ route, navigation }) => {
     }
   }, [reloadData, fetchData]);
 
-
-
   const fetchData = useCallback(() => {
     if (debtorInfo.d_id) {
       axios
-        .get(API_URL + 'debtor/' + debtorInfo.d_id)
+        .get(API_URL + "debtor/" + debtorInfo.d_id)
         .then((response) => {
           setDebtor(response.data);
           calculateStatusColor(response.data);
         })
         .catch((error) => {
-          console.error('Error fetching data:', error);
-          console.error('Response data:', error.response.data);
+          console.error("Error fetching data:", error);
+          console.error("Response data:", error.response.data);
         });
     }
     if (debtorInfo.d_id) {
       axios
-        .get(API_URL + 'uthangs/' + debtorInfo.d_id)
+        .get(API_URL + "uthangs/" + debtorInfo.d_id)
         .then((response) => {
           setUthangsData(response.data);
-          
- 
-          if(debtorInfo.status === "Overdue"){
+
+          if (debtorInfo.status === "Overdue") {
             setDue_fee(0.01);
-          }else{
+          } else {
             setDue_fee(0);
           }
           checkBalance(balance);
         })
         .catch((error) => {
-          console.error('Error fetching uthangs data:', error);
+          console.error("Error fetching uthangs data:", error);
         });
     }
   }, [debtorInfo]);
 
   useEffect(() => {
-    fetchData();
-  }, [fetchData]);
+    if (isFocused) {
+      fetchData();
+    }
+  }, [isFocused, fetchData]);
 
   const isFocused = useIsFocused();
 
-  useEffect(() => {
-    const backHandler = BackHandler.addEventListener(
-      "hardwareBackPress",
-      () => {
-        navigation.navigate("ClickforMoreDetails", { debtorInfo });
-        return true;
-      }
-    );
+  // useEffect(() => {
+  //   const backHandler = BackHandler.addEventListener(
+  //     "hardwareBackPress",
+  //     () => {
+  //       navigation.navigate("ClickforMoreDetails", { debtorInfo });
+  //       return true;
+  //     }
+  //   );
 
-    return () => backHandler.remove();
-  }, [isFocused]);
+  //   return () => backHandler.remove();
+  // }, [isFocused]);
 
   useEffect(() => {
     const focusListener = navigation.addListener("focus", () => {
@@ -104,269 +115,281 @@ const ClickforMoreDetails = ({ route, navigation }) => {
   const full = async () => {
     const paymentNumber = parseFloat(payment);
     const balanceNumber = parseFloat(balance);
-    if(payment === 0){
+    if (payment === 0) {
       setPayment(String(balance));
-    }else if(payment != balance){
+    } else if (payment != balance) {
       setPayment(String(balance));
-    }else{
-      console.log("Is payment = balance",paymentNumber === balance);
-      await setCon(true)
-      
+    } else {
+      console.log("Is payment = balance", paymentNumber === balance);
+      await setCon(true);
     }
-  }
+  };
 
   const partial = async () => {
-    if(payment === 0){
-    setEnterModalVisible(true)
-  }else{
-    await setCon(true)
-  }
-  }
+    if (payment === 0) {
+      setEnterModalVisible(true);
+    } else {
+      await setCon(true);
+    }
+  };
 
-  
-
-  const confirmed = async () =>{
-    setCon(false)
+  const confirmed = async () => {
+    setCon(false);
 
     const paymentNumber = parseFloat(payment);
     const balanceNumber = parseFloat(balance);
 
-    if(paymentNumber === balanceNumber){
+    if (paymentNumber === balanceNumber) {
       await updateDataAmount(debtorInfo.d_id, 0);
       await deleteUtangs(debtorInfo.d_id);
-    }else{
+    } else {
       await handlePay();
       setReloadData(true);
     }
-  }
+  };
 
   const grandTotal = uthangsData
-  .filter(item => typeof item.total === 'number' || (typeof item.total === 'string' && item.total.trim() !== ''))
-  .reduce((sum, item) => sum + parseFloat(item.total), 0);
-  const interest  = (grandTotal * due_fee) + grandTotal;
+    .filter(
+      (item) =>
+        typeof item.total === "number" ||
+        (typeof item.total === "string" && item.total.trim() !== "")
+    )
+    .reduce((sum, item) => sum + parseFloat(item.total), 0);
+  const interest = grandTotal * due_fee + grandTotal;
   const percent = interest - grandTotal;
   const balance = interest - debtor.data_amount;
-  
+
   const payAmount = (balance) => {
     if (selectedUthang.total > balance) {
-      Alert.alert('Payment exceeded the current balance. Please use the Partial or Full Payment option.');
-      setLoading(false);  // Make sure to set loading to false
+      Alert.alert(
+        "Payment exceeded the current balance. Please use the Partial or Full Payment option."
+      );
+      setLoading(false); // Make sure to set loading to false
       return;
-    }else{
-      setIsModalVisible(true)
+    } else {
+      setIsModalVisible(true);
     }
-  }
+  };
 
   const handleConfirm = async () => {
     setIsModalVisible(false);
     setLoading(true);
-      try {
+    try {
+      const url = API_URL + "payutang/" + selectedUthang.u_id;
+      const response = await axios.delete(url);
 
-        const url = API_URL + 'payutang/' + selectedUthang.u_id;
-        const response = await axios.delete(url);
-    
-        console.log("Response data:", response.data);
-        if (response.status === 200 || response.status === 204) {
-          // Handle success
-          console.log("Uthang paid successfully");
-          setModalVisible(!modalVisible)
-          ToastAndroid.show("Uthang paid successfully", ToastAndroid.SHORT);
-          setReloadData(true);
-        } else if (response.status === 404) {
-          // Handle case where the resource was not found (deleted successfully but 404 status)
-          console.log("Uthang not found (deleted successfully)");
-          navigation.navigate("ClickforMoreDetails", { debtorInfo });
-          ToastAndroid.show("Uthang not found (deleted successfully)", ToastAndroid.SHORT);
-        } else {
-          // Handle other cases where the API response does not indicate success
-          console.error(
-            "Uthang operation failed:",
-            response.data.message || "Unknown error"
-          );
-          ToastAndroid.show("Uthang operation failed", ToastAndroid.SHORT);
-        }
-      } catch (error) {
-        // Handle network error or other exceptions
-        console.error("Error deleting uthang:", error.message);
-        ToastAndroid.show("Error deleting uthang", ToastAndroid.SHORT);
-      }finally{
-        setLoading(false);
+      console.log("Response data:", response.data);
+      if (response.status === 200 || response.status === 204) {
+        // Handle success
+        console.log("Uthang paid successfully");
+        setModalVisible(!modalVisible);
+        ToastAndroid.show("Uthang paid successfully", ToastAndroid.SHORT);
+        setReloadData(true);
+      } else if (response.status === 404) {
+        // Handle case where the resource was not found (deleted successfully but 404 status)
+        console.log("Uthang not found (deleted successfully)");
+        navigation.navigate("ClickforMoreDetails", { debtorInfo });
+        ToastAndroid.show(
+          "Uthang not found (deleted successfully)",
+          ToastAndroid.SHORT
+        );
+      } else {
+        // Handle other cases where the API response does not indicate success
+        console.error(
+          "Uthang operation failed:",
+          response.data.message || "Unknown error"
+        );
+        ToastAndroid.show("Uthang operation failed", ToastAndroid.SHORT);
       }
-    };
-
-    
-    
-
-
-    const showToast = (message = "Something wen't wrong") => {
-      ToastAndroid.show(message, 3000);
-    };
-
-    const updateDataAmount = async () => {
-      setLoading(true);
-      try {
-        const defaultValue = 0.00;
-    
-        const url = API_URL + 'updatedataamount/' + debtorInfo.d_id;
-        const data = {
-          data_amount: defaultValue
-        };
-    
-        const response = await axios.put(url, data);
-    
-        if (response.status === 200 || response.status === 204) {
-          console.log('Data amount updated successfully');
-          setReloadData(true);
-          setPayModalVisible(!paymodalVisible);
-          setPayment(0);
-        } else {
-          console.error('Error updating data amount:', response.data.message || 'Unknown error');
-        }
-      } catch (error) {
-        console.error('Error updating data amount:', error.message);
-      }finally {
-        setLoading(false);
+    } catch (error) {
+      // Handle network error or other exceptions
+      console.error("Error deleting uthang:", error.message);
+      ToastAndroid.show("Error deleting uthang", ToastAndroid.SHORT);
+    } finally {
+      setLoading(false);
     }
-    };
-    
-    
-    const deleteUtangs = async () => {
-      setLoading(true);
-      try {
-        const url = API_URL + 'deleteutangs/' + debtorInfo.d_id;
-        
-        // Assuming data_amount is the amount you want to send
-        const parsedPayment = parseFloat(payment);
-        const data_amount = parsedPayment; // Replace this with your actual data_amount
-    
-        const response = await axios.delete(url, {
-          data: { data_amount } // Include data_amount in the request body
-        });
-        if (response.status === 200 || response.status === 204) {
-          console.log('Utangs paid successfully');
-          setReloadData(true);
-          setPayModalVisible(!paymodalVisible);
-          setPayment(0);
-        } else {
-          console.error('Error deleting utangs:', response.data.message || 'Unknown error');
-        }
-      } catch (error) {
-        console.error('Error deleting utangs:', error.message);
-      }finally {
-        setLoading(false);
-    }
-    };
-    
+  };
 
-    const handlePay = async () => {
-      setLoading(true);
-      let isFullPayment = false;
-      try {
-        if (payment === 0 || payment > balance) {
-          Alert.alert('Error', 'Invalid payment amount. Please enter a valid Amount.');
-          return;
-        }
-    
-        const parsedPayment = parseFloat(payment);
-        const newBalance = balance - parsedPayment;
-        console.log('Parsed Payment:', parsedPayment);
-    
-        const response = await fetch(API_URL + 'datapayment/' + debtorInfo.d_id, {
-          method: 'PUT',
-          headers: {
-            'Content-Type': 'application/json',
-          },
-          body: JSON.stringify({
-            data_amount: parsedPayment,
-          }),
-        });
-    
-        const responseData = await response.json();
-        console.log(responseData);
-    
-        if (response.status === 200 || response.status === 204) {
-          console.log('Payment Successful');
-          setReloadData(true);
-          setPayModalVisible(!paymodalVisible);
-          setPayment(0);
-          ToastAndroid.show('Payment Successful', ToastAndroid.SHORT);
-    
-          if (newBalance === 0) {
-            await updateDataAmount(debtorInfo.d_id, 0);
-            await deleteUtangs(debtorInfo.d_id);
-            isFullPayment = true;
-          }
-        } else {
-          // Log the error to the console
-          console.error('Error during payment:', responseData.error || 'An error occurred');
-    
-          // Handle errors, e.g., show an error message
-          Alert.alert('Error', responseData.error || 'An error occurred');
-        }
-      } catch (error) {
-        console.error('Error during payment:', error);
-        // Handle other errors if needed
-        Alert.alert('Error', 'An unexpected error occurred');
-      } finally {
-        setLoading(false);
-        if (isFullPayment) {
-          setReloadData(true);
-        } else {
-          fetchData(); // Reload data for partial payment
-        }
-      }
-    };
-    
-        
-    
-    
+  const showToast = (message = "Something wen't wrong") => {
+    ToastAndroid.show(message, 3000);
+  };
 
-      const handleCancel = () => {
-        // Handle the "No" button click
-        setIsModalVisible(false);
-        setEnterModalVisible(false);
-        setCon(false);
-        setIsConfirmed(false);
+  const updateDataAmount = async () => {
+    setLoading(true);
+    try {
+      const defaultValue = 0.0;
+
+      const url = API_URL + "updatedataamount/" + debtorInfo.d_id;
+      const data = {
+        data_amount: defaultValue,
       };
 
-      const checkBalance = async (balance) =>{
-        try{
-          if(uthangsData.length > 0){
-            if(balance <= 0){
-              const newDataAmount = 0.00
-              const response = await axios.post(
-              API_URL + 'checkbalance/' + debtorInfo.d_id,
-              newDataAmount 
-            );
-        
-            if (response.status === 200) {
-              console.log('Check successful');
-              // Handle success
-            } else {
-              console.error('Check failed:', response.data.error || 'Unknown error');
-              // Handle failure
-            }
-          } 
-             
-          }
-        }catch (error) {
-          console.error('Error during checkBalance:', error.message || 'Unknown error');
-          }
+      const response = await axios.put(url, data);
+
+      if (response.status === 200 || response.status === 204) {
+        console.log("Data amount updated successfully");
+        setReloadData(true);
+        setPayModalVisible(!paymodalVisible);
+        setPayment(0);
+      } else {
+        console.error(
+          "Error updating data amount:",
+          response.data.message || "Unknown error"
+        );
       }
-  
+    } catch (error) {
+      console.error("Error updating data amount:", error.message);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const deleteUtangs = async () => {
+    setLoading(true);
+    try {
+      const url = API_URL + "deleteutangs/" + debtorInfo.d_id;
+
+      // Assuming data_amount is the amount you want to send
+      const parsedPayment = parseFloat(payment);
+      const data_amount = parsedPayment; // Replace this with your actual data_amount
+
+      const response = await axios.delete(url, {
+        data: { data_amount }, // Include data_amount in the request body
+      });
+      if (response.status === 200 || response.status === 204) {
+        console.log("Utangs paid successfully");
+        setReloadData(true);
+        setPayModalVisible(!paymodalVisible);
+        setPayment(0);
+      } else {
+        console.error(
+          "Error deleting utangs:",
+          response.data.message || "Unknown error"
+        );
+      }
+    } catch (error) {
+      console.error("Error deleting utangs:", error.message);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const handlePay = async () => {
+    setLoading(true);
+    let isFullPayment = false;
+    try {
+      if (payment === 0 || payment > balance) {
+        Alert.alert(
+          "Error",
+          "Invalid payment amount. Please enter a valid Amount."
+        );
+        return;
+      }
+
+      const parsedPayment = parseFloat(payment);
+      const newBalance = balance - parsedPayment;
+      console.log("Parsed Payment:", parsedPayment);
+
+      const response = await fetch(API_URL + "datapayment/" + debtorInfo.d_id, {
+        method: "PUT",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          data_amount: parsedPayment,
+        }),
+      });
+
+      const responseData = await response.json();
+      console.log(responseData);
+
+      if (response.status === 200 || response.status === 204) {
+        console.log("Payment Successful");
+        setReloadData(true);
+        setPayModalVisible(!paymodalVisible);
+        setPayment(0);
+        ToastAndroid.show("Payment Successful", ToastAndroid.SHORT);
+
+        if (newBalance === 0) {
+          await updateDataAmount(debtorInfo.d_id, 0);
+          await deleteUtangs(debtorInfo.d_id);
+          isFullPayment = true;
+        }
+      } else {
+        // Log the error to the console
+        console.error(
+          "Error during payment:",
+          responseData.error || "An error occurred"
+        );
+
+        // Handle errors, e.g., show an error message
+        Alert.alert("Error", responseData.error || "An error occurred");
+      }
+    } catch (error) {
+      console.error("Error during payment:", error);
+      // Handle other errors if needed
+      Alert.alert("Error", "An unexpected error occurred");
+    } finally {
+      setLoading(false);
+      if (isFullPayment) {
+        setReloadData(true);
+      } else {
+        fetchData(); // Reload data for partial payment
+      }
+    }
+  };
+
+  const handleCancel = () => {
+    // Handle the "No" button click
+    setIsModalVisible(false);
+    setEnterModalVisible(false);
+    setCon(false);
+    setIsConfirmed(false);
+  };
+
+  const checkBalance = async (balance) => {
+    try {
+      if (uthangsData.length > 0) {
+        if (balance <= 0) {
+          const newDataAmount = 0.0;
+          const response = await axios.post(
+            API_URL + "checkbalance/" + debtorInfo.d_id,
+            newDataAmount
+          );
+
+          if (response.status === 200) {
+            console.log("Check successful");
+            // Handle success
+          } else {
+            console.error(
+              "Check failed:",
+              response.data.error || "Unknown error"
+            );
+            // Handle failure
+          }
+        }
+      }
+    } catch (error) {
+      console.error(
+        "Error during checkBalance:",
+        error.message || "Unknown error"
+      );
+    }
+  };
+
   const renderModalContent = () => {
     if (!selectedUthang) {
       return null;
     }
 
     return (
-        <View style={styles.modalContent}>
-          <TouchableOpacity
-            style={styles.closeButton}
-            onPress={() => setModalVisible(!modalVisible)}
-          >
-            <Text style={styles.buttonText}>X</Text>
-          </TouchableOpacity>
+      <View style={styles.modalContent}>
+        <TouchableOpacity
+          style={styles.closeButton}
+          onPress={() => setModalVisible(!modalVisible)}
+        >
+          <AntDesign name="closecircle" size={24} color="black" />
+        </TouchableOpacity>
         <Text style={styles.modalTitle}>Debt Details</Text>
         <View style={styles.detailsContainer}>
           <Text style={styles.detailLabel}>Item:</Text>
@@ -389,132 +412,137 @@ const ClickforMoreDetails = ({ route, navigation }) => {
           <Text style={styles.detailValue}>{selectedUthang.date}</Text>
         </View>
         <View style={styles.buttonsContainer}>
-        <TouchableOpacity
-          style={[styles.payButton, { marginRight: 10 }]}
-          onPress={() => {
-            payAmount(balance);
-          }}
-        >
-          <Text style={styles.buttonText}>Pay</Text>
-        </TouchableOpacity>
-        <TouchableOpacity
-          style={styles.editButton}
-          onPress={() =>
-            navigation.navigate("ViewDebtRecord", {
-              selectedUthang, debtorInfo, calculatedDueStatus 
-            })
-          }
-        >
-          <Text style={styles.buttonText}>Edit</Text>
-        </TouchableOpacity>
+          <TouchableOpacity
+            style={[styles.payButton, { marginRight: 10 }]}
+            onPress={() => {
+              payAmount(balance);
+            }}
+          >
+            <Text style={styles.buttonText}>Pay</Text>
+          </TouchableOpacity>
+          <TouchableOpacity
+            style={styles.editButton}
+            onPress={() => {
+              try {
+                setModalVisible(false); // Close the modal
+                navigation.navigate("ViewDebtRecord", {
+                  selectedUthang,
+                  debtorInfo
+                });
+              } catch (error) {
+                console.error("Error navigating:", error);
+              }
+            }}
+          >
+            <Text style={styles.buttonText}>Edit</Text>
+          </TouchableOpacity>
+        </View>
       </View>
-    </View>
-  );
-};
+    );
+  };
 
-// DARI ANG SA PAYMENT NGA BOX
-const PayModalContent = ({ setPayModalVisible }) => {
-  return (
-    <View style={styles.modalContent1}>
-      <TouchableOpacity
-        style={styles.closeButton}
-        onPress={() => setPayModalVisible(false)}
-      >
-        <Text style={styles.buttonText}>X</Text>
-      </TouchableOpacity>
-      <Text style={styles.modalTitle}>Payment</Text>
-      <View style={styles.paydetailsContainer}>
-        <Text style={styles.paydetailLabel}>Total Utang:</Text>
-        <Text style={styles.paydetailValue}>₱{grandTotal.toFixed(2)}</Text>
-      </View>
-      <View style={styles.paydetailsContainer}>
-        <Text style={styles.paydetailLabel}>Overdue Fee:</Text>
-        <Text style={styles.paydetailValue}>₱{percent.toFixed(2)}</Text>
-      </View>
-      <View style={styles.paydetailsContainer}>
-        <Text style={styles.paydetailLabel}>Data Payment:</Text>
-        <Text style={styles.paydetailValue}>₱{debtor.data_amount}</Text>
-      </View>
-      <View style={styles.paydetailsContainer}>
-        <Text style={styles.paydetailLabel}>Last Payment:</Text>
-        <Text style={styles.paydetailValue}>{debtor.last_payment_date}</Text>
-      </View>
-      <View style={styles.paydetailsContainer}>
-        <Text style={styles.paydetailLabel}>Balance:</Text>
-        <Text style={styles.paydetailValue}>₱{balance.toFixed(2)}</Text>
-      </View>
-      <Text style={styles.payTitle}>Amount</Text>
-      
+  // DARI ANG SA PAYMENT NGA BOX
+  const PayModalContent = ({ setPayModalVisible }) => {
+    return (
+      <View style={styles.modalContent1}>
+        <TouchableOpacity
+          style={styles.closeButton}
+          onPress={() => setPayModalVisible(false)}
+        >
+          <AntDesign name="closecircle" size={24} color="black" />
+        </TouchableOpacity>
+        <Text style={styles.modalTitle}>Payment</Text>
+        <View style={styles.paydetailsContainer}>
+          <Text style={styles.paydetailLabel}>Total Utang:</Text>
+          <Text style={styles.paydetailValue}>₱{grandTotal.toFixed(2)}</Text>
+        </View>
+        <View style={styles.paydetailsContainer}>
+          <Text style={styles.paydetailLabel}>Overdue Fee:</Text>
+          <Text style={styles.paydetailValue}>₱{percent.toFixed(2)}</Text>
+        </View>
+        <View style={styles.paydetailsContainer}>
+          <Text style={styles.paydetailLabel}>Data Payment:</Text>
+          <Text style={styles.paydetailValue}>₱{debtor.data_amount}</Text>
+        </View>
+        <View style={styles.paydetailsContainer}>
+          <Text style={styles.paydetailLabel}>Last Payment:</Text>
+          <Text style={styles.paydetailValue}>{debtor.last_payment_date}</Text>
+        </View>
+        <View style={styles.paydetailsContainer}>
+          <Text style={styles.paydetailLabel}>Balance:</Text>
+          <Text style={styles.paydetailValue}>₱{balance.toFixed(2)}</Text>
+        </View>
+        <Text style={styles.payTitle}>Amount</Text>
+
         <View style={styles.payFieldContainer}>
           <TouchableOpacity onPress={() => setEnterModalVisible(true)}>
-            <Text style={styles.pesoSign}>          ₱{payment}</Text>
+            <Text style={styles.pesoSign}> ₱{payment}</Text>
           </TouchableOpacity>
-          
-            <View style={styles.resetButtonContainer}>    
-            <TouchableOpacity onPress={() => setPayment(0)} style={styles.resetButton}>
+
+          <View style={styles.resetButtonContainer}>
+            <TouchableOpacity
+              onPress={() => setPayment(0)}
+              style={styles.resetButton}
+            >
               <Text style={styles.resetButtonText}>Reset</Text>
             </TouchableOpacity>
           </View>
         </View>
-      <View style={styles.buttonsContainer}>
-      <TouchableOpacity
-        style={[styles.payButton, { marginRight: 10 }]}
-        disabled={loading}
-        loading={loading}
-        onPress={() => {full()
-        }}
-      >
-          <Text style={styles.buttonText}>Pay Full</Text>
-        </TouchableOpacity>
+        <View style={styles.buttonsContainer}>
+          <TouchableOpacity
+            style={[styles.payButton, { marginRight: 10 }]}
+            disabled={loading}
+            loading={loading}
+            onPress={() => {
+              full();
+            }}
+          >
+            <Text style={styles.buttonText}>Pay Full</Text>
+          </TouchableOpacity>
 
-
-        <TouchableOpacity
-          style={styles.editButton}
-          disabled={loading}
-          loading={loading}
-          onPress={() => partial()}
-        >
-          <Text style={styles.buttonText}>Partial Pay</Text>
-        </TouchableOpacity>
+          <TouchableOpacity
+            style={styles.editButton}
+            disabled={loading}
+            loading={loading}
+            onPress={() => partial()}
+          >
+            <Text style={styles.buttonText}>Partial Pay</Text>
+          </TouchableOpacity>
+        </View>
       </View>
-    </View>
-  );
-};
-const calculateStatusColor = (debtor) => {
-  const status = debtor.status;
+    );
+  };
+  const calculateStatusColor = (debtor) => {
+    const status = debtor.status;
 
-  if(status === "Not Due"){
-    setColor("black");
-  }else if(status === "Due"){
-    setColor("blue");
-  }else if(status === "Due Today"){
-    setColor("orange");
-  }else if(status === "Overdue"){
-    setColor("red");
-  }
-}
-
-
-useEffect(() => {
-  const backHandler = BackHandler.addEventListener(
-    "hardwareBackPress",
-    () => {
-      navigation.navigate("MainPage");
-      return true;
+    if (status === "Not Due") {
+      setColor("black");
+    } else if (status === "Due") {
+      setColor("blue");
+    } else if (status === "Due Today") {
+      setColor("orange");
+    } else if (status === "Overdue") {
+      setColor("red");
     }
-  );
+  };
 
-  return () => backHandler.remove();
-}, [isFocused]);
+  useEffect(() => {
+    const backHandler = BackHandler.addEventListener(
+      "hardwareBackPress",
+      () => {
+        navigation.navigate("MainPage");
+        return true;
+      }
+    );
 
-
-
+    return () => backHandler.remove();
+  }, [isFocused]);
 
   return (
     <KeyboardAvoidingView
-    behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
-    style={{ flex: 1 }}
-  >
+      behavior={Platform.OS === "ios" ? "padding" : "height"}
+      style={{ flex: 1 }}
+    >
       <ScrollView>
         <View style={styles.container}>
           <View style={styles.contentContainer}>
@@ -522,32 +550,52 @@ useEffect(() => {
               <EvilIcons name="user" size={230} color="black" />
             </View>
             <View style={styles.details}>
-              <Text><Text style={{fontWeight: "bold",}}>Name: </Text>{debtorInfo.d_name}</Text>
-              <Text><Text style={{fontWeight: "bold",}}>Phone: </Text>{debtorInfo.phone}</Text>
-              <Text><Text style={{fontWeight: "bold",}}>Address: </Text>{debtorInfo.address}</Text>
-              <Text><Text style={{fontWeight: "bold",}}>Email: </Text>{debtorInfo.email}</Text>
-              <Text><Text style={{fontWeight: "bold",}}>Due Date: </Text>{debtor.due_date}    /     <Text style={{color:color, fontWeight:'bold'}}>{debtor.status}</Text></Text>
-      
+              <Text>
+                <Text style={{ fontWeight: "bold" }}>Name: </Text>
+                {debtorInfo.d_name}
+              </Text>
+              <Text>
+                <Text style={{ fontWeight: "bold" }}>Phone: </Text>
+                {debtorInfo.phone}
+              </Text>
+              <Text>
+                <Text style={{ fontWeight: "bold" }}>Address: </Text>
+                {debtorInfo.address}
+              </Text>
+              <Text>
+                <Text style={{ fontWeight: "bold" }}>Email: </Text>
+                {debtorInfo.email}
+              </Text>
+              <Text>
+                <Text style={{ fontWeight: "bold" }}>Due Date: </Text>
+                {debtor.due_date} /{" "}
+                <Text style={{ color: color, fontWeight: "bold" }}>
+                  {debtor.status}
+                </Text>
+              </Text>
             </View>
             <View style={{ flexDirection: "row", marginTop: 15, gap: 5 }}>
               <TouchableOpacity
                 style={styles.button}
-                onPress={() => navigation.navigate("ViewTransaction", { debtorInfo})}
+                onPress={() =>
+                  navigation.navigate("ViewTransaction", { debtorInfo })
+                }
               >
-                <Text style={styles.buttonText}>Transactions</Text>
+                <Text variant="titleSmall" style={styles.buttonText}>Transactions</Text>
               </TouchableOpacity>
               <TouchableOpacity
                 style={styles.button}
-                onPress={() => navigation.navigate("EditProfile", { debtorInfo})}
+                onPress={() =>
+                  navigation.navigate("EditProfile", { debtorInfo })
+                }
               >
-                <Text style={styles.buttonText}>Edit Profile</Text>
+                <Text variant="titleSmall" style={styles.buttonText}>Edit Profile</Text>
               </TouchableOpacity>
             </View>
           </View>
 
           <View style={styles.tableDebt}>
             {uthangsData?.length > 0 ? (
-              
               <DataTable>
                 <DataTable.Header>
                   <DataTable.Title>Item</DataTable.Title>
@@ -557,7 +605,6 @@ useEffect(() => {
                   <DataTable.Title>Date</DataTable.Title>
                 </DataTable.Header>
                 {uthangsData.map((item) => (
-                  
                   <TouchableHighlight
                     key={item.u_id}
                     onPress={() => {
@@ -579,21 +626,24 @@ useEffect(() => {
                   <DataTable.Cell></DataTable.Cell>
                   <DataTable.Cell></DataTable.Cell>
                   <DataTable.Cell>
-                  <TouchableOpacity
+                    <TouchableOpacity
                       style={styles.pbutton}
                       onPress={() => {
                         setPayModalVisible(true);
                       }}
                       underlayColor="#DDDDDD"
                     >
-                      <Text style={{color: "white"}}>Pay</Text>
+                      <Text style={{ color: "white" }}>Pay</Text>
                     </TouchableOpacity>
                   </DataTable.Cell>
                   <DataTable.Cell>
                     <Text style={styles.tableTitle}>Balance Total:</Text>
                   </DataTable.Cell>
                   <DataTable.Cell>
-                    <Text style={styles.tableTitle}> ₱{balance.toFixed(2)}</Text>
+                    <Text style={styles.tableTitle}>
+                      {" "}
+                      ₱{balance.toFixed(2)}
+                    </Text>
                   </DataTable.Cell>
                 </DataTable.Row>
               </DataTable>
@@ -601,7 +651,9 @@ useEffect(() => {
               <Text style={styles.noUthangsText}>NO UTHANGS TO SHOW</Text>
             )}
           </View>
-          <TouchableOpacity onPress={() => navigation.navigate("AddUtang", { debtorInfo})}>
+          <TouchableOpacity
+            onPress={() => navigation.navigate("AddUtang", { debtorInfo })}
+          >
             <AntDesign
               style={styles.plusButton}
               name="pluscircle"
@@ -609,8 +661,6 @@ useEffect(() => {
               color="black"
             />
           </TouchableOpacity>
-
-
 
           <Modal
             animationType="slide"
@@ -625,8 +675,6 @@ useEffect(() => {
             </View>
           </Modal>
 
-
-
           <Modal
             animationType="slide"
             transparent={true}
@@ -634,16 +682,14 @@ useEffect(() => {
             onRequestClose={() => setModalVisible(!modalVisible)}
           >
             <View style={styles.centeredView}>
-              <View style={styles.modalView1}>
-                {renderModalContent()}
-              </View>
+              <View style={styles.modalView1}>{renderModalContent()}</View>
             </View>
           </Modal>
-          
+
           <ConfirmationModal
-          isVisible={isModalVisible}
-          onConfirm={handleConfirm}
-          onCancel={handleCancel}
+            isVisible={isModalVisible}
+            onConfirm={handleConfirm}
+            onCancel={handleCancel}
           />
           <ConfirmModal
             isVisible={con}
@@ -651,17 +697,16 @@ useEffect(() => {
             onCancel={handleCancel}
           />
           <EnterModal
-        isVisible={entermodalVisible}
-        onConfirm={() => {
-          // Handle the confirmation logic if needed
-          setEnterModalVisible(false);
-        }}
-        onCancel={() => setEnterModalVisible(false)}
-        onAmountEntered={(enteredPayment) => setPayment(enteredPayment)}
-        payment={payment}  // Pass the payment as a prop
-        balance={balance}
-      />
-
+            isVisible={entermodalVisible}
+            onConfirm={() => {
+              // Handle the confirmation logic if needed
+              setEnterModalVisible(false);
+            }}
+            onCancel={() => setEnterModalVisible(false)}
+            onAmountEntered={(enteredPayment) => setPayment(enteredPayment)}
+            payment={payment} // Pass the payment as a prop
+            balance={balance}
+          />
         </View>
       </ScrollView>
     </KeyboardAvoidingView>
@@ -769,117 +814,112 @@ const styles = StyleSheet.create({
     marginBottom: 120,
     marginTop: 150,
   },
-  
 
   modalContent: {
     flex: 1,
-    backgroundColor: 'white',
+    backgroundColor: "white",
     borderRadius: 10,
     padding: 10,
-    alignItems: 'center',
+    alignItems: "center",
   },
 
   modalContent1: {
     flex: 1,
-    backgroundColor: 'white',
+    backgroundColor: "white",
     borderRadius: 10,
     padding: 10,
-    alignItems: 'center',
+    alignItems: "center",
   },
 
   modalTitle: {
     fontSize: 24,
-    fontWeight: 'bold',
+    fontWeight: "bold",
     marginBottom: 20,
   },
   detailsContainer: {
     flex: 1,
-    flexDirection: 'row',
+    flexDirection: "row",
     paddingLeft: 50,
     marginBottom: 10,
-    alignItems: 'center',
+    alignItems: "center",
   },
   detailLabel: {
-    flexBasis: '30%',
-    fontWeight: 'bold',
+    flexBasis: "30%",
+    fontWeight: "bold",
     marginRight: 10,
-    textAlign: 'right',
+    textAlign: "right",
   },
   detailValue: {
     flex: 1,
   },
   payTitle: {
     fontSize: 15,
-    fontWeight: 'bold',
+    fontWeight: "bold",
     marginTop: 20,
   },
   paydetailsContainer: {
-    flexDirection: 'row',
+    flexDirection: "row",
     marginBottom: 10,
-    alignItems: 'center',
+    alignItems: "center",
   },
   paydetailLabel: {
-    flexBasis: '40%',
-    fontWeight: 'bold',
+    flexBasis: "40%",
+    fontWeight: "bold",
     marginRight: 10,
-    textAlign: 'right',
+    textAlign: "right",
   },
   paydetailValue: {
     flex: 1,
   },
   closeButton: {
-    backgroundColor: 'red',
     borderRadius: 10,
     paddingVertical: 5,
     paddingHorizontal: 5,
-    width: 30,
-    left: 100,
+    left: 130,
   },
   buttonText: {
-    color: 'black',
+    color: "white",
     fontSize: 16,
-    textAlign: 'center',
+    textAlign: "center",
   },
   buttonsContainer: {
-    flexDirection: 'row',
+    flexDirection: "row",
     marginTop: 20,
   },
   payFieldContainer: {
-    flexDirection: 'row',
+    flexDirection: "row",
     marginTop: 20,
   },
   pesoSign: {
     fontSize: 15,
-    fontWeight: 'bold',
+    fontWeight: "bold",
   },
   payButton: {
-    backgroundColor: 'green',
+    backgroundColor: "green",
     borderRadius: 10,
     paddingVertical: 12,
     flex: 1,
-    alignItems: 'center',
+    alignItems: "center",
   },
   editButton: {
-    backgroundColor: 'orange',
+    backgroundColor: "orange",
     borderRadius: 10,
     paddingVertical: 12,
     flex: 1,
-    alignItems: 'center',
+    alignItems: "center",
   },
   paymentinput: {
     height: 30,
-    borderBottomColor: 'blue',
-    borderBottomWidth: 1,    
-    marginBottom: 10,           
+    borderBottomColor: "blue",
+    borderBottomWidth: 1,
+    marginBottom: 10,
   },
   resetButtonContainer: {
-    marginLeft: 'auto', // This will push the reset button to the right
-    alignSelf: 'center', // Align the button vertically in the center
+    marginLeft: "auto", // This will push the reset button to the right
+    alignSelf: "center", // Align the button vertically in the center
   },
   resetButton: {
     marginLeft: 10, // Add some space between the amount and the reset button
-    color: 'blue', // Customize the color as needed
+    color: "blue", // Customize the color as needed
   },
-
-  
 });

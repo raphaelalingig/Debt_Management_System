@@ -1,15 +1,16 @@
-import { StyleSheet, View, TouchableOpacity, FlatList } from "react-native";
-import React, { useState, useEffect} from "react";
+import { StyleSheet, View, TouchableOpacity, FlatList, BackHandler } from "react-native";
+import React, { useState, useEffect } from "react";
+import { useIsFocused } from "@react-navigation/native";
 import { TextInput, Text, Button } from "react-native-paper";
 import { EvilIcons } from "@expo/vector-icons";
 import ConfirmationModal from './Confirmation';
 import API_URL from "../services/apiurl";
 import axios from "axios";
 import { ToastAndroid } from "react-native";
+import { useNavigation } from '@react-navigation/native';
 
-
-const ViewDebtRecord = ({ navigation, route }) => {
-  const { selectedUthang, debtorInfo, calculatedDueStatus } = route.params;
+const ViewDebtRecord = ({ route }) => {
+  const { selectedUthang, debtorInfo, onGoBack } = route.params;
   const [loading, setLoading] = React.useState(false);
   const [isError, setIsError] = React.useState(false);
   const [item_id, setItemId] = useState("");
@@ -17,11 +18,14 @@ const ViewDebtRecord = ({ navigation, route }) => {
   const [quantity, setQuantity] = useState("");
   const [query, setQuery] = useState("");
   const [suggestions, setSuggestions] = useState([]);
+  const [isInputClicked, setIsInputClicked] = useState(false);
+  const isFocused = useIsFocused();
+  const navigation = useNavigation();
 
   const items = [
     { id: 1, name: 'Rice' },
     { id: 2, name: 'Egg' },
-    { id: 3, name: 'Bread' },,
+    { id: 3, name: 'Bread' },
     { id: 4, name: 'Powdered Milk' },
     { id: 5, name: 'Softdrink' },
     { id: 6, name: 'Juice' },
@@ -55,7 +59,11 @@ const ViewDebtRecord = ({ navigation, route }) => {
     setItemId(item.id);
     setQuantity(selectedUthang.quantity.toString());
     setSuggestions([]);
-    setEditedData({ ...editedData, item: item.name, quantity: selectedUthang.quantity.toString() });
+  setEditedData({
+      ...editedData,
+      item: item.name,
+      quantity: selectedUthang.quantity.toString(),
+    });
   };
 
   // Assuming you want to allow editing and have local state for it
@@ -83,60 +91,76 @@ const ViewDebtRecord = ({ navigation, route }) => {
         return false;
       }
 
-
+      
       if (!selectedUthang?.u_id) {
           console.error("Missing 'u_id' in selectedUthang");
           return;
       }
       if (item_id === null) {
-        console.warn("item_id is null. Setting to default value or handling accordingly.");
+        console.warn(
+          "item_id is null. Setting to default value or handling accordingly."
+        );
         setItemId(selectedUthang.item_id); // Set to a default item_id or handle this case accordingly
       }
   
-
-      const url = API_URL + 'updateutang/' + selectedUthang.u_id;
+const url = API_URL + "updateutang/" + selectedUthang.u_id;
       const data = {
-          quantity: quantity,
-          item_id: item_id,
+        quantity: quantity,
+        item_id: item_id,
       };
 
       console.log("Request URL:", url);
-      const result = await axios.put(url, data);
+      const result = await axios.put(url, data).catch((error) => {
+      console.error("API request failed:", error);
+        showToast("Failed to update data");
+    });
 
           if (result?.data?.uthang) {
               // Access the updated Uthang data
               console.log(result.data.uthang);
-              navigation.navigate("ClickforMoreDetails", { debtorInfo, calculatedDueStatus });
-          } else {
-              // Handle error if needed
+              navigation.navigate("ClickforMoreDetails", {
+          debtorInfo,
+        });
+    } else {
+        // Handle error if needed
               console.log(result?.data?.error || result?.message);
-          }
+            }
 
-  } catch (e) {
+    } catch (e) {
       showToast(e.toString());
       console.error(e);
-  } finally {
+    } finally {
       setLoading(false);
       console.log("Edited Data:", editedData);
-  }
+    }
+  };
+  const handleGoBack = () => {
+    // Pop the ClickforMoreDetails screen from the stack
+    navigation.pop();
   };
   
+  
 
+  
   return (
-    <View style={styles.container}>
-      <View style={styles.contentContainer}>
-        <View style={styles.displayPicture}>
-          <EvilIcons name="user" size={256} color="black" />
-        </View>
-        <View style={styles.autoCompleteContainer}>
-          <TextInput
-              placeholder={selectedUthang.item_name}
-              label="Item"
-              mode="outlined"
-              value={query}
-              onChangeText={handleInputChange}
-              onFocus={handleInputClick}
-            />
+    <FlatList
+      contentContainerStyle={styles.scrollView}
+      data={[{ key: "dummy" }]} // Add a dummy item to make FlatList work
+      renderItem={() => (
+        <View style={styles.container}>
+          <View style={styles.contentContainer}>
+            
+            <View style={styles.details}>
+              <View style={styles.autoCompleteContainer}>
+              <TextInput
+                placeholder={selectedUthang.item_name}
+                label="Item"
+                mode="outlined"
+                value={query}
+                onChangeText={handleInputChange}
+                onFocus={handleInputClick} 
+                error={isError}
+              />
               <FlatList
                 data={suggestions}
                 renderItem={({ item }) => (
@@ -158,38 +182,50 @@ const ViewDebtRecord = ({ navigation, route }) => {
                 onChangeText={setQuantity}
                 error={isError}
               />
+
+              <View style={styles.actionButton}>
+                <TouchableOpacity>
+                  <Button
+                    disabled={loading}
+                    loading={loading}
+                    style={{ backgroundColor: "#13C913" }}
+                    onPress={handleSave}
+                  >
+                    <Text style={{ color: "white" }}>Save</Text>
+                  </Button>
+                </TouchableOpacity>
+                <TouchableOpacity
+                  onPress={handleGoBack}
+                >
+                  <Button style={{ backgroundColor: "#DB0202" }}>
+                    <Text style={{ color: "white" }}>Cancel</Text>
+                  </Button>
+                </TouchableOpacity>
+              </View>
+            </View>
           </View>
-          <View style={{ marginTop: 20, gap: 5 }}>
-            <TouchableOpacity onPress={handleSave}>
-              <Button 
-              disabled={loading}
-              loading={loading}
-              style={styles.button}
-              >Save</Button>
-            </TouchableOpacity>
-            
-            <TouchableOpacity onPress={() => navigation.navigate("ClickforMoreDetails",{debtorInfo, calculatedDueStatus})}>
-              <Button 
-                style={{ backgroundColor: "red" }}
-                disabled={loading}
-              loading={loading}>
-                <Text style={{ color: "white" }}>Cancel</Text>
-              </Button>
-            </TouchableOpacity>
-          </View>
-        </View>    
+        </View>
+      )}
+    />
   );
 };
 
 export default ViewDebtRecord;
 
 const styles = StyleSheet.create({
+  scrollView: {
+    flexGrow: 1,
+    backgroundColor: "red",
+  },
   container: {
     flex: 1,
     alignItems: "center",
     backgroundColor: "#BAE8E8",
+    paddingTop: 100,
+    paddingBottom: 300,
   },
   contentContainer: {
+    flex: 1,
     padding: 20,
     backgroundColor: "white",
     borderRadius: 30,
@@ -200,23 +236,31 @@ const styles = StyleSheet.create({
     marginTop: 20,
     gap: 10,
   },
-  actionButton: {
-    flexDirection: "row",
-    left: 135,
-  },
-  button: {
-    backgroundColor: "#FFD803",
-  },
   autoCompleteContainer: {
     position: "relative",
     zIndex: 1,
     marginBottom: 10,
-    width: "100%",
+    width: "100%", // Set width to 100%
+  },
+  autoComplete: {
+    height: 40, // Set the height to the desired value
+    marginBottom: 10,
+    width: "100%", // Set width to 100%
   },
 
   quantityInput: {
-    height: 50,
+    height: 50, // Set the height to the same value as autoComplete
     marginBottom: 10,
+    width: "100%", // Set width to 100%
+  },
+  actionButton: {
+    flexDirection: "row",
+    marginLeft: 140,
+    gap: 5,
+    marginTop: 20,
+  },
+  button: {
+    backgroundColor: "#FFD803",
   },
   suggestionItem: {
     height: 40, // Adjust the height according to your preference
