@@ -5,10 +5,10 @@ import { TextInput, Text, Button } from "react-native-paper";
 import API_URL from "../services/apiurl";
 import fetchServices from "../services/fetchServices";
 import { ToastAndroid } from "react-native";
-import AutoComplete from "react-native-autocomplete-input";
+
 
 const AddUtang = ({ route, navigation }) => {
-  const { debtorInfo, calculatedDueStatus } = route.params;
+  const { debtorInfo } = route.params;
   const [item_id, setItemId] = useState("");
   const [itemName, setItemName] = useState("");
   const [quantity, setQuantity] = useState("");
@@ -19,18 +19,17 @@ const AddUtang = ({ route, navigation }) => {
   const [isInputClicked, setIsInputClicked] = useState(false);
 
   const items = [
-    { id: 1, name: "Rice" },
-    { id: 2, name: "Egg" },
-    { id: 3, name: "Bread" },
-    ,
-    { id: 4, name: "Powdered Milk" },
-    { id: 5, name: "Softdrink" },
-    { id: 6, name: "Juice" },
-    { id: 7, name: "Coffee" },
-    { id: 8, name: "Sugar" },
-    { id: 9, name: "Bleach" },
-    { id: 10, name: "Soap" },
-    { id: 11, name: "Beer" },
+    { id: 1, name: 'Rice' },
+    { id: 2, name: 'Egg' },
+    { id: 3, name: 'Bread' },
+    { id: 4, name: 'Powdered Milk' },
+    { id: 5, name: 'Softdrink' },
+    { id: 6, name: 'Juice' },
+    { id: 7, name: 'Coffee' },
+    { id: 8, name: 'Sugar' },
+    { id: 9, name: 'Bleach' },
+    { id: 10, name: 'Soap' },
+    { id: 11, name: 'Beer' },
   ];
 
   const handleInputChange = (text) => {
@@ -88,11 +87,8 @@ const AddUtang = ({ route, navigation }) => {
         showToast(result?.message);
       } else {
         showToast(result?.message);
-        navigation.navigate("ClickforMoreDetails", {
-          debtorInfo,
-          calculatedDueStatus,
-        });
-      }
+        navigation.navigate('ClickforMoreDetails', { debtorInfo });
+    }
     } catch (e) {
       showToast(e.toString());
       console.error(e); // Log the error directly
@@ -101,35 +97,8 @@ const AddUtang = ({ route, navigation }) => {
     }
   };
 
-  const checkStatus = async (balance) => {
-    try {
-      if (uthangsData.length > 0) {
-        if (balance <= 0) {
-          const newDataAmount = 0.0;
-          const response = await axios.post(
-            API_URL + "checkbalance/" + debtorInfo.d_id,
-            newDataAmount
-          );
+  
 
-          if (response.status === 200) {
-            console.log("Check successful");
-            // Handle success
-          } else {
-            console.error(
-              "Check failed:",
-              response.data.error || "Unknown error"
-            );
-            // Handle failure
-          }
-        }
-      }
-    } catch (error) {
-      console.error(
-        "Error during checkBalance:",
-        error.message || "Unknown error"
-      );
-    }
-  };
 
   return (
     <FlatList
@@ -138,7 +107,7 @@ const AddUtang = ({ route, navigation }) => {
       renderItem={() => (
         <View style={styles.container}>
           <View style={styles.contentContainer}>
-            <View style={styles.details}>
+                        <View style={styles.details}>
               <View style={styles.autoCompleteContainer}>
                 <TextInput
                   placeholder="Item:"
@@ -172,7 +141,7 @@ const AddUtang = ({ route, navigation }) => {
               />
 
               <View style={styles.actionButton}>
-                <TouchableOpacity
+              <TouchableOpacity
                   onPress={() =>
                     navigation.navigate("ClickforMoreDetails", {
                       debtorInfo,

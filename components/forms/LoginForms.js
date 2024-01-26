@@ -200,18 +200,6 @@ const LoginForm = () => {
                 />
                 <Text>Remember Me</Text>
               </View>
-              <View style={styles.signupContainer}>
-                <Text variant="bodyMedium">Don't have an account? </Text>
-                <TouchableOpacity>
-                  <Text
-                    variant="bodyMedium"
-                    onPress={() => navigation.navigate("SignupForm")}
-                    style={{ color: "#008686" }}
-                  >
-                    Sign up
-                  </Text>
-                </TouchableOpacity>
-              </View>
               <Card.Actions>
                 <TouchableOpacity
                   disabled={isValidating}

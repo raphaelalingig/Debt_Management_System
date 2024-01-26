@@ -135,7 +135,7 @@ const NavigationStack = () => {
           name="SignupForm"
           component={SignupForm}
         />
-        <Stack.Screen
+                <Stack.Screen
           options={{ headerShown: false }}
           name="LoginForms"
           component={LoginForm}
@@ -204,7 +204,7 @@ const NavigationStack = () => {
           name="ViewDebtRecord"
           component={ViewDebtRecord}
           options={{
-            title: "View Debt Record",
+            title: "Edit Utang",
             headerStyle: {
               backgroundColor: "#BAE8E8",
             },
@@ -245,7 +245,7 @@ const NavigationStack = () => {
           name="AddUtang"
           component={AddUtang}
           options={{
-            title: "Add Debt Items",
+            title: "Add Utang ",
             headerStyle: {
               backgroundColor: "#BAE8E8",
             },

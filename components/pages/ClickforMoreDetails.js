@@ -22,8 +22,10 @@ import ConfirmationModal from "./Confirmation";
 import EnterModal from "./EnterAmount";
 import ConfirmModal from "./Confirm";
 import { Text } from "react-native-paper";
+import { useNavigation } from '@react-navigation/native';
 
-const ClickforMoreDetails = ({ route, navigation }) => {
+const ClickforMoreDetails = ({ route }) => {
+  const navigation = useNavigation();
   const { debtorInfo } = route.params;
   const [debtor, setDebtor] = useState([]);
   const [color, setColor] = useState([]);
@@ -81,22 +83,24 @@ const ClickforMoreDetails = ({ route, navigation }) => {
   }, [debtorInfo]);
 
   useEffect(() => {
-    fetchData();
-  }, [fetchData]);
+    if (isFocused) {
+      fetchData();
+    }
+  }, [isFocused, fetchData]);
 
   const isFocused = useIsFocused();
 
-  useEffect(() => {
-    const backHandler = BackHandler.addEventListener(
-      "hardwareBackPress",
-      () => {
-        navigation.navigate("ClickforMoreDetails", { debtorInfo });
-        return true;
-      }
-    );
+  // useEffect(() => {
+  //   const backHandler = BackHandler.addEventListener(
+  //     "hardwareBackPress",
+  //     () => {
+  //       navigation.navigate("ClickforMoreDetails", { debtorInfo });
+  //       return true;
+  //     }
+  //   );
 
-    return () => backHandler.remove();
-  }, [isFocused]);
+  //   return () => backHandler.remove();
+  // }, [isFocused]);
 
   useEffect(() => {
     const focusListener = navigation.addListener("focus", () => {
@@ -418,12 +422,17 @@ const ClickforMoreDetails = ({ route, navigation }) => {
           </TouchableOpacity>
           <TouchableOpacity
             style={styles.editButton}
-            onPress={() =>
-              navigation.navigate("ViewDebtRecord", {
-                selectedUthang,
-                debtorInfo,
-              })
-            }
+            onPress={() => {
+              try {
+                setModalVisible(false); // Close the modal
+                navigation.navigate("ViewDebtRecord", {
+                  selectedUthang,
+                  debtorInfo
+                });
+              } catch (error) {
+                console.error("Error navigating:", error);
+              }
+            }}
           >
             <Text style={styles.buttonText}>Edit</Text>
           </TouchableOpacity>

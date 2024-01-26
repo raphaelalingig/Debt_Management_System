@@ -51,7 +51,7 @@ const Transactions = ({ navigation, route }) => {
     return () => backHandler.remove();
   }, [navigation]);
 
-  const handlePrintReceipt = async () => {
+    const handlePrintReceipt = async () => {
     // Perform logic to print receipt
     const receiptContent = generateReceiptContent();
     await Print.printAsync({ html: receiptContent });
@@ -120,15 +120,15 @@ const Transactions = ({ navigation, route }) => {
     receiptContent += `
       <tr class="totalRow">
         <td colspan="2">Total</td>
-        <td>${totalPrice.toFixed(2)}</td>
-        <td>${totalPayment.toFixed(2)}</td>
-        <td>${difference.toFixed(2)}</td>
+        <td>₱${totalPrice.toFixed(2)}</td>
+        <td>₱${totalPayment.toFixed(2)}</td>
+        <td>₱${difference.toFixed(2)}</td>
       </tr>
       <tr class="totalRow">
         <td colspan="4"></td>
         <td>Balance</td>
         `;
-
+        
     receiptContent += `
           </table>
         </body>
@@ -168,14 +168,14 @@ const Transactions = ({ navigation, route }) => {
               style={styles.button}
             >
               <Text>Search</Text>
-            </Button>
-            <Button
+              </Button>
+              <Button
               mode="outlined"
               onPress={handleCancel}
               style={{ borderColor: "#FFD803" }}
             >
               <Text>Cancel</Text>
-            </Button>
+              </Button>
           </View>
         ) : (
           <View style={styles.buttonContainer}>
@@ -185,8 +185,8 @@ const Transactions = ({ navigation, route }) => {
               style={styles.button}
             >
               <Text variant="">Search Date</Text>
-            </Button>
-            <Button
+              </Button>
+              <Button
               mode="contained"
               onPress={handlePrintReceipt}
               style={styles.button}
@@ -273,7 +273,7 @@ const styles = StyleSheet.create({
     marginRight: 10,
     width: "40%",
     backgroundColor: "white",
-    borderRadius: 20,
+  borderRadius: 20,
   },
   buttonContainer: {
     flexDirection: "row",
