@@ -572,7 +572,9 @@ const ClickforMoreDetails = ({ route, navigation }) => {
                   navigation.navigate("ViewTransaction", { debtorInfo })
                 }
               >
-                <Text variant="titleSmall" style={styles.buttonText}>Transactions</Text>
+                <Text variant="titleSmall" style={styles.buttonText}>
+                  Transactions
+                </Text>
               </TouchableOpacity>
               <TouchableOpacity
                 style={styles.button}
@@ -580,7 +582,9 @@ const ClickforMoreDetails = ({ route, navigation }) => {
                   navigation.navigate("EditProfile", { debtorInfo })
                 }
               >
-                <Text variant="titleSmall" style={styles.buttonText}>Edit Profile</Text>
+                <Text variant="titleSmall" style={styles.buttonText}>
+                  Edit Profile
+                </Text>
               </TouchableOpacity>
             </View>
           </View>
@@ -642,16 +646,6 @@ const ClickforMoreDetails = ({ route, navigation }) => {
               <Text style={styles.noUthangsText}>NO UTHANGS TO SHOW</Text>
             )}
           </View>
-          <TouchableOpacity
-            onPress={() => navigation.navigate("AddUtang", { debtorInfo })}
-          >
-            <AntDesign
-              style={styles.plusButton}
-              name="pluscircle"
-              size={58}
-              color="black"
-            />
-          </TouchableOpacity>
 
           <Modal
             animationType="slide"
@@ -700,6 +694,18 @@ const ClickforMoreDetails = ({ route, navigation }) => {
           />
         </View>
       </ScrollView>
+      <View style={styles.plusButtontBG}>
+        <TouchableOpacity
+          onPress={() => navigation.navigate("AddUtang", { debtorInfo })}
+        >
+          <AntDesign
+            style={styles.plusButton}
+            name="pluscircle"
+            size={58}
+            color="black"
+          />
+        </TouchableOpacity>
+      </View>
     </KeyboardAvoidingView>
   );
 };
@@ -731,6 +737,7 @@ const styles = StyleSheet.create({
     width: 345,
     borderRadius: 15,
     marginTop: 10,
+    marginBottom: 75,
   },
   tableTitle: {
     fontWeight: "bold",
@@ -740,11 +747,19 @@ const styles = StyleSheet.create({
     fontSize: 16,
     marginTop: 20,
   },
+
   plusButton: {
-    margin: 20,
-    marginTop: 20,
-    bottom: "1%",
+    alignSelf: "center",
+    margin: 10,
+    position: "relative",
+    elevation: 10,
+    borderRadius: 150,
   },
+
+  plusButtontBG: {
+    backgroundColor: "#BAE8E8",
+  },
+
   button: {
     backgroundColor: "#FFD803",
     borderRadius: 20,

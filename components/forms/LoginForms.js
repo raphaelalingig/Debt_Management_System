@@ -1,4 +1,4 @@
-import { StyleSheet, TouchableOpacity, ToastAndroid, View } from "react-native";
+import { StyleSheet, TouchableOpacity, ToastAndroid, View, Image } from "react-native";
 import React, { useState, useEffect, useCallback } from "react";
 import {
   Button,
@@ -18,6 +18,7 @@ import { MaterialIcons } from "@expo/vector-icons";
 import fetchServices from "../services/fetchServices";
 import API_URL from "../services/apiurl";
 
+const logo = require("../pages/pictures/Logo.png");
 const LoginForm = () => {
 
   const formik = useFormik({
@@ -130,6 +131,10 @@ const LoginForm = () => {
         }) => {
           return (
             <View styles={{ flex: 1 }}>
+              <View style={styles.logocont}>
+                <Image source={logo} style={styles.image} />
+              </View>
+
               <Text
                 variant="displaySmall"
                 style={{
@@ -154,8 +159,8 @@ const LoginForm = () => {
                 style={{ marginTop: 10 }}
                 value={formik.values.email}
                 keyboardType="email-address"
-                onChangeText={formik.handleChange('email')}
-                onBlur={formik.handleBlur('email')}
+                onChangeText={formik.handleChange("email")}
+                onBlur={formik.handleBlur("email")}
                 error={formik.errors.email && formik.touched.email}
                 onFocus={() => formik.setTouched({ email: true }, false)}
               />
@@ -172,14 +177,14 @@ const LoginForm = () => {
                 secureTextEntry={!showPass}
                 right={
                   <TextInput.Icon
-                    icon={showPass ? 'eye' : 'eye-off'}
+                    icon={showPass ? "eye" : "eye-off"}
                     onPress={() => setShowPass(!showPass)}
                   />
                 }
                 style={{ marginTop: 10 }}
                 value={formik.values.password}
-                onChangeText={formik.handleChange('password')}
-                onBlur={formik.handleBlur('password')}
+                onChangeText={formik.handleChange("password")}
+                onBlur={formik.handleBlur("password")}
                 error={formik.errors.password && formik.touched.password}
                 onFocus={() => formik.setTouched({ password: true }, false)}
               />
@@ -189,10 +194,10 @@ const LoginForm = () => {
                 </HelperText>
               )}
               <View style={styles.checkboxContainer}>
-              <Checkbox
-                status={rememberMe ? "checked" : "unchecked"}
-                onPress={handleRememberMe}
-              />
+                <Checkbox
+                  status={rememberMe ? "checked" : "unchecked"}
+                  onPress={handleRememberMe}
+                />
                 <Text>Remember Me</Text>
               </View>
               <View style={styles.signupContainer}>
@@ -226,7 +231,7 @@ const LoginForm = () => {
                 </TouchableOpacity>
                 <TouchableOpacity
                   loading={isValidating}
-                  disabled={isValidating} 
+                  disabled={isValidating}
                   mode="elevated"
                   onPress={handleSubmit}
                   style={{
@@ -271,5 +276,18 @@ const styles = StyleSheet.create({
     flexDirection: "row",
     alignItems: "center",
     marginTop: 10,
+  },
+
+  logocont: {
+    padding: 10,
+    justifyContent: "center",
+    alignItems: "center",
+    marginTop: -80
+  },
+
+  image: {
+    width: 150,
+    height: 150,
+    borderRadius: 150,
   },
 });
