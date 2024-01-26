@@ -1,12 +1,14 @@
 import React from "react";
 import UserHeader from "../components/UserHeader";
-import { StyleSheet, View, Text, ScrollView, TouchableOpacity, TouchableHighlight, ActivityIndicator } from "react-native";
+import { StyleSheet, View, Text, ScrollView, TouchableOpacity, TouchableHighlight, ActivityIndicator, Image } from "react-native";
 import { FontAwesome } from "@expo/vector-icons";
 import { DataTable } from "react-native-paper";
 import { useState, useEffect, useCallback, useFocusEffect } from "react";
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import axios from 'axios';
 import API_URL from "../../services/apiurl";
+import base64 from 'base64-js';
+
 
 const UserMainPage = () => {
   const [userData, setUserData] = useState([]);
@@ -16,6 +18,7 @@ const UserMainPage = () => {
   const [due_fee, setDue_fee] = useState(0);
   const [color, setColor] = useState([]);
   const [loading, setLoading] = React.useState(true);
+  const [image, setImage] = useState(null);
 
   useEffect(() => {
     const fetchUserData = async () => {
@@ -78,6 +81,37 @@ const UserMainPage = () => {
     fetchData();
   }, [fetchData]);
 
+  useEffect(() => {
+    const getImage = async () => {
+      try {
+        const response = await axios.get(API_URL + 'getImage/' + userData.d_id, {
+          responseType: 'arraybuffer',
+        });
+    
+        if (response.status !== 200) {
+          console.error("Error fetching picture:", response.data.error);
+          // Handle other non-404 errors if needed
+        } else {
+          console.log("Response data:", response.data);
+          const base64Image = `data:image/png;base64,${base64.fromByteArray(new Uint8Array(response.data))}`;
+          setImage(base64Image);
+        }
+      } catch (error) {
+        if (error.response && error.response.status === 404) {
+          // Handle 404 error gracefully
+          console.log("Image not found (404)");
+          setImage(null); // Set image to null
+        } else {
+          console.error("Error fetching picture:", error.message);
+          console.log(error.response); // Log the entire response for more details
+          // Handle other non-404 errors if needed
+        }
+      }
+    };
+
+      getImage();
+  }, [userData]);
+
   const calculateStatusColor = (debtor) => {
     const status = debtor.status;
   
@@ -112,7 +146,15 @@ const UserMainPage = () => {
       <UserHeader />
       <View style={styles.details}>
         <View style={styles.logo}>
-          <FontAwesome name="user" size={84} color="black" />
+        {image !== null ? (
+              <Image
+                source={{ uri: image }}
+                style={{ width: 80, height: 80, borderRadius: 100 }}
+              />
+            ) : (
+              <FontAwesome name="user" size={84} color="black" />
+            )}
+          
         </View>
         {userData ? (
           <View style={styles.info}>

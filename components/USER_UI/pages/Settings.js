@@ -4,6 +4,7 @@ import {
   View,
   Modal,
   TouchableWithoutFeedback,
+  Image
 } from "react-native";
 import React, { useState, useEffect, useCallback } from "react";
 import AsyncStorage from '@react-native-async-storage/async-storage';
@@ -15,12 +16,14 @@ import { EvilIcons } from "@expo/vector-icons";
 import { Zocial } from "@expo/vector-icons";
 import axios from "axios";
 import API_URL from "../../services/apiurl";
+import base64 from 'base64-js';
 
 const Settings = ({ navigation }) => {
   const [modalVisible, setModalVisible] = useState(false);
   const [user, setUser] = useState('');
   const [resetPasswordPressed, setResetPasswordPressed] = useState(false);
   const [debtor,setDebtor] = useState([]);
+  const [image, setImage] = useState(null);
 
   const getUsers = async () => {
     const storedD_id = await AsyncStorage.getItem('d_id');
@@ -34,6 +37,7 @@ const Settings = ({ navigation }) => {
         .get(API_URL + 'debtor/' + user)
         .then((response) => {
           setDebtor(response.data);
+          getImage();
         })
         .catch((error) => {
           console.error('Error fetching data:', error);
@@ -45,6 +49,36 @@ const Settings = ({ navigation }) => {
   useEffect(() => {
     fetchData();
   }, [fetchData]);
+    const getImage = async () => {
+      try {
+        const response = await axios.get(API_URL + 'getImage/' + user, {
+          responseType: 'arraybuffer',
+        });
+    
+        if (response.status !== 200) {
+          console.error("Error fetching picture:", response.data.error);
+          // Handle other non-404 errors if needed
+        } else {
+          console.log("Response data:", response.data);
+          const base64Image = `data:image/png;base64,${base64.fromByteArray(new Uint8Array(response.data))}`;
+          setImage(base64Image);
+        }
+      } catch (error) {
+        if (error.response && error.response.status === 404) {
+          // Handle 404 error gracefully
+          console.log("Image not found (404)");
+          setImage(null); // Set image to null
+        } else {
+          console.error("Error fetching picture:", error.message);
+          console.log(error.response); // Log the entire response for more details
+          // Handle other non-404 errors if needed
+        }
+      }
+    };
+      
+
+
+
   
   const openModal = () => {
     setModalVisible(true);
@@ -91,13 +125,21 @@ const Settings = ({ navigation }) => {
       </Appbar.Header>
       <View style={styles.featureContainer}>
         <View style={styles.userLogoSettings}>
-          <Avatar.Icon
+        {image !== null ? (
+              <Image
+                source={{ uri: image }}
+                style={{ width: 200, height: 200, borderRadius: 100 }}
+              />
+            ) : (
+              <Avatar.Icon
             size={200}
             icon="account-check"
             color="black"
             backgroundColor={"white"}
             style={{ shadowOpacity: 80, elevation: 15 }}
           />
+            )}
+          
         </View>
 
         <View style={styles.featureSettings}>

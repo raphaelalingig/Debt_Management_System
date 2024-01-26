@@ -32,22 +32,24 @@ const EditProfile = ({ route, navigation }) => {
     
         if (response.status !== 200) {
           console.error("Error fetching picture:", response.data.error);
+          // Handle other non-404 errors if needed
         } else {
-          console.log("Response data:", response.data); // Log the response data
+          console.log("Response data:", response.data);
           const base64Image = `data:image/png;base64,${base64.fromByteArray(new Uint8Array(response.data))}`;
           setImage(base64Image);
         }
       } catch (error) {
-        console.error("Error fetching picture:", error.message);
-        console.log(error.response); // Log the entire response for more details
+        if (error.response && error.response.status === 404) {
+          // Handle 404 error gracefully
+          console.log("Image not found (404)");
+          setImage(null); // Set image to null
+        } else {
+          console.error("Error fetching picture:", error.message);
+          console.log(error.response); // Log the entire response for more details
+          // Handle other non-404 errors if needed
+        }
       }
     };
-    
-    
-    
-    
-    
-  
     getImage();
   }, [debtorInfo]);
 
@@ -170,38 +172,24 @@ const EditProfile = ({ route, navigation }) => {
       setLoading(true);
       const url = API_URL + "deletedebtor/" + debtorInfo.d_id;
       const response = await axios.delete(url);
-
-      if (
-        response.data &&
-        response.data.message === "Cannot delete Debtor, Uthangs still unpaid."
-      ) {
+  
+      if (response.status === 200) {
         // Log success
-        console.log(response.data.message);
-        ToastAndroid.show(response.data.message, ToastAndroid.SHORT);
+        console.log("Debtor deleted successfully");
+        ToastAndroid.show("Debtor deleted successfully", ToastAndroid.SHORT);
         // Navigate to a success page or perform any other action
         navigation.navigate("MainPage");
       } else {
         // Handle the case where the API response does not indicate success
-        console.error(
-          "Debtor deletion failed:",
-          response.data.message || "Unknown error"
-        );
+        console.error("Debtor deletion failed:", response.data.message || "Unknown error");
         ToastAndroid.show("Debtor deletion failed", ToastAndroid.SHORT);
       }
     } catch (error) {
       // Handle network error or other exceptions
-      if (
-        error.response &&
-        error.response.status === 422 &&
-        error.response.data.message ===
-          "Cannot delete Debtor, Uthangs still unpaid."
-      ) {
+      if (error.response && error.response.status === 422 && error.response.data.message === "Cannot delete Debtor, Uthangs still unpaid.") {
         // Handle the specific error scenario where Uthangs are still unpaid
         console.error("Cannot delete Debtor, Uthangs still unpaid.");
-        ToastAndroid.show(
-          "Cannot delete Debtor, Uthangs still unpaid.",
-          ToastAndroid.SHORT
-        );
+        ToastAndroid.show("Cannot delete Debtor, Uthangs still unpaid.", ToastAndroid.SHORT);
       } else {
         // Handle other errors
         console.error("Error deleting debtor:", error.message);
@@ -211,6 +199,7 @@ const EditProfile = ({ route, navigation }) => {
       setLoading(false);
     }
   };
+  
 
   const handleCancel = () => {
     // Handle the "No" button click

@@ -63,21 +63,24 @@ const ClickforMoreDetails = ({ route }) => {
     
         if (response.status !== 200) {
           console.error("Error fetching picture:", response.data.error);
+          // Handle other non-404 errors if needed
         } else {
-console.log("Response data:", response.data); // Log the response data
+          console.log("Response data:", response.data);
           const base64Image = `data:image/png;base64,${base64.fromByteArray(new Uint8Array(response.data))}`;
           setImage(base64Image);
         }
       } catch (error) {
-        console.error("Error fetching picture:", error.message);
-        console.log(error.response); // Log the entire response for more details
+        if (error.response && error.response.status === 404) {
+          // Handle 404 error gracefully
+          console.log("Image not found (404)");
+          setImage(null); // Set image to null
+        } else {
+          console.error("Error fetching picture:", error.message);
+          console.log(error.response); // Log the entire response for more details
+          // Handle other non-404 errors if needed
+        }
       }
     };
-        
-      
-
-
-  
 
       getImage();
   }, [debtorInfo]);
@@ -581,7 +584,7 @@ console.log("Response data:", response.data); // Log the response data
           <View style={styles.contentContainer}>
             
           <View style={styles.displayPicture}>
-            {image ? (
+            {image !== null ? (
               <Image
                 source={{ uri: image }}
                 style={{ width: 200, height: 200, borderRadius: 100 }}
