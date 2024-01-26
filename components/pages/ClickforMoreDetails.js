@@ -579,16 +579,18 @@ console.log("Response data:", response.data); // Log the response data
       <ScrollView>
         <View style={styles.container}>
           <View style={styles.contentContainer}>
-<View style={styles.displayPicture}>
-<View style={styles.displayPicture}>
-                        {image ? (
-                <Image source={{ uri: image }} style={{ width: 200, height: 200 }} />
-              ) : (
-                <EvilIcons name="user" size={230} color="black" />
-              )}
-</View>
+            
+          <View style={styles.displayPicture}>
+            {image ? (
+              <Image
+                source={{ uri: image }}
+                style={{ width: 200, height: 200, borderRadius: 100 }}
+              />
+            ) : (
+              <EvilIcons name="user" size={230} color="black" />
+            )}
+          </View>
 
-            </View>
             <View style={styles.details}>
               <Text>
                 <Text style={{ fontWeight: "bold" }}>Name: </Text>
