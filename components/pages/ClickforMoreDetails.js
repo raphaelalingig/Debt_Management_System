@@ -426,7 +426,7 @@ const ClickforMoreDetails = ({ route }) => {
         >
           <AntDesign name="closecircle" size={24} color="black" />
         </TouchableOpacity>
-        <Text style={styles.modalTitle}>Debt Details</Text>
+        <Text style={styles.modalTitle}>Utang Details</Text>
         <View style={styles.detailsContainer}>
           <Text style={styles.detailLabel}>Item:</Text>
           <Text style={styles.detailValue}>{selectedUthang.item_name}</Text>
@@ -579,7 +579,7 @@ const ClickforMoreDetails = ({ route }) => {
       behavior={Platform.OS === "ios" ? "padding" : "height"}
       style={{ flex: 1 }}
     >
-      <ScrollView>
+      <ScrollView style={{backgroundColor: '#BAE8E8'}}>
         <View style={styles.container}>
           <View style={styles.contentContainer}>
             
@@ -791,7 +791,7 @@ const styles = StyleSheet.create({
     width: 345,
     borderRadius: 15,
     marginTop: 10,
-    marginBottom: 75,
+    marginBottom: 20,
   },
   tableTitle: {
     fontWeight: "bold",

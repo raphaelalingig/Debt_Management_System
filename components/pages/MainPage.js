@@ -193,7 +193,7 @@ const styles = StyleSheet.create({
     alignItems: "center",
     borderColor: "black",
     borderRadius: 5,
-    width: 260,
+    width: 320,
     left: 80,
   },
   searchBox: {
@@ -201,7 +201,7 @@ const styles = StyleSheet.create({
   },
   iconSearch: {
     position: "absolute",
-    right: 50,
+    right: 60,
   },
   menuLogo: {
     top: 40,
@@ -209,14 +209,14 @@ const styles = StyleSheet.create({
   },
   transactionButton: {
     flexDirection: "row",
-    left: 220,
+    left: 250,
     top: 20,
     marginBottom: 35,
   },
   customersList: {
     backgroundColor: "white",
     width: 310,
-    left: 30,
+    left: 50,
     borderRadius: 15,
     marginBottom: 20,
   },
@@ -247,20 +247,13 @@ const styles = StyleSheet.create({
     marginBottom: 5,
     fontWeight: "bold",
   },
-  deleteButton: {
-    position: "absolute",
-    padding: 1,
-    backgroundColor: "#FFD803",
-    marginTop: 15,
-    right: -50,
-  },
   plusButton: {
     margin: 20,
     marginTop: 20,
     left: "37%",
   },
   accountIconContainer: {
-    marginLeft: "5%", // This will push it to the rightmost side
+    marginLeft: "5%",
   },
 });
 

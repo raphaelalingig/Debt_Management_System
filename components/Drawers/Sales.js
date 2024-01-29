@@ -78,7 +78,7 @@ const Sales = ({ navigation }) => {
   };
 
   return (
-    <ScrollView>
+    <ScrollView style={{backgroundColor: 'white'}}>
       <View style={styles.tableSales}>
         {searchMode ? (
           <View style={styles.searchContainer}>
@@ -196,18 +196,20 @@ const styles = StyleSheet.create({
     margin: 10,
     padding: 5,
     backgroundColor: "white",
+    
   },
 
   tableSales: {
     flex: 1,
     flexDirection: "column",
-    justifyContent: "space-around",
+    justifyContent: "center",
     alignItems: "stretch",
     padding: 5,
     backgroundColor: "white",
     width: 370,
     borderRadius: 10,
     marginTop: 10,
+    marginLeft: 20
   },
 
   buttonContainer: {

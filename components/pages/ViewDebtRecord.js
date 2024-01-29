@@ -214,7 +214,7 @@ export default ViewDebtRecord;
 const styles = StyleSheet.create({
   scrollView: {
     flexGrow: 1,
-    backgroundColor: "red",
+    backgroundColor: "#BAE8E8",
   },
   container: {
     flex: 1,
