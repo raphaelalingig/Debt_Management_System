@@ -59,7 +59,7 @@ const DrawerNavigator = ({ navigation }) => (
         },
         title: "Inventory of Items",
         headerStyle: {
-          backgroundColor: "#B2DFEB",
+          backgroundColor: "#BAE8E8",
         },
       }}
     />
@@ -80,7 +80,7 @@ const DrawerNavigator = ({ navigation }) => (
         },
         title: "About Us",
         headerStyle: {
-          backgroundColor: "#B2DFEB",
+          backgroundColor: "#BAE8E8",
         },
       }}
     />
@@ -101,7 +101,7 @@ const DrawerNavigator = ({ navigation }) => (
         },
         title: "Sales",
         headerStyle: {
-          backgroundColor: "#B2DFEB",
+          backgroundColor: "#BAE8E8",
         },
       }}
     />

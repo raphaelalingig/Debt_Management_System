@@ -78,7 +78,10 @@ const Sales = ({ navigation }) => {
   };
 
   return (
-    <ScrollView style={{backgroundColor: 'white'}}>
+    <ScrollView
+      style={{ backgroundColor: "white" }}
+      contentContainerStyle={{ alignItems: "center" }}
+    >
       <View style={styles.tableSales}>
         {searchMode ? (
           <View style={styles.searchContainer}>
@@ -88,16 +91,14 @@ const Sales = ({ navigation }) => {
               value={searchDate}
               onChangeText={(text) => setSearchDate(text)}
             />
-            <Button 
-              mode="contained" 
+            <Button
+              mode="contained"
               onPress={searchByDate}
-              style={styles.buttonStyle}>
+              style={styles.buttonStyle}
+            >
               <Text>Search</Text>
             </Button>
-            <Button 
-              mode="outlined" 
-              onPress={handleCancel}
-              >
+            <Button mode="outlined" onPress={handleCancel}>
               <Text>Cancel</Text>
             </Button>
           </View>
@@ -196,7 +197,6 @@ const styles = StyleSheet.create({
     margin: 10,
     padding: 5,
     backgroundColor: "white",
-    
   },
 
   tableSales: {
@@ -209,7 +209,7 @@ const styles = StyleSheet.create({
     width: 370,
     borderRadius: 10,
     marginTop: 10,
-    marginLeft: 20
+    marginLeft: 20,
   },
 
   buttonContainer: {
@@ -239,8 +239,9 @@ const styles = StyleSheet.create({
   },
 
   searchbox: {
-    marginRight: 10,
     width: "40%",
+    backgroundColor: "white",
+    color: "black",
   },
   buttonStyle: {
     backgroundColor: "#FFD803",

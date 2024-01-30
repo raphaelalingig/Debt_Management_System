@@ -10,7 +10,7 @@ import {
   TextInput,
   ScrollView,
   Modal,
-  Image
+  Image,
 } from "react-native";
 import { useIsFocused } from "@react-navigation/native";
 import { EvilIcons } from "@expo/vector-icons";
@@ -23,8 +23,8 @@ import ConfirmationModal from "./Confirmation";
 import EnterModal from "./EnterAmount";
 import ConfirmModal from "./Confirm";
 import { Text } from "react-native-paper";
-import { useNavigation } from '@react-navigation/native';
-import base64 from 'base64-js';
+import { useNavigation } from "@react-navigation/native";
+import base64 from "base64-js";
 
 const ClickforMoreDetails = ({ route }) => {
   const navigation = useNavigation();
@@ -45,7 +45,6 @@ const ClickforMoreDetails = ({ route }) => {
   const [isError, setIsError] = React.useState(false);
   const [due_fee, setDue_fee] = useState(0);
   const [image, setImage] = useState(null);
-    
 
   useEffect(() => {
     if (reloadData) {
@@ -57,16 +56,21 @@ const ClickforMoreDetails = ({ route }) => {
   useEffect(() => {
     const getImage = async () => {
       try {
-        const response = await axios.get(API_URL + 'getImage/' + debtorInfo.d_id, {
-          responseType: 'arraybuffer',
-        });
-    
+        const response = await axios.get(
+          API_URL + "getImage/" + debtorInfo.d_id,
+          {
+            responseType: "arraybuffer",
+          }
+        );
+
         if (response.status !== 200) {
           console.error("Error fetching picture:", response.data.error);
           // Handle other non-404 errors if needed
         } else {
           console.log("Response data:", response.data);
-          const base64Image = `data:image/png;base64,${base64.fromByteArray(new Uint8Array(response.data))}`;
+          const base64Image = `data:image/png;base64,${base64.fromByteArray(
+            new Uint8Array(response.data)
+          )}`;
           setImage(base64Image);
         }
       } catch (error) {
@@ -82,9 +86,8 @@ const ClickforMoreDetails = ({ route }) => {
       }
     };
 
-      getImage();
+    getImage();
   }, [debtorInfo]);
-  
 
   const fetchData = useCallback(() => {
     if (debtorInfo.d_id) {
@@ -463,7 +466,7 @@ const ClickforMoreDetails = ({ route }) => {
                 setModalVisible(false); // Close the modal
                 navigation.navigate("ViewDebtRecord", {
                   selectedUthang,
-                  debtorInfo
+                  debtorInfo,
                 });
               } catch (error) {
                 console.error("Error navigating:", error);
@@ -579,20 +582,19 @@ const ClickforMoreDetails = ({ route }) => {
       behavior={Platform.OS === "ios" ? "padding" : "height"}
       style={{ flex: 1 }}
     >
-      <ScrollView style={{backgroundColor: '#BAE8E8'}}>
+      <ScrollView style={{ backgroundColor: "#BAE8E8" }}>
         <View style={styles.container}>
           <View style={styles.contentContainer}>
-            
-          <View style={styles.displayPicture}>
-            {image !== null ? (
-              <Image
-                source={{ uri: image }}
-                style={{ width: 200, height: 200, borderRadius: 100 }}
-              />
-            ) : (
-              <EvilIcons name="user" size={230} color="black" />
-            )}
-          </View>
+            <View style={styles.displayPicture}>
+              {image !== null ? (
+                <Image
+                  source={{ uri: image }}
+                  style={{ width: 200, height: 200, borderRadius: 100 }}
+                />
+              ) : (
+                <EvilIcons name="user" size={230} color="black" />
+              )}
+            </View>
 
             <View style={styles.details}>
               <Text>
@@ -748,18 +750,18 @@ const ClickforMoreDetails = ({ route }) => {
           />
         </View>
       </ScrollView>
-      <View style={styles.plusButtontBG}>
-        <TouchableOpacity
-          onPress={() => navigation.navigate("AddUtang", { debtorInfo })}
-        >
-          <AntDesign
-            style={styles.plusButton}
-            name="pluscircle"
-            size={58}
-            color="black"
-          />
-        </TouchableOpacity>
-      </View>
+      <TouchableOpacity
+        style={styles.plusButtonContainer}
+        onPress={() => navigation.navigate("AddUtang", { debtorInfo })}
+      >
+        <AntDesign
+          name="pluscircle"
+          size={58}
+          color="black"
+          style={styles.plusButton}
+          onPress={() => navigation.navigate("AddDebtor")}
+        />
+      </TouchableOpacity>
     </KeyboardAvoidingView>
   );
 };
@@ -800,6 +802,11 @@ const styles = StyleSheet.create({
     textAlign: "center",
     fontSize: 16,
     marginTop: 20,
+  },
+  plusButtonContainer: {
+    position: "absolute",
+    bottom: 20,
+    alignSelf: "center",
   },
 
   plusButton: {

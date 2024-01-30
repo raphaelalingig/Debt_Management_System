@@ -166,15 +166,14 @@ export default function MainPage({ navigation, route }) {
           </TouchableOpacity>
         )}
       />
-      <TouchableOpacity onPress={() => navigation.navigate("AddDebtor")}>
-        <View style={styles.plusButtonContainer}>
-          <AntDesign
-            name="pluscircle"
-            size={58}
-            color="black"
-            style={styles.plusButton}
-          />
-        </View>
+      <TouchableOpacity style={styles.plusButtonContainer}>
+        <AntDesign
+          name="pluscircle"
+          size={58}
+          color="black"
+          style={styles.plusButton}
+          onPress={() => navigation.navigate("AddDebtor")}
+        />
       </TouchableOpacity>
     </View>
   );
@@ -230,11 +229,11 @@ const styles = StyleSheet.create({
     marginRight: 10,
   },
   userDetails: { padding: 10 },
-  plusButton: {
-    marginBottom: 10,
 
+  plusButtonContainer: {
+    position: "absolute",
+    bottom: 20,
+    alignSelf: "center",
   },
-  
 });
 
-// No return outside of the function
