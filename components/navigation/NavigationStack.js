@@ -135,7 +135,7 @@ const NavigationStack = () => {
           name="SignupForm"
           component={SignupForm}
         />
-                <Stack.Screen
+        <Stack.Screen
           options={{ headerShown: false }}
           name="LoginForms"
           component={LoginForm}

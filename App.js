@@ -10,7 +10,7 @@ import { useSharedValue, withSpring } from "react-native-reanimated";
 const App = () => {
   return (
     <PaperProvider style={styles.container}>
-      <SafeAreaView style={{ flex: 1, backgroundColor: "#B2DFEB" }}>
+      <SafeAreaView style={{ flex: 1, backgroundColor: "#BAE8E8" }}>
         <NavigationStack />
       </SafeAreaView>
     </PaperProvider>

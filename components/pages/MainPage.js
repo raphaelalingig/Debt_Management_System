@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { useFocusEffect } from "@react-navigation/native";
 import { StyleSheet, TouchableOpacity, View, FlatList } from "react-native";
-import { TextInput, Button, Text } from "react-native-paper";
+import { TextInput, Button, Text, Searchbar } from "react-native-paper";
 import { FontAwesome } from "@expo/vector-icons";
 import { MaterialCommunityIcons } from "@expo/vector-icons";
 import { Feather } from "@expo/vector-icons";
@@ -78,50 +78,45 @@ export default function MainPage({ navigation, route }) {
 
   return (
     <View style={styles.container}>
-      <TouchableOpacity style={styles.menuLogo}>
-        <MaterialCommunityIcons
-          name="menu"
-          size={24}
-          color="black"
-          onPress={() => navigation.toggleDrawer()}
-        />
-      </TouchableOpacity>
-
-      <View style={styles.inputBoxContainer}>
-        <TextInput
-          style={styles.searchBox}
-          placeholder="Search Name: "
-          mode="outlined"
-          label={"Search:"}
-          value={searchTerm}
-          onChangeText={(text) => setSearchTerm(text)}
-        />
-        <FontAwesome
-          name="search"
-          size={24}
-          color="black"
-          style={styles.iconSearch}
-        />
-        <View style={styles.accountIconContainer}>
-          <TouchableOpacity onPress={() => navigation.navigate("Account")}>
+      <View style={styles.header}>
+        <View style={styles.menuContainer}>
+          <TouchableOpacity style={styles.menuLogo}>
             <MaterialCommunityIcons
-              name="account"
-              size={30}
+              name="menu"
+              size={24}
               color="black"
+              onPress={() => navigation.toggleDrawer()}
             />
           </TouchableOpacity>
         </View>
-      </View>
-      <TouchableOpacity onPress={() => navigation.navigate("Transactions")}>
-        <View style={styles.transactionButton}>
-          <MaterialCommunityIcons
-            name="clipboard-check-multiple-outline"
-            size={24}
-            color="black"
+        <View style={styles.searchContainer}>
+          <Searchbar
+            placeholder="Search Name: "
+            value={searchTerm}
+            onChangeText={(text) => setSearchTerm(text)}
+            style={{ backgroundColor: "white" }}
           />
-          <Text>Transactions</Text>
         </View>
-      </TouchableOpacity>
+        <View style={styles.accountContainer}>
+          <TouchableOpacity onPress={() => navigation.navigate("Account")}>
+            <MaterialCommunityIcons name="account" size={30} color="black" />
+          </TouchableOpacity>
+        </View>
+      </View>
+      {/* CUUUUTTTTT */}
+
+      <View style={styles.transactionContainer}>
+        <TouchableOpacity onPress={() => navigation.navigate("Transactions")}>
+          <View style={styles.rowAligned}>
+            <MaterialCommunityIcons
+              name="clipboard-check-multiple-outline"
+              size={24}
+              color="black"
+            />
+            <Text>Transactions</Text>
+          </View>
+        </TouchableOpacity>
+      </View>
       <FlatList
         data={filteredDebtors}
         keyExtractor={(item) => item.d_id.toString()}
@@ -157,8 +152,8 @@ export default function MainPage({ navigation, route }) {
                         style={{
                           ...styles.debtorInfo1,
                           color: calculateStatusColor(item.status).color,
-                          fontWeight:
-                            calculateStatusColor(item.status).fontWeight,
+                          fontWeight: calculateStatusColor(item.status)
+                            .fontWeight,
                         }}
                       >
                         {item.status}
@@ -172,12 +167,14 @@ export default function MainPage({ navigation, route }) {
         )}
       />
       <TouchableOpacity onPress={() => navigation.navigate("AddDebtor")}>
-        <AntDesign
-          style={styles.plusButton}
-          name="pluscircle"
-          size={58}
-          color="black"
-        />
+        <View style={styles.plusButtonContainer}>
+          <AntDesign
+            name="pluscircle"
+            size={58}
+            color="black"
+            style={styles.plusButton}
+          />
+        </View>
       </TouchableOpacity>
     </View>
   );
@@ -187,44 +184,44 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     backgroundColor: "#BAE8E8",
-  },
-  inputBoxContainer: {
-    flexDirection: "row",
     alignItems: "center",
-    borderColor: "black",
-    borderRadius: 5,
-    width: 320,
-    left: 80,
   },
-  searchBox: {
-    flex: 1,
-  },
-  iconSearch: {
-    position: "absolute",
-    right: 60,
-  },
-  menuLogo: {
-    top: 40,
-    left: 25,
-  },
-  transactionButton: {
+  header: {
+    position: "relative",
+    justifyContent: "space-between",
     flexDirection: "row",
-    left: 250,
-    top: 20,
-    marginBottom: 35,
+    alignItems: "center", // Add this line
+    position: "relative",
+    marginTop: 20,
+  },
+
+  searchContainer: {
+    flex: 2,
+  },
+  menuContainer: {
+    marginLeft: 20,
+    marginRight: 20,
+  },
+  accountContainer: {
+    marginRight: 20,
+    marginLeft: 20,
+  },
+  transactionContainer: {
+    position: "relative",
+    marginLeft: 160,
+    marginTop: 10,
+    marginBottom: 20,
+  },
+  rowAligned: {
+    flexDirection: "row",
   },
   customersList: {
     backgroundColor: "white",
-    width: 310,
-    left: 50,
-    borderRadius: 15,
-    marginBottom: 20,
+    marginBottom: 15,
+    borderRadius: 20,
+    padding: 20,
   },
-  userLogo: {
-    marginLeft: 10,
-    marginRight: 10,
-    marginTop: 10,
-  },
+  userLogo: { padding: 10, marginRight: 5 },
   verticalLine: {
     width: 1,
     height: "auto",
@@ -232,29 +229,12 @@ const styles = StyleSheet.create({
     borderColor: "black",
     marginRight: 10,
   },
-  userDetails: {
-    gap: 4,
-  },
-  debtorBox: {
-    padding: 10,
-  },
-  debtorInfo1: {
-    fontSize: 16,
-    marginBottom: 5,
-  },
-  debtorInfo: {
-    fontSize: 16,
-    marginBottom: 5,
-    fontWeight: "bold",
-  },
+  userDetails: { padding: 10 },
   plusButton: {
-    margin: 20,
-    marginTop: 20,
-    left: "37%",
+    marginBottom: 10,
+
   },
-  accountIconContainer: {
-    marginLeft: "5%",
-  },
+  
 });
 
 // No return outside of the function
