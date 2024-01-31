@@ -32,7 +32,10 @@ const LoginForm = () => {
   const [password, setPassword] = useState("");
   const [showPass, setShowPass] = useState(false);
   const [rememberMe, setRememberMe] = useState(false);
+  const [loading, setLoading] = useState(false);
+  const [disabled, setDisabled] = useState(false);
   const navigation = useNavigation();
+  const [isError, setIsError] = React.useState(false);
 
 
   const saveCredentials = useCallback(async (values) => {
@@ -69,19 +72,30 @@ const LoginForm = () => {
   };
 
   const handleLogin = async (values) => {
+    setDisabled(true);
+    setLoading(true);
     try {
+
+      if ( formik.values.email === "" || formik.values.password === "" ) {
+        showToast("Please input required data");
+        setIsError(true);
+        return false;
+      }
+
       const url = API_URL + "login";
       const result = await fetchServices.postData(url, values);
-
+  
       if (result.message != null) {
         showToast(result?.message);
       } else {
-        await AsyncStorage.setItem("authToken", result.token);
-
-        if (rememberMe) {
-          await saveCredentials(values);
+        if (result.token) {
+          await AsyncStorage.setItem("authToken", result.token);
+  
+          if (rememberMe) {
+            await saveCredentials(values);
+          }
         }
-
+  
         if (result.role === 1) {
           navigation.replace("MainPage");
         } else if (result.role === 2) {
@@ -91,8 +105,12 @@ const LoginForm = () => {
     } catch (e) {
       console.error("API Error:", e);
       showToast("Something went wrong. Please try again.");
+    } finally {
+      setDisabled(false);
+      setLoading(false);
     }
   };
+  
 
   const validationSchema = Yup.object().shape({
     email: Yup.string().email("Invalid Email").required("Please enter your email"),
@@ -161,8 +179,9 @@ const LoginForm = () => {
                 keyboardType="email-address"
                 onChangeText={formik.handleChange("email")}
                 onBlur={formik.handleBlur("email")}
-                error={formik.errors.email && formik.touched.email}
-                onFocus={() => formik.setTouched({ email: true }, false)}
+                error={isError}
+                onFocus={() => formik.setTouched({ email: true }, false)
+                }
               />
               {errors.email && touched.email && (
                 <HelperText type="error" visible={errors.email}>
@@ -185,7 +204,7 @@ const LoginForm = () => {
                 value={formik.values.password}
                 onChangeText={formik.handleChange("password")}
                 onBlur={formik.handleBlur("password")}
-                error={formik.errors.password && formik.touched.password}
+                error={isError}
                 onFocus={() => formik.setTouched({ password: true }, false)}
               />
               {errors.password && touched.password && (
@@ -202,7 +221,8 @@ const LoginForm = () => {
               </View>
               <Card.Actions>
                 <TouchableOpacity
-                  disabled={isValidating}
+                  loading={loading}
+                  disabled={disabled}
                   onPress={() => navigation.navigate("Intro")}
                   style={{
                     marginTop: 10,

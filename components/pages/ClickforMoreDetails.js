@@ -759,7 +759,7 @@ const ClickforMoreDetails = ({ route }) => {
           size={58}
           color="black"
           style={styles.plusButton}
-          onPress={() => navigation.navigate("AddDebtor")}
+          onPress={() => navigation.navigate("AddUtang", { debtorInfo })}
         />
       </TouchableOpacity>
     </KeyboardAvoidingView>
@@ -793,7 +793,7 @@ const styles = StyleSheet.create({
     width: 345,
     borderRadius: 15,
     marginTop: 10,
-    marginBottom: 20,
+    marginBottom: 100,
   },
   tableTitle: {
     fontWeight: "bold",

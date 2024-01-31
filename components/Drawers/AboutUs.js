@@ -33,7 +33,7 @@ const AboutUs = () => {
         <View style={styles.memberContainer}>
           <Image
             style={styles.tinyLogo}
-            source={require("./pictures/Buwanding_Aladdin.jpg")}
+            source={require("./pictures/Buwanding.jpg")}
           />
           <Text style={styles.memberName}>Buwanding, Aladdin</Text>
           <Text style={styles.memberRole}>Hacker</Text>
@@ -46,7 +46,7 @@ const AboutUs = () => {
         <View style={styles.memberContainer}>
           <Image
             style={styles.tinyLogo}
-            source={require("./pictures/Juaton.png")}
+            source={require("./pictures/Juaton.jpg")}
           />
           <Text style={styles.memberName}>Juaton, Mark Jundy</Text>
           <Text style={styles.memberRole}>Team Leader</Text>
@@ -59,7 +59,7 @@ const AboutUs = () => {
         <View style={styles.memberContainer}>
           <Image
             style={styles.tinyLogo}
-            source={require("./pictures/Alingig.png")}
+            source={require("./pictures/Alingig.jpg")}
           />
           <Text style={styles.memberName}>Alingig, Raphael</Text>
           <Text style={styles.memberRole}>Managing Director</Text>
@@ -72,7 +72,7 @@ const AboutUs = () => {
         <View style={styles.memberContainer}>
           <Image
             style={styles.tinyLogo}
-            source={require("./pictures/Ibarra.png")}
+            source={require("./pictures/Ibarra.jpg")}
           />
           <Text style={styles.memberName}>Ibarra, Ray Anthony</Text>
           <Text style={styles.memberRole}>Designer</Text>

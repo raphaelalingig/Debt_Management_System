@@ -7,13 +7,12 @@ import fetchServices from "../services/fetchServices";
 import { useNavigation, useIsFocused } from "@react-navigation/native";
 import API_URL from "../services/apiurl";
 
-const AddDebtor = () => {
+const AddItem = () => {
   const navigation = useNavigation();
   const isFocused = useIsFocused();
-  const [d_name, setDebtorName] = React.useState("");
-  const [email, setEmail] = React.useState("");
-  const [phone, setPhone] = React.useState("");
-  const [address, setAddress] = React.useState("");
+  const [item, setItem] = React.useState("");
+  const [price, setPrice] = React.useState("");
+  const [category, setCategory] = React.useState("");
   const [loading, setLoading] = React.useState(false);
   const [isError, setIsError] = React.useState(false);
 
@@ -25,18 +24,17 @@ const AddDebtor = () => {
     try {
       setLoading(true);
 
-      if (d_name === "" || email === "" || phone === "" || address === "") {
+      if (item === "" || price === "" || category === "") {
         showToast("Please input required data");
         setIsError(true);
         return false;
       }
 
-      const url = API_URL + "insertdebtors";
+      const url = API_URL + "insert_items";
       const data = {
-        d_name,
-        email,
-        phone,
-        address,
+        item,
+        price,
+        category,
       };
 
       const result = await fetchServices.postData(url, data);
@@ -74,45 +72,36 @@ const AddDebtor = () => {
     <View style={styles.container}>
       <View style={styles.contentContainer}>
         <View style={styles.displayPicture}>
-          <EvilIcons name="user" size={256} color="black" />
         </View>
         <View style={styles.details}>
           <TextInput
             style={{ height: 30 }}
-            placeholder="Name: "
-            label="Name: "
+            placeholder="Item: "
+            label="Item: "
             mode="outlined"
-            value={d_name}
-            onChangeText={setDebtorName}
+            value={item}
+            onChangeText={setItem}
             error={isError}
           />
           <TextInput
             style={{ height: 30 }}
-            placeholder="Email: "
-            label="Email: "
+            placeholder="Price: "
+            label="Price: "
             mode="outlined"
-            value={email}
-            onChangeText={setEmail}
+            value={price}
+            onChangeText={setPrice}
             error={isError}
           />
           <TextInput
             style={{ height: 30 }}
-            placeholder="Phone Number: "
-            label="Phone Number: "
+            placeholder="Category: "
+            label="Category "
             mode="outlined"
-            value={phone}
-            onChangeText={setPhone}
+            value={category}
+            onChangeText={setCategory}
             error={isError}
           />
-          <TextInput
-            style={{ height: 30 }}
-            placeholder="Address: "
-            label="Address: "
-            mode="outlined"
-            value={address}
-            onChangeText={setAddress}
-            error={isError}
-          />
+          
           <View
             style={{
               marginTop: 20,
@@ -143,7 +132,7 @@ const AddDebtor = () => {
   );
 };
 
-export default AddDebtor;
+export default AddItem;
 
 const styles = StyleSheet.create({
   container: {

@@ -1,7 +1,7 @@
 {
   "expo": {
-    "name": "Project",
-    "slug": "Project",
+    "name": "Uthangs",
+    "slug": "uthangs",
     "version": "1.0.0",
     "orientation": "portrait",
     "icon": "./assets/icon.png",
@@ -21,10 +21,16 @@
       "adaptiveIcon": {
         "foregroundImage": "./assets/adaptive-icon.png",
         "backgroundColor": "#ffffff"
-      }
+      },
+      "package": "com.jundy.uthangs"
     },
     "web": {
       "favicon": "./assets/favicon.png"
+    },
+    "extra": {
+      "eas": {
+        "projectId": "79e4516f-8a48-41a9-9e37-f067c550440f"
+      }
     }
   }
 }

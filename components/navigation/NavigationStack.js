@@ -16,8 +16,10 @@ import { FontAwesome5 } from "@expo/vector-icons";
 import { MaterialCommunityIcons } from "@expo/vector-icons";
 import ClickforMoreDetails from "../pages/ClickforMoreDetails";
 import EditProfile from "../pages/EditProfile";
+import EditItem from "../pages/EditItem";
 import ViewDebtRecord from "../pages/ViewDebtRecord";
 import AddDebtor from "../pages/AddDebtor";
+import AddItem from "../pages/AddItem";
 import Transactions from "../pages/Transactions";
 import ViewTransaction from "../pages/ViewTransaction";
 import DebtorPage from "../pages/DebtorPage";
@@ -47,7 +49,7 @@ const DrawerNavigator = ({ navigation }) => (
       }}
     />
     <Drawer.Screen
-      name="Inventory of Items"
+      name="Items"
       component={Items}
       options={{
         drawerIcon: () => (
@@ -201,6 +203,16 @@ const NavigationStack = () => {
           }}
         />
         <Stack.Screen
+          name="EditItem"
+          component={EditItem}
+          options={{
+            title: "Edit Item",
+            headerStyle: {
+              backgroundColor: "#BAE8E8",
+            },
+          }}
+        />
+        <Stack.Screen
           name="ViewDebtRecord"
           component={ViewDebtRecord}
           options={{
@@ -221,6 +233,18 @@ const NavigationStack = () => {
             },
           }}
         />
+
+        <Stack.Screen
+          name="AddItem"
+          component={AddItem}
+          options={{
+            title: "Add Item",
+            headerStyle: {
+              backgroundColor: "#BAE8E8",
+            },
+          }}
+        />
+
         <Stack.Screen
           name="Transactions"
           component={Transactions}

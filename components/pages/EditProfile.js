@@ -274,9 +274,7 @@ const EditProfile = ({ route, navigation }) => {
 
             <TouchableOpacity
               onPress={() =>
-                navigation.navigate("ClickforMoreDetails", {
-                  debtorInfo
-                })
+                navigation.pop()
               }
             >
               <Button

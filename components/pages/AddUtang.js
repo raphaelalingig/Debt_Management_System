@@ -143,9 +143,7 @@ const AddUtang = ({ route, navigation }) => {
               <View style={styles.actionButton}>
               <TouchableOpacity
                   onPress={() =>
-                    navigation.navigate("ClickforMoreDetails", {
-                      debtorInfo
-                    })
+                    navigation.pop()
                   }
                 >
                   <Button style={{ backgroundColor: "#DB0202" }}>
