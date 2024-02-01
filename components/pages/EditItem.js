@@ -5,9 +5,6 @@ import { TextInput, Text, Button } from "react-native-paper";
 import ConfirmationModal from "./Confirmation";
 import API_URL from "../services/apiurl";
 import axios from "axios";
-import { MaterialCommunityIcons } from "@expo/vector-icons";
-import * as ImagePicker from 'expo-image-picker';
-import base64 from 'base64-js';
 
 const EditItem = ({ route, navigation }) => {
   const { selectedItem } = route.params;

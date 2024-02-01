@@ -14,6 +14,7 @@ import Reset from "../Drawers/Reset";
 import Account from "../Drawers/Account";
 import { FontAwesome5 } from "@expo/vector-icons";
 import { MaterialCommunityIcons } from "@expo/vector-icons";
+import Ionicons from 'react-native-vector-icons/Ionicons';
 import ClickforMoreDetails from "../pages/ClickforMoreDetails";
 import EditProfile from "../pages/EditProfile";
 import EditItem from "../pages/EditItem";
@@ -27,6 +28,7 @@ import AddUtang from "../pages/AddUtang";
 import Auto from "../pages/Confirmation";
 import Sales from "../Drawers/Sales";
 import SalesInfo from "../Drawers/SalesInfo";
+import Settings from "../Drawers/Settings";
 import LogoutScreen from "../Drawers/LogoutScreen";
 import { TouchableOpacity, StyleSheet, View } from "react-native";
 import BottomNavigation from "../USER_UI/navigation/BottomNavigation";
@@ -107,6 +109,23 @@ const DrawerNavigator = ({ navigation }) => (
         },
       }}
     />
+    <Drawer.Screen
+      name="Settings"
+      component={Settings}
+      options={{
+        drawerIcon: () => (
+          <Ionicons name="settings" size={24}/>
+        ),
+        drawerLabel: "Settings",
+        drawerLabelStyle: {
+          color: "black",
+        },
+        title: "Settings",
+        headerStyle: {
+          backgroundColor: "#BAE8E8",
+        },
+      }}
+      />
     <Drawer.Screen
       name="Logout"
       component={LogoutScreen}
@@ -265,6 +284,7 @@ const NavigationStack = () => {
             },
           }}
         />
+        
         <Stack.Screen
           name="AddUtang"
           component={AddUtang}
@@ -276,10 +296,10 @@ const NavigationStack = () => {
           }}
         />
         <Stack.Screen
-          name="Auto"
-          component={Auto}
+          name="Settings"
+          component={Settings}
           options={{
-            title: "Add Debt Items",
+            title: "Settings",
             headerStyle: {
               backgroundColor: "#BAE8E8",
             },
@@ -295,6 +315,7 @@ const NavigationStack = () => {
           name="MainPage"
           component={DrawerNavigator}
         />
+        
         <Stack.Screen
           options={{ headerShown: false }}
           name="UserMainPage"

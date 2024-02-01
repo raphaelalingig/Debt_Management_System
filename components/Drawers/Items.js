@@ -80,78 +80,6 @@ const ItemsComponent = ({navigation}) => {
     }
   };
 
-  const renderModalContent = () => {
-    if (!selectedItem) {
-      return null;
-    }
-
-    return (
-      <View style={styles.modalContent}>
-        <TouchableOpacity
-          style={styles.closeButton}
-          onPress={() => setModalVisible(!modalVisible)}
-        >
-          <AntDesign name="closecircle" size={24} color="black" />
-        </TouchableOpacity>
-        <Text style={styles.modalTitle}>Edit Item</Text>
-        <View style={styles.detailsContainer}>
-          <Text style={styles.detailLabel}>Item:</Text>
-        </View>
-        <View style={styles.detailsContainer}>
-        <TextInput
-                placeholder={selectedItem.item_name}
-                label="Item"
-                mode="outlined"
-                value={selectedItem.item_name} 
-                onChangeText={setItemName}
-                error={isError}
-              />
-              
-        </View>
-        <View style={styles.detailsContainer}>
-          <Text style={styles.detailLabel}>Price:</Text>
-          <TextInput
-                placeholder={selectedItem.price}
-                label="Price"
-                mode="outlined"
-                value={selectedItem.price} 
-                onChangeText={setItemPrice}
-                error={isError}
-              />
-        </View>
-        <View style={styles.detailsContainer}>
-          <Text style={styles.detailLabel}>Category:</Text>
-          <TextInput
-                placeholder={selectedItem.price}
-                label="Category"
-                mode="outlined"
-                value={selectedItem.category} 
-                onChangeText={setItemCategory}
-                error={isError}
-              />
-        </View>
-        <View style={styles.buttonsContainer}>
-          <TouchableOpacity
-            style={[styles.payButton, { marginRight: 10 }]}
-            onPress={() => {
-              payAmount(balance);
-            }}
-          >
-            <Text style={styles.buttonText}>Edit</Text>
-          </TouchableOpacity>
-          <TouchableOpacity
-            style={styles.editButton}
-            onPress={() => {
-              setModalVisible(!modalVisible)
-            }}
-          >
-            <Text style={styles.buttonText}>Cancel</Text>
-          </TouchableOpacity>
-        </View>
-      </View>
-    );
-  };
-
   return (
     <View style={styles.container}>
       <Text style={styles.header}></Text>
@@ -192,16 +120,6 @@ const ItemsComponent = ({navigation}) => {
           />
         </TouchableOpacity>
       </View>
-      <Modal
-            animationType="slide"
-            transparent={true}
-            visible={modalVisible}
-            onRequestClose={() => setModalVisible(!modalVisible)}
-          >
-            <View style={styles.centeredView}>
-              <View style={styles.modalView1}>{renderModalContent()}</View>
-            </View>
-          </Modal>
     </View>
   );
 };

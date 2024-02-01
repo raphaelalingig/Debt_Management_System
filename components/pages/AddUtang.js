@@ -78,14 +78,17 @@ const AddUtang = ({ route, navigation }) => {
       };
 
       const result = await fetchServices.postData(url, data);
-      console.log("API Response:", result); // Log the entire response
-      if (result?.error === "Total price exceeds 1000 for this item") {
+      console.log("API Response:", result);
+      
+      if (result?.error === "Total price exceeds 1000 for this item"){
         showToast("Total price exceeds 1000 for this item");
-      } else if (result?.error === "Exceeded maximum total of Debt") {
+      } else if (result?.error === "Exceeded maximum total of Debt for this debtor"){
+        showToast("Exceeded maximum total of Debt for this debtor");
+      } else if (result?.error === "Exceeded maximum total of Debt"){
         showToast("Exceeded maximum total of Debt");
       } else if (result?.message !== "Uthang added successfully") {
-        showToast(result?.message);
-      } else {
+        showToast(result);
+      } else if (result?.message === "Uthang added successfully"){
         showToast(result?.message);
         navigation.navigate('ClickforMoreDetails', { debtorInfo });
     }

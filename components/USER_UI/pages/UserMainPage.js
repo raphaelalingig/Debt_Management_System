@@ -19,6 +19,9 @@ const UserMainPage = () => {
   const [color, setColor] = useState([]);
   const [loading, setLoading] = React.useState(true);
   const [image, setImage] = useState(null);
+  const [interestFee, setInterestFee] = useState(0.00);
+  const [totalAmount, setTotalAmount] = useState(0.00);
+  const [overDue, setOverdue] = useState(false);
 
   useEffect(() => {
     const fetchUserData = async () => {
@@ -50,9 +53,12 @@ const UserMainPage = () => {
       axios
         .get(API_URL + 'debtor/' + userData.d_id)
         .then((response) => {
-          setDebtor(response.data);
-          calculateStatusColor(response.data);
-        })
+          const { debtor, totalAmount, interest } = response.data;
+          setDebtor(debtor);
+          setTotalAmount(totalAmount);
+          setInterestFee(interest);
+          calculateStatusColor(debtor);
+      })
         .catch((error) => {
           console.error('Error fetching data:', error);
           console.error('Response data:', error.response.data);
@@ -64,18 +70,12 @@ const UserMainPage = () => {
         .get(API_URL + 'uthangs/' + userData.d_id)
         .then((response) => {
           setUthangsData(response.data);
-  
-          if (userData.status === "Overdue") {
-            setDue_fee(0.01);
-          } else {
-            setDue_fee(0);
-          }
         })
         .catch((error) => {
           console.error('Error fetching uthangs data:', error);
         });
     }
-  }, [userData, balance]);
+  }, [userData, totalAmount]);
 
   useEffect(() => {
     fetchData();
@@ -117,21 +117,18 @@ const UserMainPage = () => {
   
     if(status === "Not Due"){
       setColor("black");
+      setOverdue(false);
     }else if(status === "Due"){
       setColor("blue");
+      setOverdue(false);
     }else if(status === "Due Today"){
       setColor("orange");
+      setOverdue(false);
     }else if(status === "Overdue"){
       setColor("red");
+      setOverdue(true);
     }
   }
-
-  const grandTotal = uthangsData
-  .filter(item => typeof item.total === 'number' || (typeof item.total === 'string' && item.total.trim() !== ''))
-  .reduce((sum, item) => sum + parseFloat(item.total), 0);
-  const interest  = (grandTotal * due_fee) + grandTotal;
-  const percent = interest - grandTotal;
-  const balance = interest - debtor.data_amount;
   
   if (loading) {
     return (
@@ -159,7 +156,7 @@ const UserMainPage = () => {
         {userData ? (
           <View style={styles.info}>
             <Text>Name: {userData.name}</Text>
-            <Text>Balance: ₱{balance.toFixed(2)}</Text>
+            <Text>Balance: ₱{totalAmount.toFixed(2)}</Text>
             <Text>Due Date: {debtor.due_date}</Text>
             <Text >Status: <Text style={{color:color, fontWeight:'bold'}}>{debtor.status}</Text></Text>
           </View>
@@ -196,6 +193,20 @@ const UserMainPage = () => {
                   </DataTable.Row>
                 </TouchableHighlight>
               ))}
+
+              {overDue && (
+                <DataTable.Row>
+                  <DataTable.Cell></DataTable.Cell>
+                  <DataTable.Cell></DataTable.Cell>
+                  <DataTable.Cell></DataTable.Cell>
+                  <DataTable.Cell>
+                    <Text style={styles.tableTitle}>Overdue Fee:</Text>
+                  </DataTable.Cell>
+                  <DataTable.Cell>
+                    <Text style={styles.tableTitle}> ₱{interestFee.toFixed(2)}</Text>
+                  </DataTable.Cell>
+                </DataTable.Row>
+              )}
               <DataTable.Row>
                 <DataTable.Cell></DataTable.Cell>
                 <DataTable.Cell></DataTable.Cell>
@@ -204,9 +215,12 @@ const UserMainPage = () => {
                   <Text style={styles.tableTitle}>Balance Total:</Text>
                 </DataTable.Cell>
                 <DataTable.Cell>
-                  <Text style={styles.tableTitle}> ₱{balance.toFixed(2)}</Text>
+                  <Text style={styles.tableTitle}> ₱{totalAmount.toFixed(2)}</Text>
                 </DataTable.Cell>
               </DataTable.Row>
+
+              
+
             </DataTable>
           ) : (
             <Text style={styles.noUthangsText}>NO UTHANGS TO SHOW</Text>

@@ -44,6 +44,8 @@ const ClickforMoreDetails = ({ route }) => {
   const [reloadData, setReloadData] = useState(false);
   const [isError, setIsError] = React.useState(false);
   const [due_fee, setDue_fee] = useState(0);
+  const [interestFee, setInterestFee] = useState(0.00);
+  const [totalAmount, setTotalAmount] = useState(0.00);
   const [image, setImage] = useState(null);
 
   useEffect(() => {
@@ -92,11 +94,14 @@ const ClickforMoreDetails = ({ route }) => {
   const fetchData = useCallback(() => {
     if (debtorInfo.d_id) {
       axios
-        .get(API_URL + "debtor/" + debtorInfo.d_id)
-        .then((response) => {
-          setDebtor(response.data);
-          calculateStatusColor(response.data);
-        })
+          .get(API_URL + "debtor/" + debtorInfo.d_id)
+          .then((response) => {
+              const { debtor, totalAmount, interest } = response.data;
+              setDebtor(debtor);
+              setTotalAmount(totalAmount);
+              setInterestFee(interest);
+              calculateStatusColor(debtor);
+          })
         .catch((error) => {
           console.error("Error fetching data:", error);
           console.error("Response data:", error.response.data);
@@ -107,13 +112,7 @@ const ClickforMoreDetails = ({ route }) => {
         .get(API_URL + "uthangs/" + debtorInfo.d_id)
         .then((response) => {
           setUthangsData(response.data);
-
-          if (debtorInfo.status === "Overdue") {
-            setDue_fee(0.01);
-          } else {
-            setDue_fee(0);
-          }
-          checkBalance(balance);
+          checkBalance(totalAmount);
         })
         .catch((error) => {
           console.error("Error fetching uthangs data:", error);
@@ -153,13 +152,13 @@ const ClickforMoreDetails = ({ route }) => {
 
   const full = async () => {
     const paymentNumber = parseFloat(payment);
-    const balanceNumber = parseFloat(balance);
+    const totalAmountNumber = parseFloat(totalAmount);
     if (payment === 0) {
-      setPayment(String(balance));
-    } else if (payment != balance) {
-      setPayment(String(balance));
+      setPayment(String(totalAmount));
+    } else if (payment != totalAmount) {
+      setPayment(String(totalAmount));
     } else {
-      console.log("Is payment = balance", paymentNumber === balance);
+      console.log("Is payment = balance", paymentNumber === totalAmount);
       await setCon(true);
     }
   };
@@ -176,9 +175,9 @@ const ClickforMoreDetails = ({ route }) => {
     setCon(false);
 
     const paymentNumber = parseFloat(payment);
-    const balanceNumber = parseFloat(balance);
+    const totalAmountNumber = parseFloat(totalAmount);
 
-    if (paymentNumber === balanceNumber) {
+    if (paymentNumber === totalAmountNumber) {
       await updateDataAmount(debtorInfo.d_id, 0);
       await deleteUtangs(debtorInfo.d_id);
     } else {
@@ -194,12 +193,17 @@ const ClickforMoreDetails = ({ route }) => {
         (typeof item.total === "string" && item.total.trim() !== "")
     )
     .reduce((sum, item) => sum + parseFloat(item.total), 0);
+
+
+
   const interest = grandTotal * due_fee + grandTotal;
   const percent = interest - grandTotal;
   const balance = interest - debtor.data_amount;
 
-  const payAmount = (balance) => {
-    if (selectedUthang.total > balance) {
+
+
+  const payAmount = (totalAmount) => {
+    if (selectedUthang.total > totalAmount) {
       Alert.alert(
         "Payment exceeded the current balance. Please use the Partial or Full Payment option."
       );
@@ -317,7 +321,7 @@ const ClickforMoreDetails = ({ route }) => {
     setLoading(true);
     let isFullPayment = false;
     try {
-      if (payment === 0 || payment > balance) {
+      if (payment === 0 || payment > totalAmount) {
         Alert.alert(
           "Error",
           "Invalid payment amount. Please enter a valid Amount."
@@ -326,7 +330,7 @@ const ClickforMoreDetails = ({ route }) => {
       }
 
       const parsedPayment = parseFloat(payment);
-      const newBalance = balance - parsedPayment;
+      const newBalance = totalAmount - parsedPayment;
       console.log("Parsed Payment:", parsedPayment);
 
       const response = await fetch(API_URL + "datapayment/" + debtorInfo.d_id, {
@@ -386,10 +390,10 @@ const ClickforMoreDetails = ({ route }) => {
     setIsConfirmed(false);
   };
 
-  const checkBalance = async (balance) => {
+  const checkBalance = async (totalAmount) => {
     try {
       if (uthangsData.length > 0) {
-        if (balance <= 0) {
+        if (totalAmount <= 0) {
           const newDataAmount = 0.0;
           const response = await axios.post(
             API_URL + "checkbalance/" + debtorInfo.d_id,
@@ -454,7 +458,7 @@ const ClickforMoreDetails = ({ route }) => {
           <TouchableOpacity
             style={[styles.payButton, { marginRight: 10 }]}
             onPress={() => {
-              payAmount(balance);
+              payAmount(totalAmount);
             }}
           >
             <Text style={styles.buttonText}>Pay</Text>
@@ -497,7 +501,7 @@ const ClickforMoreDetails = ({ route }) => {
         </View>
         <View style={styles.paydetailsContainer}>
           <Text style={styles.paydetailLabel}>Overdue Fee:</Text>
-          <Text style={styles.paydetailValue}>₱{percent.toFixed(2)}</Text>
+          <Text style={styles.paydetailValue}>₱{parseFloat(interestFee).toFixed(2)}</Text>
         </View>
         <View style={styles.paydetailsContainer}>
           <Text style={styles.paydetailLabel}>Data Payment:</Text>
@@ -509,7 +513,7 @@ const ClickforMoreDetails = ({ route }) => {
         </View>
         <View style={styles.paydetailsContainer}>
           <Text style={styles.paydetailLabel}>Balance:</Text>
-          <Text style={styles.paydetailValue}>₱{balance.toFixed(2)}</Text>
+          <Text style={styles.paydetailValue}>₱{totalAmount.toFixed(2)}</Text>
         </View>
         <Text style={styles.payTitle}>Amount</Text>
 
@@ -693,7 +697,7 @@ const ClickforMoreDetails = ({ route }) => {
                   <DataTable.Cell>
                     <Text style={styles.tableTitle}>
                       {" "}
-                      ₱{balance.toFixed(2)}
+                      ₱{parseFloat(totalAmount).toFixed(2)}
                     </Text>
                   </DataTable.Cell>
                 </DataTable.Row>
@@ -746,7 +750,7 @@ const ClickforMoreDetails = ({ route }) => {
             onCancel={() => setEnterModalVisible(false)}
             onAmountEntered={(enteredPayment) => setPayment(enteredPayment)}
             payment={payment} // Pass the payment as a prop
-            balance={balance}
+            totalAmount={totalAmount}
           />
         </View>
       </ScrollView>

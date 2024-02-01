@@ -34,9 +34,10 @@ const Settings = ({ navigation }) => {
     getUsers()
     if (user) {
       axios
-        .get(API_URL + 'debtor/' + user)
-        .then((response) => {
-          setDebtor(response.data);
+      .get(API_URL + "debtor/" + user)
+      .then((response) => {
+          const { debtor } = response.data;
+          setDebtor(debtor);
           getImage();
         })
         .catch((error) => {
