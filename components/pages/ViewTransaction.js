@@ -36,10 +36,9 @@ const Transactions = ({ navigation, route }) => {
   );
   useEffect(() => {
     const backAction = () => {
-      // Handle the back button press
-      // For example, navigate back or perform other actions
+     
       navigation.goBack();
-      return true; // Prevent default behavior (exit the app)
+      return true; 
     };
 
     const backHandler = BackHandler.addEventListener(
@@ -47,19 +46,16 @@ const Transactions = ({ navigation, route }) => {
       backAction
     );
 
-    // Clean up the event listener when the component is unmounted
+
     return () => backHandler.remove();
   }, [navigation]);
 
     const handlePrintReceipt = async () => {
-    // Perform logic to print receipt
     const receiptContent = generateReceiptContent();
     await Print.printAsync({ html: receiptContent });
   };
 
   const generateReceiptContent = () => {
-    // Generate the content of the receipt based on transactions
-    // Format the content as an HTML table
     let receiptContent = `
       <html>
         <head>
@@ -108,15 +104,11 @@ const Transactions = ({ navigation, route }) => {
           <td>${item.date}</td>
         </tr>`;
 
-      // Calculate total price and total payment
       totalPrice += item.price !== null ? parseFloat(item.price) : 0;
       totalPayment += item.payment !== null ? parseFloat(item.payment) : 0;
     });
-
-    // Calculate the difference between total price and total payment
     const difference = totalPrice - totalPayment;
 
-    // Add the total row with the difference column
     receiptContent += `
       <tr class="totalRow">
         <td colspan="2">Total</td>

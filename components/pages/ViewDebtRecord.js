@@ -99,7 +99,7 @@ const ViewDebtRecord = ({ route }) => {
         console.warn(
           "item_id is null. Setting to default value or handling accordingly."
         );
-        setItemId(selectedUthang.item_id); // Set to a default item_id or handle this case accordingly
+        setItemId(selectedUthang.item_id); 
       }
   
     const url = API_URL + "updateutang/" + selectedUthang.u_id;
@@ -115,13 +115,11 @@ const ViewDebtRecord = ({ route }) => {
     });
 
           if (result?.data?.uthang) {
-              // Access the updated Uthang data
               console.log(result.data.uthang);
               navigation.navigate("ClickforMoreDetails", {
           debtorInfo,
         });
     } else {
-        // Handle error if needed
               console.log(result?.data?.error || result?.message);
             }
 
@@ -134,7 +132,6 @@ const ViewDebtRecord = ({ route }) => {
     }
   };
   const handleGoBack = () => {
-    // Pop the ClickforMoreDetails screen from the stack
     navigation.pop();
   };
   
@@ -144,7 +141,7 @@ const ViewDebtRecord = ({ route }) => {
   return (
     <FlatList
       contentContainerStyle={styles.scrollView}
-      data={[{ key: "dummy" }]} // Add a dummy item to make FlatList work
+      data={[{ key: "dummy" }]}
       renderItem={() => (
         <View style={styles.container}>
           <View style={styles.contentContainer}>
@@ -169,7 +166,7 @@ const ViewDebtRecord = ({ route }) => {
                     </View>
                   </TouchableOpacity>
                 )}
-                keyExtractor={(item) => item.id.toString()} // assuming id is a number
+                keyExtractor={(item) => item.id.toString()} 
               />
               </View>
               <TextInput
@@ -239,18 +236,18 @@ const styles = StyleSheet.create({
     position: "relative",
     zIndex: 1,
     marginBottom: 10,
-    width: "100%", // Set width to 100%
+    width: "100%",
   },
   autoComplete: {
-    height: 40, // Set the height to the desired value
+    height: 40, 
     marginBottom: 10,
-    width: "100%", // Set width to 100%
+    width: "100%", 
   },
 
   quantityInput: {
-    height: 50, // Set the height to the same value as autoComplete
+    height: 50, 
     marginBottom: 10,
-    width: "100%", // Set width to 100%
+    width: "100%",
   },
   actionButton: {
     flexDirection: "row",

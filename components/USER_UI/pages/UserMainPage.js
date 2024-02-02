@@ -198,25 +198,25 @@ const UserMainPage = () => {
                 <DataTable.Row>
                   <DataTable.Cell></DataTable.Cell>
                   <DataTable.Cell></DataTable.Cell>
+                  <DataTable.Cell>
+                  <Text style={styles.tableTitle}>Overdue Fee:</Text>
+                  </DataTable.Cell>
+                  <DataTable.Cell>
+                  <Text style={styles.tableTitle}> ₱{interestFee.toFixed(2)}</Text>
+                  </DataTable.Cell>
                   <DataTable.Cell></DataTable.Cell>
-                  <DataTable.Cell>
-                    <Text style={styles.tableTitle}>Overdue Fee:</Text>
-                  </DataTable.Cell>
-                  <DataTable.Cell>
-                    <Text style={styles.tableTitle}> ₱{interestFee.toFixed(2)}</Text>
-                  </DataTable.Cell>
                 </DataTable.Row>
               )}
               <DataTable.Row>
                 <DataTable.Cell></DataTable.Cell>
                 <DataTable.Cell></DataTable.Cell>
+                <DataTable.Cell>
+                <Text style={styles.tableTitle}>Balance Total:</Text>
+                </DataTable.Cell>
+                <DataTable.Cell>
+                <Text style={styles.tableTitle}> ₱{totalAmount.toFixed(2)}</Text>
+                </DataTable.Cell>
                 <DataTable.Cell></DataTable.Cell>
-                <DataTable.Cell>
-                  <Text style={styles.tableTitle}>Balance Total:</Text>
-                </DataTable.Cell>
-                <DataTable.Cell>
-                  <Text style={styles.tableTitle}> ₱{totalAmount.toFixed(2)}</Text>
-                </DataTable.Cell>
               </DataTable.Row>
 
               

@@ -44,32 +44,25 @@ const ResetPasswordScreen = ({ route, navigation }) => {
       if (response.data && response.data.message) {
         console.log(response.data.message); // Password reset successfully
 
-        // Display success message using ToastAndroid
         ToastAndroid.show(response.data.message, ToastAndroid.SHORT);
-
-        // Navigate back to the previous screen after successful reset
         navigation.pop();
       } else {
         console.error('API response is missing data.message property:', response);
 
-        // Display error message using ToastAndroid
         ToastAndroid.show("Error in resetPassword", ToastAndroid.SHORT);
       }
     } catch (error) {
       if (error.response && error.response.status === 422 && error.response.data && error.response.data.errors) {
-        // Handle validation errors
         console.error('Validation errors:', error.response.data.errors);
         Alert.alert("Validation Error", Object.values(error.response.data.errors).join('\n'));
 
-        // Display validation error message using ToastAndroid
         ToastAndroid.show("Validation Error", ToastAndroid.SHORT);
       } else {
         console.error('Error in resetPassword:', error.response ? error.response.data.error : error.message);
 
-        // Display generic error message using ToastAndroid
         ToastAndroid.show("Error in resetPassword", ToastAndroid.SHORT);
       }
-      throw error; // Rethrow the error to be caught in handleReset
+      throw error;
     }
   };
   
@@ -78,17 +71,10 @@ const ResetPasswordScreen = ({ route, navigation }) => {
   
   const handleReset = async () => {
     try {
-      // Ensure new values are set before calling resetPassword
+
       const newOldPassword = oldPassword;
       const newNewPassword = newPassword;
       const newConfirmPassword = confirmPassword;
-  
-      // Update state with new values (if needed)
-      // await setOldPassword(newOldPassword);
-      // await setNewPassword(newNewPassword);
-      // await setConfirmPassword(newConfirmPassword);
-  
-      // Call resetPassword with the new values
       await resetPassword(newOldPassword, newNewPassword, newConfirmPassword);
     } catch (error) {
       console.error('Error in handleReset:', error);

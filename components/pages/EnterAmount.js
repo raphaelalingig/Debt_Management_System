@@ -20,7 +20,7 @@ const EnterModal = ({
   const [localPayment, setLocalPayment] = React.useState(0);
 
   const handlePaymentChange = (text) => {
-    const numericValue = text.replace(/[^0-9.]/g, ""); // Allow digits and a dot for decimals
+    const numericValue = text.replace(/[^0-9.]/g, "");
     setLocalPayment(numericValue);
   };
 

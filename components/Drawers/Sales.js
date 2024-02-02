@@ -12,6 +12,7 @@ import axios from "axios";
 import SalesInfoModal from "../Drawers/SalesInfo";
 import API_URL from "../services/apiurl";
 import moment from "moment";
+import * as Print from "expo-print";
 
 const Sales = ({ navigation }) => {
   const [sales, setSales] = useState([]);
@@ -59,6 +60,82 @@ const Sales = ({ navigation }) => {
     );
     setSales(todaySales);
   };
+
+  const handlePrintReceipt = async () => {
+    const receiptContent = generateReceiptContent();
+    await Print.printAsync({ html: receiptContent });
+  };
+
+  const generateReceiptContent = () => {
+
+    item.debtor_name
+
+    let receiptContent = `
+      <html>
+        <head>
+          <style>
+            table {
+              width: 100%;
+              border-collapse: collapse;
+              margin-bottom: 10px;
+            }
+            th, td {
+              border: 1px solid #ddd;
+              padding: 8px;
+              text-align: left;
+            }
+            .debtorName {
+              font-size: 20px;
+              font-weight: bold;
+            }
+            .totalRow {
+              font-weight: bold;
+            }
+          </style>
+        </head>
+        <body>
+        <p class="debtorName">StoreName: Mark Jundy Store</p>
+        <p class="debtorName">Sales Invoice</p>
+          <table>
+            <tr>
+              <th>ID</th>
+              <th>Item</th>
+              <th>Quantity</th>
+              <th>Price</th>
+              <th>Debtor</th>
+              <th>Date</th>
+            </tr>`;
+  
+    let totalPayment = 0;
+  
+    sales.forEach((item) => {
+      receiptContent += `
+        <tr>
+          <td>${item.sale_id}</td>
+          <td>${item.item_name}</td>
+          <td>${item.quantity_sold}</td>
+          <td>${item.price}</td>
+          <td>${item.debtor_name}</td>
+          <td>${item.sale_date}</td>
+        </tr>`;
+  
+      totalPayment += parseFloat(item.price) || 0;
+    });
+  
+    receiptContent += `
+      <tr class="totalRow">
+        <td colspan="2">Total</td>
+        <td></td>
+        <td>₱${totalPayment.toFixed(2)}</td>
+        <td></td>
+      </tr>
+    </table>
+      </body>
+    </html>`;
+  
+    return receiptContent;
+  };
+  
 
   const showAllSales = async () => {
     try {
@@ -117,6 +194,13 @@ const Sales = ({ navigation }) => {
               style={styles.buttonStyle}
             >
               <Text>Today</Text>
+            </Button>
+            <Button
+              mode="contained"
+              onPress={handlePrintReceipt}
+              style={styles.button}
+            >
+              <Text>Print Receipt</Text>
             </Button>
             <Button
               mode="contained"

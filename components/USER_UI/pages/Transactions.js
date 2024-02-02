@@ -41,10 +41,9 @@ const Transactions = () => {
         }
       };
 
-      fetchData(); // Call the async function immediately
+      fetchData(); 
 
       return () => {
-        // Clean-up logic if needed
       };
     }, [])
   );
@@ -53,31 +52,25 @@ const Transactions = () => {
       const receiptContent = generateReceiptContent();
       const fileName = `Receipt_${new Date().getTime()}.pdf`;
 
-      // Create the PDF file
       const fileUri = `${FileSystem.documentDirectory}${fileName}`;
       await FileSystem.writeAsStringAsync(fileUri, receiptContent, {
         encoding: FileSystem.EncodingType.UTF8,
       });
 
-      // Display success message with the file URI
       console.log("Receipt downloaded successfully:", fileUri);
 
-      // You can also show an alert with the file URI
-      // Alert.alert('Downloaded Successfully', `File saved at: ${fileUri}`);
     } catch (error) {
       console.error("Error downloading receipt:", error);
     }
   };
 
   const handlePrintReceipt = async () => {
-    // Perform logic to print receipt
+
     const receiptContent = generateReceiptContent();
     await Print.printAsync({ html: receiptContent });
   };
 
   const generateReceiptContent = () => {
-    // Generate the content of the receipt based on transactions
-    // Format the content as an HTML table
     let receiptContent = `
         <html>
           <head>
@@ -126,15 +119,12 @@ const Transactions = () => {
             <td>${item.date}</td>
           </tr>`;
 
-      // Calculate total price and total payment
       totalPrice += item.price !== null ? parseFloat(item.price) : 0;
       totalPayment += item.payment !== null ? parseFloat(item.payment) : 0;
     });
 
-    // Calculate the difference between total price and total payment
     const difference = totalPrice - totalPayment;
 
-    // Add the total row with the difference column
     receiptContent += `
         <tr class="totalRow">
           <td colspan="2">Total</td>
@@ -157,8 +147,8 @@ const Transactions = () => {
 
   const handleCancel = () => {
     setIsModalVisible(false);
-    setSearchMode(false); // Cancel search mode
-    setSearchDate(""); // Clear search date
+    setSearchMode(false); 
+    setSearchDate(""); 
   };
 
   const searchByDate = () => {

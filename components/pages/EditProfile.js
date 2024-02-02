@@ -32,7 +32,7 @@ const EditProfile = ({ route, navigation }) => {
     
         if (response.status !== 200) {
           console.error("Error fetching picture:", response.data.error);
-          // Handle other non-404 errors if needed
+
         } else {
           console.log("Response data:", response.data);
           const base64Image = `data:image/png;base64,${base64.fromByteArray(new Uint8Array(response.data))}`;
@@ -40,13 +40,12 @@ const EditProfile = ({ route, navigation }) => {
         }
       } catch (error) {
         if (error.response && error.response.status === 404) {
-          // Handle 404 error gracefully
+      
           console.log("Image not found (404)");
-          setImage(null); // Set image to null
+          setImage(null);
         } else {
           console.error("Error fetching picture:", error.message);
-          console.log(error.response); // Log the entire response for more details
-          // Handle other non-404 errors if needed
+          console.log(error.response); 
         }
       }
     };
@@ -70,10 +69,8 @@ const EditProfile = ({ route, navigation }) => {
       let selectedImage;
   
       if (result.assets && result.assets.length > 0) {
-        // Use the first asset from the assets array
         selectedImage = result.assets[0].uri;
 } else if (result.uri) {
-          // Use the selected image URI if available
           selectedImage = result.uri;
       }
   
@@ -97,7 +94,6 @@ const EditProfile = ({ route, navigation }) => {
         name: 'user_profile.jpg',
       });
   
-      // Assuming you have debtorInfo object with d_id
       imageFormData.append("d_id", debtorInfo.d_id);
   
       const imageUploadResponse = await axios.post(API_URL + "uploadImage", imageFormData, {
@@ -107,11 +103,8 @@ const EditProfile = ({ route, navigation }) => {
       });
   
       if (imageUploadResponse?.data) {
-        // Adjust this part based on the actual response structure
-        const imageUrl = imageUploadResponse.data; // Change this line accordingly
+        const imageUrl = imageUploadResponse.data;
   
-        // Further logic to handle the image URL, e.g., save it to another table
-        // ...
     
         console.log("Image uploaded successfully:", imageUrl);
       } else {
@@ -151,11 +144,11 @@ const EditProfile = ({ route, navigation }) => {
       const result = await axios.put(url, data);
 
       if (result?.data?.debtor) {
-        // Access the updated Uthang data
+   
         console.log(result.data.debtor);
         navigation.navigate("MainPage");
       } else {
-        // Handle error if needed
+
         console.log(result?.data?.error || result?.message);
       }
     } catch (e) {
@@ -177,21 +170,21 @@ const EditProfile = ({ route, navigation }) => {
         // Log success
         console.log("Debtor deleted successfully");
         ToastAndroid.show("Debtor deleted successfully", ToastAndroid.SHORT);
-        // Navigate to a success page or perform any other action
+
         navigation.navigate("MainPage");
       } else {
-        // Handle the case where the API response does not indicate success
+
         console.error("Debtor deletion failed:", response.data.message || "Unknown error");
         ToastAndroid.show("Debtor deletion failed", ToastAndroid.SHORT);
       }
     } catch (error) {
-      // Handle network error or other exceptions
+
       if (error.response && error.response.status === 422 && error.response.data.message === "Cannot delete Debtor, Uthangs still unpaid.") {
-        // Handle the specific error scenario where Uthangs are still unpaid
+
         console.error("Cannot delete Debtor, Uthangs still unpaid.");
         ToastAndroid.show("Cannot delete Debtor, Uthangs still unpaid.", ToastAndroid.SHORT);
       } else {
-        // Handle other errors
+
         console.error("Error deleting debtor:", error.message);
         ToastAndroid.show("Error deleting debtor", ToastAndroid.SHORT);
       }
@@ -202,7 +195,6 @@ const EditProfile = ({ route, navigation }) => {
   
 
   const handleCancel = () => {
-    // Handle the "No" button click
     setIsModalVisible(false);
   };
 

@@ -67,7 +67,7 @@ const ClickforMoreDetails = ({ route }) => {
 
         if (response.status !== 200) {
           console.error("Error fetching picture:", response.data.error);
-          // Handle other non-404 errors if needed
+          
         } else {
           console.log("Response data:", response.data);
           const base64Image = `data:image/png;base64,${base64.fromByteArray(
@@ -77,13 +77,12 @@ const ClickforMoreDetails = ({ route }) => {
         }
       } catch (error) {
         if (error.response && error.response.status === 404) {
-          // Handle 404 error gracefully
+          
           console.log("Image not found (404)");
-          setImage(null); // Set image to null
+          setImage(null); 
         } else {
           console.error("Error fetching picture:", error.message);
-          console.log(error.response); // Log the entire response for more details
-          // Handle other non-404 errors if needed
+          console.log(error.response); 
         }
       }
     };
@@ -207,7 +206,7 @@ const ClickforMoreDetails = ({ route }) => {
       Alert.alert(
         "Payment exceeded the current balance. Please use the Partial or Full Payment option."
       );
-      setLoading(false); // Make sure to set loading to false
+      setLoading(false);
       return;
     } else {
       setIsModalVisible(true);
@@ -223,13 +222,12 @@ const ClickforMoreDetails = ({ route }) => {
 
       console.log("Response data:", response.data);
       if (response.status === 200 || response.status === 204) {
-        // Handle success
+        
         console.log("Uthang paid successfully");
         setModalVisible(!modalVisible);
         ToastAndroid.show("Uthang paid successfully", ToastAndroid.SHORT);
         setReloadData(true);
       } else if (response.status === 404) {
-        // Handle case where the resource was not found (deleted successfully but 404 status)
         console.log("Uthang not found (deleted successfully)");
         navigation.navigate("ClickforMoreDetails", { debtorInfo });
         ToastAndroid.show(
@@ -237,7 +235,6 @@ const ClickforMoreDetails = ({ route }) => {
           ToastAndroid.SHORT
         );
       } else {
-        // Handle other cases where the API response does not indicate success
         console.error(
           "Uthang operation failed:",
           response.data.message || "Unknown error"
@@ -245,7 +242,6 @@ const ClickforMoreDetails = ({ route }) => {
         ToastAndroid.show("Uthang operation failed", ToastAndroid.SHORT);
       }
     } catch (error) {
-      // Handle network error or other exceptions
       console.error("Error deleting uthang:", error.message);
       ToastAndroid.show("Error deleting uthang", ToastAndroid.SHORT);
     } finally {
@@ -292,12 +288,11 @@ const ClickforMoreDetails = ({ route }) => {
     try {
       const url = API_URL + "deleteutangs/" + debtorInfo.d_id;
 
-      // Assuming data_amount is the amount you want to send
       const parsedPayment = parseFloat(payment);
-      const data_amount = parsedPayment; // Replace this with your actual data_amount
+      const data_amount = parsedPayment; 
 
       const response = await axios.delete(url, {
-        data: { data_amount }, // Include data_amount in the request body
+        data: { data_amount },
       });
       if (response.status === 200 || response.status === 204) {
         console.log("Utangs paid successfully");
@@ -359,31 +354,31 @@ const ClickforMoreDetails = ({ route }) => {
           isFullPayment = true;
         }
       } else {
-        // Log the error to the console
+   
         console.error(
           "Error during payment:",
           responseData.error || "An error occurred"
         );
 
-        // Handle errors, e.g., show an error message
+
         Alert.alert("Error", responseData.error || "An error occurred");
       }
     } catch (error) {
       console.error("Error during payment:", error);
-      // Handle other errors if needed
+
       Alert.alert("Error", "An unexpected error occurred");
     } finally {
       setLoading(false);
       if (isFullPayment) {
         setReloadData(true);
       } else {
-        fetchData(); // Reload data for partial payment
+        fetchData();
       }
     }
   };
 
   const handleCancel = () => {
-    // Handle the "No" button click
+
     setIsModalVisible(false);
     setEnterModalVisible(false);
     setCon(false);
@@ -402,13 +397,13 @@ const ClickforMoreDetails = ({ route }) => {
 
           if (response.status === 200) {
             console.log("Check successful");
-            // Handle success
+
           } else {
             console.error(
               "Check failed:",
               response.data.error || "Unknown error"
             );
-            // Handle failure
+          
           }
         }
       }
@@ -467,7 +462,7 @@ const ClickforMoreDetails = ({ route }) => {
             style={styles.editButton}
             onPress={() => {
               try {
-                setModalVisible(false); // Close the modal
+                setModalVisible(false);
                 navigation.navigate("ViewDebtRecord", {
                   selectedUthang,
                   debtorInfo,
@@ -744,7 +739,6 @@ const ClickforMoreDetails = ({ route }) => {
           <EnterModal
             isVisible={entermodalVisible}
             onConfirm={() => {
-              // Handle the confirmation logic if needed
               setEnterModalVisible(false);
             }}
             onCancel={() => setEnterModalVisible(false)}
@@ -986,11 +980,11 @@ const styles = StyleSheet.create({
     marginBottom: 10,
   },
   resetButtonContainer: {
-    marginLeft: "auto", // This will push the reset button to the right
-    alignSelf: "center", // Align the button vertically in the center
+    marginLeft: "auto",
+    alignSelf: "center",
   },
   resetButton: {
-    marginLeft: 10, // Add some space between the amount and the reset button
-    color: "blue", // Customize the color as needed
+    marginLeft: 10,
+    color: "blue",
   },
 });

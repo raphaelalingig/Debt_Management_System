@@ -57,7 +57,7 @@ const DrawerNavigator = ({ navigation }) => (
         drawerIcon: () => (
           <FontAwesome5 name="clipboard-list" size={24} color="black" />
         ),
-        drawerLabel: "Items",
+        drawerLabel: "   Items",
         drawerLabelStyle: {
           color: "black",
         },

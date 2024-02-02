@@ -89,7 +89,7 @@ const AccountPage = ({ route }) => {
     if (userRole === 1) {
       return { role: "Admin" };
     } else {
-      return { role: "Regular User" }; // or any default role you want
+      return { role: "Regular User" }; 
     }
   };
 

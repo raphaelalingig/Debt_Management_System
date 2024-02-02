@@ -17,14 +17,12 @@ export default function MainPage({ navigation, route }) {
 
   useFocusEffect(
     React.useCallback(() => {
-      // Fetch data from the Laravel API endpoint
       axios
         .get(API_URL + "debtors")
         .then((response) => {
           const fetchedDebtors = response.data;
 
           if (Array.isArray(fetchedDebtors)) {
-            // Calculate balances for each debtor
             const updatedDebtors = fetchedDebtors.map((debtor) => {
               const newBalance = debtor.totalAmount || 0;
 
@@ -189,7 +187,7 @@ const styles = StyleSheet.create({
     position: "relative",
     justifyContent: "space-between",
     flexDirection: "row",
-    alignItems: "center", // Add this line
+    alignItems: "center",
     position: "relative",
     marginTop: 20,
   },

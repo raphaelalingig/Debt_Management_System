@@ -5,6 +5,7 @@ import { useFocusEffect } from "@react-navigation/native";
 import axios from "axios";
 import TransactionInfoModal from "../pages/TransactionsInfo";
 import API_URL from "../services/apiurl";
+import moment from "moment";
 
 const Transactions = ({ navigation }) => {
   const [transactions, setTransactions] = useState([]);
@@ -29,8 +30,8 @@ const Transactions = ({ navigation }) => {
 
   const handleCancel = () => {
     setIsModalVisible(false);
-    setSearchMode(false); // Cancel search mode
-    setSearchDate(""); // Clear search date
+    setSearchMode(false);
+    setSearchDate("");
   };
 
   const searchByDate = () => {
@@ -155,6 +156,7 @@ const styles = StyleSheet.create({
   },
   searchbox: {
     marginRight: 10,
+    paddingLeft: 10,
     width: "40%",
     backgroundColor: "white",
     borderRadius: 20,

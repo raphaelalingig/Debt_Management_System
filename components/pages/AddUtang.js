@@ -94,7 +94,7 @@ const AddUtang = ({ route, navigation }) => {
     }
     } catch (e) {
       showToast(e.toString());
-      console.error(e); // Log the error directly
+      console.error(e);
     } finally {
       setLoading(false);
     }
@@ -106,7 +106,7 @@ const AddUtang = ({ route, navigation }) => {
   return (
     <FlatList
       contentContainerStyle={styles.scrollView}
-      data={[{ key: "dummy" }]} // Add a dummy item to make FlatList work
+      data={[{ key: "dummy" }]}
       renderItem={() => (
         <View style={styles.container}>
           <View style={styles.contentContainer}>
@@ -130,7 +130,7 @@ const AddUtang = ({ route, navigation }) => {
                       </View>
                     </TouchableOpacity>
                   )}
-                  keyExtractor={(item) => item.id.toString()} // assuming id is a number
+                  keyExtractor={(item) => item.id.toString()}
                 />
               </View>
               <TextInput
@@ -202,18 +202,18 @@ const styles = StyleSheet.create({
     position: "relative",
     zIndex: 1,
     marginBottom: 10,
-    width: "100%", // Set width to 100%
+    width: "100%",
   },
   autoComplete: {
-    height: 40, // Set the height to the desired value
+    height: 40,
     marginBottom: 10,
-    width: "100%", // Set width to 100%
+    width: "100%",
   },
 
   quantityInput: {
-    height: 50, // Set the height to the same value as autoComplete
+    height: 50,
     marginBottom: 10,
-    width: "100%", // Set width to 100%
+    width: "100%",
   },
   actionButton: {
     flexDirection: "row",
@@ -225,9 +225,9 @@ const styles = StyleSheet.create({
     backgroundColor: "#FFD803",
   },
   suggestionItem: {
-    height: 40, // Adjust the height according to your preference
-    paddingVertical: 10, // Adjust the vertical padding according to your preference
-    paddingHorizontal: 15, // Adjust the horizontal padding according to your preference
+    height: 40, 
+    paddingVertical: 10,
+    paddingHorizontal: 15,
     borderBottomWidth: 1,
     borderBottomColor: "#DDD",
   },

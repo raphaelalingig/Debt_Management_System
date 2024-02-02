@@ -58,7 +58,7 @@ const Settings = ({ navigation }) => {
     
         if (response.status !== 200) {
           console.error("Error fetching picture:", response.data.error);
-          // Handle other non-404 errors if needed
+
         } else {
           console.log("Response data:", response.data);
           const base64Image = `data:image/png;base64,${base64.fromByteArray(new Uint8Array(response.data))}`;
@@ -66,13 +66,12 @@ const Settings = ({ navigation }) => {
         }
       } catch (error) {
         if (error.response && error.response.status === 404) {
-          // Handle 404 error gracefully
+
           console.log("Image not found (404)");
-          setImage(null); // Set image to null
+          setImage(null);
         } else {
           console.error("Error fetching picture:", error.message);
-          console.log(error.response); // Log the entire response for more details
-          // Handle other non-404 errors if needed
+          console.log(error.response);
         }
       }
     };
@@ -90,7 +89,7 @@ const Settings = ({ navigation }) => {
   };
 
   const handleModalPress = (e) => {
-    e.stopPropagation(); // Prevent closing modal when clicking inside the modal
+    e.stopPropagation();
   };
 
   const handleLogout = async () => {
@@ -103,10 +102,9 @@ const Settings = ({ navigation }) => {
   };
 
   useEffect(() => {
-    // Use the effect to handle navigation when 'ResetPassword' is pressed
     if (resetPasswordPressed) {
       navigation.navigate('ResetPasswordUser');
-      setResetPasswordPressed(false); // Reset the flag after navigation
+      setResetPasswordPressed(false);
     }
   }, [navigation, resetPasswordPressed]);
 

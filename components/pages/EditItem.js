@@ -45,7 +45,6 @@ const EditItem = ({ route, navigation }) => {
         navigation.navigate("Items");
         console.log("Navigating to Items");
       } else {
-        // Handle error if needed
         console.log(result?.data?.error || result?.data?.message);
         showToast("Failed to update item");
       }
@@ -70,21 +69,21 @@ const EditItem = ({ route, navigation }) => {
         // Log success
         console.log("Item deleted successfully");
         ToastAndroid.show("Item deleted successfully", ToastAndroid.SHORT);
-        // Navigate to a success page or perform any other action
+     
         navigation.navigate("MainPage");
       } else {
-        // Handle the case where the API response does not indicate success
+    
         console.error("Item deletion failed:", response.data.message || "Unknown error");
         ToastAndroid.show("Item deletion failed", ToastAndroid.SHORT);
       }
     } catch (error) {
-      // Handle network error or other exceptions
+
       if (error.response && error.response.status === 422 && error.response.data.message === "Cannot delete Debtor, Uthangs still unpaid.") {
-        // Handle the specific error scenario where Uthangs are still unpaid
+
         console.error("Cannot delete Item, Uthangs still unpaid.");
         ToastAndroid.show("Cannot delete Item, Uthangs still unpaid.", ToastAndroid.SHORT);
       } else {
-        // Handle other errors
+
         console.error("Error deleting Item:", error.message);
         ToastAndroid.show("Error deleting Item", ToastAndroid.SHORT);
       }
@@ -94,7 +93,7 @@ const EditItem = ({ route, navigation }) => {
   };
 
   const handleCancel = () => {
-    // Handle the "No" button click
+
     setIsModalVisible(false);
   };
 

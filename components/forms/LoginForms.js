@@ -97,9 +97,9 @@ const LoginForm = () => {
         }
   
         if (result.role === 1) {
-          navigation.replace("MainPage");
+          navigation.replace("MainPage");//ADMIN
         } else if (result.role === 2) {
-          navigation.replace("UserMainPage");
+          navigation.replace("UserMainPage");//CUSTOMER
         }
       }
     } catch (e) {

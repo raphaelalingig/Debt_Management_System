@@ -63,7 +63,7 @@ const styles = StyleSheet.create({
     backgroundColor: 'white',
     padding: 20,
     borderRadius: 10,
-    width: '80%', // Adjust the width of the modal content
+    width: '80%',
   },
   modalText: {
     fontSize: 24,
@@ -87,7 +87,7 @@ const styles = StyleSheet.create({
   },
   buttonContainer: {
     flexDirection: 'row',
-    justifyContent: 'flex-end', // Align the button to the right
+    justifyContent: 'flex-end',
     marginTop: 20,
   },
   button: {

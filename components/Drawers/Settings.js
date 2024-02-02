@@ -59,8 +59,8 @@ const Settings = () => {
     setLoading(true);
 
     if (
-      overallLimit === originalValues.overallLimit ||
-      debtorLimit === originalValues.debtorLimit ||
+      overallLimit === originalValues.overallLimit &&
+      debtorLimit === originalValues.debtorLimit &&
       interestMultiplier === originalValues.interestMultiplier
     ){
       setEditable(false);
@@ -204,7 +204,7 @@ const styles = StyleSheet.create({
     borderRadius: 8,
   },
   editablePriceBox: {
-    backgroundColor: '#e6e6e6', // Gray color when in editable mode
+    backgroundColor: '#e6e6e6',
   },
   price: {
     fontSize: 16,

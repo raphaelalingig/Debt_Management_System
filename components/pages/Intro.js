@@ -65,7 +65,7 @@ const styles = StyleSheet.create({
     gap: 5,
   },
   buttonWrapper: {
-    width: "100%", // Make the wrapper take the full width
+    width: "100%",
   },
   button: {
     backgroundColor: "#FFD803",

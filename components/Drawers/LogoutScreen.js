@@ -33,7 +33,7 @@ const LogoutScreen = ({ navigation }) => {
     }
   };
 
-  return null; // or you can return a loading indicator or a message
+  return null;
 };
 
 export default LogoutScreen;
